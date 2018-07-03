@@ -1,0 +1,107 @@
+Nebulon-B Escort Frigate
+Size Small
+Faction Rebel
+Cost 57
+Hull 5
+Front 3 RRR
+Side 1 RB
+Rear 2 RR
+AntiSquad BB
+Defense BBE
+NavChart 1 11 210
+CommandAttributes 2 2 3
+Upgrades Crew Support Turbolaser
+FrontArcOffset 0
+RearArcOffset 0
+FrontArcConjunction 35.5
+RearArcConjunction 35.5
+
+Nebulon-B Support Frigate
+Size Small
+Faction Rebel
+Cost 51
+Hull 5
+Front 3 RRR
+Side 1 RB
+Rear 2 RR
+AntiSquad B
+Defense BBE
+NavChart 1 11 210
+CommandAttributes 2 1 3
+Upgrades Crew Support Turbolaser
+FrontArcOffset 0
+RearArcOffset 0
+FrontArcConjunction 35.5
+RearArcConjunction 35.5
+
+CR90A Corvette
+Size Small
+Faction Rebel
+Cost 44
+Hull 4
+Front 2 RRB
+Side 2 RB
+Rear 1 R
+AntiSquad B
+Defense REE
+NavChart 2 21 210 2110
+CommandAttributes 1 1 2
+Upgrades Crew Support DefensiveRetro Turbolaser
+FrontArcOffset 22.22
+RearArcOffset 6.1
+FrontArcConjunction 41.28
+RearArcConjunction 41.28
+
+CR90B Corvette
+Size Small
+Faction Rebel
+Cost 39
+Hull 4
+Front 2 BBB
+Side 2 BB
+Rear 1 B
+AntiSquad B
+Defense REE
+NavChart 2 21 210 2110
+CommandAttributes 1 1 2
+Upgrades Crew Support DefensiveRetro Ion
+FrontArcOffset 22.22
+RearArcOffset 6.1
+FrontArcConjunction 41.28
+RearArcConjunction 41.28
+
+Victory 1 Star Destroyer
+Size Medium
+Faction Imperial
+Cost 73
+Hull 8
+Front 3 RRRKKK
+Side 3 RRK
+Rear 2 RR
+AntiSquad B
+Defense BRR
+NavChart 1 10
+CommandAttributes 3 3 4
+Upgrades Crew WeaponsTean OffensiveRetro Ordnance Turbolaser
+FrontArcOffset 23.81
+RearArcOffset 23.81
+FrontArcConjunction 47.62
+RearArcConjunction 47.62
+
+Victory 2 Star Destroyer
+Size Medium
+Faction Imperial
+Cost 85
+Hull 8
+Front 3 RRRBBB
+Side 3 RRB
+Rear 2 RR
+AntiSquad B
+Defense BRR
+NavChart 1 10
+CommandAttributes 3 3 4
+Upgrades Crew WeaponsTean OffensiveRetro Ion Turbolaser
+FrontArcOffset 23.81
+RearArcOffset 23.81
+FrontArcConjunction 47.62
+RearArcConjunction 47.62
