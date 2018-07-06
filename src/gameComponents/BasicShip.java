@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class BasicShip {
 
 	private Faction faction;
+	private BaseSize size;
 	private int hull;
 	private HullZone front;
 	private HullZone left;
@@ -32,8 +33,17 @@ public class BasicShip {
 					//ship found, start filling in data
 					
 					String size = sc.nextLine();
-					size.substring(6); //trim out "Size "
-					//TODO do something with this...
+					size = size.substring(5); //trim out "Size "
+					
+					//make all lowercase so that CAPS are irrelevent.
+					size=size.toLowerCase();
+					if (size.equals("small")){
+						this.setSize(BaseSize.SMALL);
+					} else if (size.equals("medium")){
+						this.setSize(BaseSize.MEDIUM);
+					} else if (size.equals("large")){
+						this.setSize(BaseSize.LARGE);
+					} else this.setSize(BaseSize.FLOTILLA);
 					
 					String faction = sc.nextLine().split(" ")[1];
 					if(faction.equals("Rebel")){
@@ -205,5 +215,13 @@ public class BasicShip {
 
 	public void setNavChart(int[][] navChart) {
 		this.navChart = navChart;
+	}
+
+	public BaseSize getSize() {
+		return size;
+	}
+
+	public void setSize(BaseSize size) {
+		this.size = size;
 	}
 }

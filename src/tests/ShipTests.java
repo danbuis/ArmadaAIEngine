@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import gameComponents.BaseSize;
 import gameComponents.BasicShip;
 import gameComponents.Faction;
 
@@ -19,6 +20,9 @@ public class ShipTests {
 		
 		//check that it even exists...
 		assertTrue(testShip!=null);
+		
+		//test size
+		assertEquals(BaseSize.SMALL, testShip.getSize());
 		
 		//check Faction
 		assertEquals(Faction.REBEL, testShip.getFaction());
@@ -47,6 +51,9 @@ public class ShipTests {
 		
 		//check that it even exists...
 		assertTrue(testShip!=null);
+		
+		//test size
+		assertEquals(BaseSize.MEDIUM, testShip.getSize());
 		
 		//check Faction
 		assertEquals(Faction.IMPERIAL, testShip.getFaction());
