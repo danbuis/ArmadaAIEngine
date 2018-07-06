@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import org.newdawn.slick.geom.Polygon;
+
 public class BasicShip {
 
 	private Faction faction;
@@ -79,6 +81,24 @@ public class BasicShip {
 					this.setCommand(Integer.parseInt(commandAttributes[1]));
 					this.setSquadron(Integer.parseInt(commandAttributes[2]));
 					this.setEngineering(Integer.parseInt(commandAttributes[3]));
+					
+					//upgrades
+					String upgrades = sc.nextLine();
+					//TODO this...
+					
+					float frontArcOffset = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					float rearArcOffset = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					float frontConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					float rearConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					
+					//build hull zone geometry
+					//front hullzone
+					Polygon frontPolygon = new Polygon();
+					frontPolygon.addPoint(this.size.getWidth()/-2, this.size.getLength()/2 - frontArcOffset);
+					frontPolygon.addPoint(this.size.getWidth()/-2, this.size.getLength()/2);
+					frontPolygon.addPoint(this.size.getWidth()/2, this.size.getLength()/2);
+					frontPolygon.addPoint(this.size.getWidth()/2, this.size.getLength()/2 -frontArcOffset);
+					frontPolygon.addPoint(0, this.size.getLength()/2 - frontConjunction);
 					
 					//set boolean to true in order to exit while loop
 					shipFound=true;
