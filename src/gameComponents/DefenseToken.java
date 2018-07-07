@@ -22,7 +22,7 @@ public class DefenseToken {
 	}
 
 	// fields. A Not exhausted token is considered ready.
-	private DefenseTokenStatus status;
+	private DefenseTokenStatus status = DefenseTokenStatus.READY;
 	private DefenseTokenType type;
 
 	// Valued constructor
