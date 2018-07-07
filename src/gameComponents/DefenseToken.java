@@ -17,9 +17,12 @@ public class DefenseToken {
 		BRACE, REDIRECT, EVADE, SCATTER, CONTAIN
 	};
 
+	public enum DefenseTokenStatus {
+		READY, EXHAUSTED, DISCARDED
+	}
+
 	// fields. A Not exhausted token is considered ready.
-	private boolean ready = true;
-	private boolean discarded = false;
+	private DefenseTokenStatus status;
 	private DefenseTokenType type;
 
 	// Valued constructor
@@ -32,8 +35,8 @@ public class DefenseToken {
 	 * discarded
 	 */
 	public boolean spendToken() {
-		if (!discarded) {
-			if (ready) {
+		if (!isDiscarded()) {
+			if (isReady()) {
 				exhaustToken();
 				return true;
 			} else {
@@ -48,15 +51,19 @@ public class DefenseToken {
 	 * Exhausting a token will make it no longer ready
 	 */
 	public boolean exhaustToken() {
-		ready = false;
-		return true;
+		if (isReady()) {
+			status = DefenseTokenStatus.EXHAUSTED;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/*
 	 * Discarded a token will make it no longer available
 	 */
 	public boolean discardToken() {
-		discarded = true;
+		status = DefenseTokenStatus.DISCARDED;
 		return true;
 	}
 
@@ -65,12 +72,34 @@ public class DefenseToken {
 	 * discarded
 	 */
 	public boolean readyToken() {
-		if (!discarded) {
-			ready = true;
+		if (status.equals(DefenseTokenStatus.EXHAUSTED)) {
+			status = DefenseTokenStatus.READY;
 			return true;
-		} else {
-			return false;
 		}
+		return false;
+	}
+	
+
+	// shortcuts for defense tokenstatus
+	public boolean isReady() {
+		if (status.equals(DefenseTokenStatus.READY)) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isExhausted() {
+		if (status.equals(DefenseTokenStatus.EXHAUSTED)) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isDiscarded() {
+		if (status.equals(DefenseTokenStatus.DISCARDED)) {
+			return true;
+		}
+		return false;
 	}
 
 	/*
@@ -80,12 +109,9 @@ public class DefenseToken {
 		return type;
 	}
 
-	public boolean getReady() {
-		return ready;
+	public DefenseTokenStatus getStatus() {
+		return status;
 	}
 
-	public boolean getDiscarded() {
-		return discarded;
-	}
 
 }
