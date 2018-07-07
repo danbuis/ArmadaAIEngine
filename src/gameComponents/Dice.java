@@ -13,11 +13,11 @@ public class Dice {
 	 */
 
 	// enums
-	enum DiceColor {
+	public enum DiceColor {
 		RED, BLUE, BLACK
 	};
 
-	enum DiceFace {
+	public enum DiceFace {
 		BLANK, ACCURACY, HIT, CRIT, HITHIT, HITCRIT
 	}
 
@@ -249,6 +249,15 @@ public class Dice {
 		default:
 			return false;
 		}
+	}
+	
+	/*
+	 * Rerolls the die. 
+	 * 
+	 */
+	
+	public boolean reroll() {
+		return rollDice(color);
 	}
 
 	/*
