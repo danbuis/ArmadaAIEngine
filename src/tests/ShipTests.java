@@ -3,10 +3,12 @@ package tests;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.newdawn.slick.geom.Polygon;
 
 import gameComponents.BaseSize;
 import gameComponents.BasicShip;
 import gameComponents.Faction;
+import gameComponents.HullZone;
 
 public class ShipTests {
 
@@ -113,5 +115,59 @@ public class ShipTests {
 		assertEquals(2, CR90B.getNavChart()[4][3]);
 		
 	}
+	
+	@Test
+	public void testHullZoneGeometryNebB(){
+		BasicShip test = new BasicShip("Nebulon-B Support Frigate");
+		
+		HullZone front = test.getFront();
+		assertEquals(3, front.getGeometry().getPointCount());
+		
+		assertEquals(-20.5, front.getNthPointOfGeometry(0).getX(), 0.001);
+		assertEquals(35.5, front.getNthPointOfGeometry(0).getY(), 0.001);
+		
+		assertEquals(20.5, front.getNthPointOfGeometry(1).getX(), 0.001);
+		assertEquals(35.5, front.getNthPointOfGeometry(1).getY(), 0.001);
+		
+		assertEquals(0, front.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(0, front.getNthPointOfGeometry(2).getY(), 0.001);
+		
+		HullZone rear = test.getRear();
+		assertEquals(3, rear.getGeometry().getPointCount());
+		
+		assertEquals(20.5, rear.getNthPointOfGeometry(0).getX(), 0.001);
+		assertEquals(-35.5, rear.getNthPointOfGeometry(0).getY(), 0.001);
+		
+		assertEquals(-20.5, rear.getNthPointOfGeometry(1).getX(), 0.001);
+		assertEquals(-35.5, rear.getNthPointOfGeometry(1).getY(), 0.001);
+		
+		assertEquals(0, rear.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(0, rear.getNthPointOfGeometry(2).getY(), 0.001);
+		
+		HullZone left = test.getLeft();
+		assertEquals(3, left.getGeometry().getPointCount());
+		
+		assertEquals(-20.5, left.getNthPointOfGeometry(0).getX(), 0.001);
+		assertEquals(-35.5, left.getNthPointOfGeometry(0).getY(), 0.001);
+		
+		assertEquals(-20.5, left.getNthPointOfGeometry(1).getX(), 0.001);
+		assertEquals(35.5, left.getNthPointOfGeometry(1).getY(), 0.001);
+		
+		assertEquals(0, left.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(0, left.getNthPointOfGeometry(2).getY(), 0.001);
+		
+		HullZone right = test.getRight();
+		assertEquals(3, right.getGeometry().getPointCount());
+		
+		assertEquals(20.5, right.getNthPointOfGeometry(0).getX(), 0.001);
+		assertEquals(35.5, right.getNthPointOfGeometry(0).getY(), 0.001);
+		
+		assertEquals(20.5, right.getNthPointOfGeometry(1).getX(), 0.001);
+		assertEquals(-35.5, right.getNthPointOfGeometry(1).getY(), 0.001);
+		
+		assertEquals(0, right.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(0, right.getNthPointOfGeometry(2).getY(), 0.001);
+	}
+	
 
 }

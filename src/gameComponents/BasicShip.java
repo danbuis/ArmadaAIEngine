@@ -94,11 +94,37 @@ public class BasicShip {
 					//build hull zone geometry
 					//front hullzone
 					Polygon frontPolygon = new Polygon();
-					frontPolygon.addPoint(this.size.getWidth()/-2, this.size.getLength()/2 - frontArcOffset);
-					frontPolygon.addPoint(this.size.getWidth()/-2, this.size.getLength()/2);
-					frontPolygon.addPoint(this.size.getWidth()/2, this.size.getLength()/2);
-					frontPolygon.addPoint(this.size.getWidth()/2, this.size.getLength()/2 -frontArcOffset);
-					frontPolygon.addPoint(0, this.size.getLength()/2 - frontConjunction);
+					frontPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/2 - frontArcOffset);
+					frontPolygon.addPoint((float)this.size.getWidth()/-2,(float)this.size.getLength()/2);
+					frontPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/2);
+					frontPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/2 -frontArcOffset);
+					frontPolygon.addPoint((float)0, (float)this.size.getLength()/2 - frontConjunction);
+					front.setGeometry(frontPolygon);
+					
+					//rear hullzone
+					Polygon rearPolygon = new Polygon();
+					rearPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/-2 + rearArcOffset);
+					rearPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/-2);
+					rearPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/-2);
+					rearPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/-2 +rearArcOffset);
+					rearPolygon.addPoint((float)0, (float)this.size.getLength()/-2 + rearConjunction);
+					rear.setGeometry(rearPolygon);
+					
+					//left hullzone
+					Polygon leftPolygon = new Polygon();
+					leftPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/-2 +rearArcOffset);
+					leftPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/2 - frontArcOffset);
+					leftPolygon.addPoint((float)0, (float)this.size.getLength()/2 - frontConjunction);
+					leftPolygon.addPoint((float)0, (float)this.size.getLength()/-2 + rearConjunction);
+					left.setGeometry(leftPolygon);
+					
+					//right hullzone
+					Polygon rightPolygon = new Polygon();
+					rightPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/2 -frontArcOffset);
+					rightPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/-2 + rearArcOffset);
+					rightPolygon.addPoint((float)0, (float)this.size.getLength()/-2 + rearConjunction);
+					rightPolygon.addPoint((float)0, (float)this.size.getLength()/2 - frontConjunction);
+					right.setGeometry(rightPolygon);
 					
 					//set boolean to true in order to exit while loop
 					shipFound=true;
