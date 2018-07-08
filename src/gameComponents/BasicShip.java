@@ -9,6 +9,9 @@ import org.newdawn.slick.geom.Polygon;
 import gameComponents.DefenseToken.DefenseTokenType;
 
 public class BasicShip {
+	
+	private float xCoord = 0;
+	private float yCoord = 0;
 
 	private Faction faction;
 	private BaseSize size;
@@ -24,6 +27,10 @@ public class BasicShip {
 	private int cost;
 	private int[][] navChart; // [speed column 0-4][knuckle joint 0-3 ]
 	private DefenseToken[] defenseTokens;
+	private float frontArcOffset;
+	private float rearArcOffset;
+	private float frontConjunction;
+	private float rearConjunction;
 
 	public BasicShip(String name) {
 		File shipData = new File("shipData");
@@ -92,45 +99,12 @@ public class BasicShip {
 					String upgrades = sc.nextLine();
 					// TODO this...
 
-					float frontArcOffset = Float.parseFloat((sc.nextLine().split(" "))[1]);
-					float rearArcOffset = Float.parseFloat((sc.nextLine().split(" "))[1]);
-					float frontConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
-					float rearConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					this.frontArcOffset = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					this.rearArcOffset = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					this.frontConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
+					this.rearConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
 
-					// build hull zone geometry
-					// front hullzone
-					Polygon frontPolygon = new Polygon();
-					frontPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/2 - frontArcOffset);
-					frontPolygon.addPoint((float)this.size.getWidth()/-2,(float)this.size.getLength()/2);
-					frontPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/2);
-					frontPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/2 -frontArcOffset);
-					frontPolygon.addPoint((float)0, (float)this.size.getLength()/2 - frontConjunction);
-					front.setGeometry(frontPolygon);
-					
-					//rear hullzone
-					Polygon rearPolygon = new Polygon();
-					rearPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/-2 + rearArcOffset);
-					rearPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/-2);
-					rearPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/-2);
-					rearPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/-2 +rearArcOffset);
-					rearPolygon.addPoint((float)0, (float)this.size.getLength()/-2 + rearConjunction);
-					rear.setGeometry(rearPolygon);
-					
-					//left hullzone
-					Polygon leftPolygon = new Polygon();
-					leftPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/-2 +rearArcOffset);
-					leftPolygon.addPoint((float)this.size.getWidth()/-2, (float)this.size.getLength()/2 - frontArcOffset);
-					leftPolygon.addPoint((float)0, (float)this.size.getLength()/2 - frontConjunction);
-					leftPolygon.addPoint((float)0, (float)this.size.getLength()/-2 + rearConjunction);
-					left.setGeometry(leftPolygon);
-					
-					//right hullzone
-					Polygon rightPolygon = new Polygon();
-					rightPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/2 -frontArcOffset);
-					rightPolygon.addPoint((float)this.size.getWidth()/2, (float)this.size.getLength()/-2 + rearArcOffset);
-					rightPolygon.addPoint((float)0, (float)this.size.getLength()/-2 + rearConjunction);
-					rightPolygon.addPoint((float)0, (float)this.size.getLength()/2 - frontConjunction);
-					right.setGeometry(rightPolygon);
+					calculateHullZoneGeometry();
 					
 					//set boolean to true in order to exit while loop
 					shipFound=true;
@@ -144,6 +118,44 @@ public class BasicShip {
 			e.printStackTrace();
 		}
 
+	}
+
+	private void calculateHullZoneGeometry() {
+		// build hull zone geometry
+		// front hullzone
+		Polygon frontPolygon = new Polygon();
+		frontPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
+		frontPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord,(float)this.size.getLength()/2 + this.yCoord);
+		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 + this.yCoord);
+		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 -frontArcOffset + this.yCoord);
+		frontPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
+		front.setGeometry(frontPolygon);
+		
+		//rear hullzone
+		Polygon rearPolygon = new Polygon();
+		rearPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
+		rearPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
+		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
+		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 +rearArcOffset + this.yCoord);
+		rearPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
+		rear.setGeometry(rearPolygon);
+		
+		//left hullzone
+		Polygon leftPolygon = new Polygon();
+		leftPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 +rearArcOffset + this.yCoord);
+		leftPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
+		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
+		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
+		left.setGeometry(leftPolygon);
+		
+		//right hullzone
+		Polygon rightPolygon = new Polygon();
+		rightPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 -frontArcOffset + this.yCoord);
+		rightPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
+		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
+		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
+		right.setGeometry(rightPolygon);
+		
 	}
 
 	private void buildNavChart(String navChart) {
@@ -309,6 +321,22 @@ public class BasicShip {
 
 	public void setDefenseTokens(DefenseToken[] defenseTokens) {
 		this.defenseTokens = defenseTokens;
+	}
+
+	public float getxCoord() {
+		return xCoord;
+	}
+
+	public void setxCoord(float xCoord) {
+		this.xCoord = xCoord;
+	}
+
+	public float getyCoord() {
+		return yCoord;
+	}
+
+	public void setyCoord(float yCoord) {
+		this.yCoord = yCoord;
 	}
 	
 	
