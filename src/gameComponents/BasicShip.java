@@ -210,6 +210,19 @@ public class BasicShip {
 		}
 
 	}
+	
+	/**Function to move and rotate the ship.  
+	 * 
+	 * @param dX difference in x, can be positive or negative
+	 * @param dY difference in y, can be positve or negative
+	 * @param rotate difference in degrees, can be positive or negative
+	 */
+	public void moveAndRotate(float dX, float dY, float rotate){
+		this.xCoord += dX;
+		this.yCoord += dY;
+		
+		this.calculateHullZoneGeometry();
+	}
 
 	public Faction getFaction() {
 		return faction;
