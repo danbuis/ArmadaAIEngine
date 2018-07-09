@@ -239,5 +239,17 @@ public class ShipTests {
 		assertEquals(0, right.getNthPointOfGeometry(3).getX(), 0.001);
 		assertEquals(3.38, right.getNthPointOfGeometry(3).getY(), 0.001);
 	}
+	
+	@Test
+	public void testPlasicBase(){
+		BasicShip test = new BasicShip("Victory 1 Star Destroyer");
+		Polygon plasticBase = test.getPlasticBase();
+		
+		assertTrue(plasticBase.contains((float)22.5, (float)35.5));
+		assertTrue(plasticBase.contains((float)22.5, (float)-35.5));
+		assertTrue(plasticBase.contains((float)-22.5, (float)-35.5));
+		assertTrue(plasticBase.contains((float)-22.5, (float)35.5));
+		
+	}
 
 }

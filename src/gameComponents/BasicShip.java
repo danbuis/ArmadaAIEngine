@@ -12,6 +12,8 @@ public class BasicShip {
 	
 	private float xCoord = 0;
 	private float yCoord = 0;
+	private final float plasticRailWidth = 2;
+	private Polygon plasticBase;
 
 	private Faction faction;
 	private BaseSize size;
@@ -120,6 +122,9 @@ public class BasicShip {
 
 	}
 
+	/**
+	 * builds hull zone and plastic base geometry.
+	 */
 	private void calculateHullZoneGeometry() {
 		// build hull zone geometry
 		// front hullzone
@@ -155,6 +160,18 @@ public class BasicShip {
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
 		right.setGeometry(rightPolygon);
+		
+		//build plastic base geometry
+		this.plasticBase = new Polygon();
+		//front left
+		this.plasticBase.addPoint((float) this.size.getWidth()/-2 - this.plasticRailWidth + this.xCoord, (float)this.size.getLength()/2 + this.yCoord);
+		//front right
+		this.plasticBase.addPoint((float) this.size.getWidth()/2 + this.plasticRailWidth + this.xCoord, (float)this.size.getLength()/2 + this.yCoord);
+		//rear right
+		this.plasticBase.addPoint((float) this.size.getWidth()/2 + this.plasticRailWidth + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
+		//rear left
+		this.plasticBase.addPoint((float) this.size.getWidth()/-2 - this.plasticRailWidth + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
+				
 		
 	}
 
@@ -350,6 +367,10 @@ public class BasicShip {
 
 	public void setyCoord(float yCoord) {
 		this.yCoord = yCoord;
+	}
+	
+	public Polygon getPlasticBase() {
+		return this.plasticBase;
 	}
 	
 	
