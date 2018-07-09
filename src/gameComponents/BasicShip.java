@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Transform;
 
 import gameComponents.DefenseToken.DefenseTokenType;
 
@@ -238,7 +239,15 @@ public class BasicShip {
 		this.xCoord += dX;
 		this.yCoord += dY;
 		
-		this.calculateHullZoneGeometry();
+		//this.calculateHullZoneGeometry();
+		//translate geometry
+		Transform translate = Transform.createTranslateTransform(dX, dY);
+		this.plasticBase = (Polygon)this.plasticBase.transform(translate);
+		this.front.setGeometry((Polygon)this.front.getGeometry().transform(translate));
+		this.rear.setGeometry((Polygon)this.rear.getGeometry().transform(translate));
+		this.left.setGeometry((Polygon)this.left.getGeometry().transform(translate));
+		this.right.setGeometry((Polygon)this.right.getGeometry().transform(translate));
+
 	}
 
 	public Faction getFaction() {
