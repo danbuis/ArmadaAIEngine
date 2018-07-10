@@ -33,6 +33,33 @@ public class DiceRoll {
 			addDice(Dice.DiceColor.BLACK);
 		}
 	}
+	// constructor based off a string
+	public DiceRoll(String armament){
+		String[] chars = armament.split("");
+		
+		int redDice=0;
+		int blueDice=0;
+		int blackDice=0;
+		
+		for(String die:chars){
+			if (die.equals("R")) redDice++;
+			if (die.equals("B")) blueDice++;
+			if (die.equals("K")) blackDice++;
+		}
+		
+		roll = new ArrayList<>();
+		for (int i = 0; i < redDice; i++) {
+			addDice(Dice.DiceColor.RED);
+		}
+		for (int i = 0; i < blueDice; i++) {
+			addDice(Dice.DiceColor.BLUE);
+		}
+		for (int i = 0; i < blackDice; i++) {
+			addDice(Dice.DiceColor.BLACK);
+		}
+		
+		
+	}
 
 	// Adds and rolls an addition die to an existing roll
 	public boolean addDice(Dice.DiceColor c) {
