@@ -274,23 +274,24 @@ public class BasicShip {
 		ArrayList<Line> enemyShipExterior = new ArrayList<Line>();
 		
 		//build list of exterior lines
-		//all polygons start at 0 as the first exterior point.
-		float[] points1 = thisPolygon.getPoint(0);
-		float[] points2 = thisPolygon.getPoint(1);
-		
-
-		Line lineymcliner = new Line(points1[0], points1[1], points2[0], points2[1]);
-		
-		thisShipExterior.add(lineymcliner);
-		enemyShipExterior.add(new Line(enemyPolygon.getPoint(0), enemyPolygon.getPoint(1)));
+		//all polygons start at 0 as the first exterior point.		
+		thisShipExterior.add(new Line(thisPolygon.getPoint(0)[0], thisPolygon.getPoint(0)[1], thisPolygon.getPoint(1)[0],thisPolygon.getPoint(1)[1]));
+		enemyShipExterior.add(new Line(enemyPolygon.getPoint(0)[0], enemyPolygon.getPoint(0)[1], enemyPolygon.getPoint(1)[0],enemyPolygon.getPoint(1)[1]));
 		
 		//some will have 4+ points, and therefore 2+ exterior lines
 		if(thisShipNumberOfPoints>=4) thisShipExterior.add(new Line(thisPolygon.getPoint(1), thisPolygon.getPoint(2)));
 		if(enemyShipNumberOfPoints>=4) enemyShipExterior.add(new Line(enemyPolygon.getPoint(1), enemyPolygon.getPoint(2)));
 		
 		//some will have 5 points and have 3 exterior lines.
-		if(thisShipNumberOfPoints>=5) thisShipExterior.add(new Line(thisPolygon.getPoint(2), thisPolygon.getPoint(3)));
-		if(enemyShipNumberOfPoints>=5) enemyShipExterior.add(new Line(enemyPolygon.getPoint(2), enemyPolygon.getPoint(3)));
+		if(thisShipNumberOfPoints==5) 
+			{
+			thisShipExterior.add(new Line(thisPolygon.getPoint(1)[0], thisPolygon.getPoint(1)[1], thisPolygon.getPoint(2)[0],thisPolygon.getPoint(2)[1]));
+			thisShipExterior.add(new Line(thisPolygon.getPoint(2)[0], thisPolygon.getPoint(2)[1], thisPolygon.getPoint(3)[0],thisPolygon.getPoint(3)[1]));
+			}
+		if(enemyShipNumberOfPoints==5) {
+			enemyShipExterior.add(new Line(enemyPolygon.getPoint(1)[0], enemyPolygon.getPoint(1)[1], enemyPolygon.getPoint(2)[0],enemyPolygon.getPoint(2)[1]));
+			enemyShipExterior.add(new Line(enemyPolygon.getPoint(2)[0], enemyPolygon.getPoint(2)[1], enemyPolygon.getPoint(3)[0],enemyPolygon.getPoint(3)[1]));
+		}
 		
 		//nested loops where line segments are paired up, and we check the range to 4 pairs of points
 		for (int i=0; i<thisShipExterior.size(); i++){
