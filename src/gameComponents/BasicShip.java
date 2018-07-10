@@ -253,68 +253,7 @@ public class BasicShip {
 
 	}
 	
-	/**
-	 * Method to return the range between 2 hullzones.  Looks at combinations of all exterior
-	 * points and lines.  Only looking at exterior portions means that it won't look
-	 * at obvious incorrect things, like distance to/from and interior point.  That will make 
-	 * calculations about 60% faster, due to the On^2 runtime.
-	 * @param thisShipHullZone
-	 * @param enemyShipHullZone
-	 * @return
-	 */
-	public float rangeToHullZone(HullZone thisShipHullZone, HullZone enemyShipHullZone){
-		float returnValue = (float)100000000;
-		
-		Polygon thisPolygon = thisShipHullZone.getGeometry();
-		Polygon enemyPolygon = enemyShipHullZone.getGeometry();
-		int thisShipNumberOfPoints = thisShipHullZone.getGeometry().getPointCount();
-		int enemyShipNumberOfPoints = enemyShipHullZone.getGeometry().getPointCount();
-		
-		ArrayList<Line> thisShipExterior = new ArrayList<Line>();
-		ArrayList<Line> enemyShipExterior = new ArrayList<Line>();
-		
-		//build list of exterior lines
-		//all polygons start at 0 as the first exterior point.		
-		thisShipExterior.add(new Line(thisPolygon.getPoint(0)[0], thisPolygon.getPoint(0)[1], thisPolygon.getPoint(1)[0],thisPolygon.getPoint(1)[1]));
-		enemyShipExterior.add(new Line(enemyPolygon.getPoint(0)[0], enemyPolygon.getPoint(0)[1], enemyPolygon.getPoint(1)[0],enemyPolygon.getPoint(1)[1]));
-		
-		//some will have 4+ points, and therefore 2+ exterior lines
-		if(thisShipNumberOfPoints>=4) thisShipExterior.add(new Line(thisPolygon.getPoint(1), thisPolygon.getPoint(2)));
-		if(enemyShipNumberOfPoints>=4) enemyShipExterior.add(new Line(enemyPolygon.getPoint(1), enemyPolygon.getPoint(2)));
-		
-		//some will have 5 points and have 3 exterior lines.
-		if(thisShipNumberOfPoints==5) 
-			{
-			thisShipExterior.add(new Line(thisPolygon.getPoint(1)[0], thisPolygon.getPoint(1)[1], thisPolygon.getPoint(2)[0],thisPolygon.getPoint(2)[1]));
-			thisShipExterior.add(new Line(thisPolygon.getPoint(2)[0], thisPolygon.getPoint(2)[1], thisPolygon.getPoint(3)[0],thisPolygon.getPoint(3)[1]));
-			}
-		if(enemyShipNumberOfPoints==5) {
-			enemyShipExterior.add(new Line(enemyPolygon.getPoint(1)[0], enemyPolygon.getPoint(1)[1], enemyPolygon.getPoint(2)[0],enemyPolygon.getPoint(2)[1]));
-			enemyShipExterior.add(new Line(enemyPolygon.getPoint(2)[0], enemyPolygon.getPoint(2)[1], enemyPolygon.getPoint(3)[0],enemyPolygon.getPoint(3)[1]));
-		}
-		
-		//nested loops where line segments are paired up, and we check the range to 4 pairs of points
-		for (int i=0; i<thisShipExterior.size(); i++){
-			for(int j=0; j<enemyShipExterior.size(); j++){
-				Line thisShipLine = thisShipExterior.get(i);
-				Line enemyShipLine = enemyShipExterior.get(j);
-				
-				//find 4 distances between points and the opposing line
-				float dist1 = enemyShipLine.distance(new Vector2f(thisShipLine.getPoint(0)));
-				float dist2 = enemyShipLine.distance(new Vector2f(thisShipLine.getPoint(1)));
-				float dist3 = thisShipLine.distance(new Vector2f(enemyShipLine.getPoint(0)));
-				float dist4 = thisShipLine.distance(new Vector2f(enemyShipLine.getPoint(1)));
-				
-				//check if any of these are shorter than the current shortest, and replace
-				if (dist1 < returnValue) returnValue = dist1;
-				if (dist2 < returnValue) returnValue = dist2;
-				if (dist3 < returnValue) returnValue = dist3;
-				if (dist4 < returnValue) returnValue = dist4;
-			}//end inner loop
-		}//end outer loop
-		
-		return returnValue;
-	}
+	
 
 	public Faction getFaction() {
 		return faction;

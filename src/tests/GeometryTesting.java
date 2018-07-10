@@ -5,8 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import gameComponents.BasicShip;
+import geometry.geometryHelper;
 
-public class RangeTesting {
+public class GeometryTesting {
 
 	@Test
 	public void testHullZoneRangeMeasures() {
@@ -14,7 +15,7 @@ public class RangeTesting {
 		BasicShip ship2 = new BasicShip("Nebulon-B Support Frigate");
 		
 		ship2.moveAndRotate(50, 0, 0);
-		assertEquals(9.0, ship2.rangeToHullZone(ship2.getLeft(), ship1.getRight()), 0.001);
+		assertEquals(9.0, geometryHelper.rangeToPolygon(ship1.getRight().getGeometry(), ship2.getLeft().getGeometry()), 0.001);
 	}
 
 }
