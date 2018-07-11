@@ -24,7 +24,7 @@ public class Dice {
 	// fields
 	private DiceColor color;
 	private DiceFace face;
-	private static Random rd; // no reason for the random number generator to be bound to each individual die?
+	private static Random rd = new Random(); // no reason for the random number generator to be bound to each individual die?
 
 	/*
 	 * Roll Tables for dice. Slightly hacky but using these guarantees we don't
@@ -90,7 +90,7 @@ public class Dice {
 	/*
 	 * Method to see if a facing is available to a certain Dice. 
 	 */
-	public boolean canHaveFace(DiceFace targFace) {
+	private boolean canHaveFace(DiceFace targFace) {
 		return canColorHaveFace(this.color, targFace);
 	}
 
