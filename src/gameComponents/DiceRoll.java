@@ -71,7 +71,9 @@ public class DiceRoll {
 	// If it is an illegal die, adds nothing and return false;
 	public boolean addDice(Dice.DiceColor c, Dice.DiceFace f) {
 		if (Dice.canColorHaveFace(c, f)) {
-			roll.add(new Dice(c, f));
+			Dice newDice = new Dice(c);
+			newDice.changeFace(f);
+			roll.add(newDice);
 			return true;
 		}
 		return false;
@@ -138,7 +140,7 @@ public class DiceRoll {
 		int returnThis = 0;
 		if(roll.size()>0) {
 			for(int i = 1 ; i<=roll.size();i++) {
-				returnThis+=roll.get(i).CritCount();
+				returnThis+=roll.get(i).critCount();
 			}
 		}
 		return returnThis;
@@ -160,7 +162,7 @@ public class DiceRoll {
 		int returnThis = 0;
 		if(roll.size()>0) {
 			for(int i = 1 ; i<=roll.size();i++) {
-				returnThis+=roll.get(i).BlankCount();
+				returnThis+=roll.get(i).blankCount();
 			}
 		}
 		return returnThis;

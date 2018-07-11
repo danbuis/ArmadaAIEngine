@@ -53,16 +53,6 @@ public class Dice {
 	}
 
 	/*
-	 * Valued Constructor (Color and Face, if valid, else creates a lot of null).
-	 * This sounds bad and I'm not sure how to allow specific dice without opening a
-	 * window to null dice? Default dice sound risky, too. TODO: I think the play
-	 * may involve creating a static verification tool?
-	 */
-	public Dice(DiceColor c, DiceFace f) {
-
-	}
-
-	/*
 	 * Method for rolling dice based on a color. Generates a random number between
 	 * 0-7. Looks that up on the rolltables for a facing returns true if a face is
 	 * chosen, returns false if it doesn't (Though there is no legitimate case for
@@ -86,38 +76,9 @@ public class Dice {
 	}
 
 	/*
-	 * Method to see if a facing is available to a certain Dice. TODO: Might be
-	 * duplicated by CanColorHaveFace at this point
-	 */
-	public boolean canHaveFace(DiceFace targFace) {
-		if (color.equals(DiceColor.RED)) {
-			for (DiceFace faces : RollTableRed) {
-				if (targFace.equals(faces)) {
-					return true;
-				}
-			}
-		}
-		if (color.equals(DiceColor.BLUE)) {
-			for (DiceFace faces : RollTableBlue) {
-				if (targFace.equals(faces)) {
-					return true;
-				}
-			}
-		}
-		if (color.equals(DiceColor.BLACK)) {
-			for (DiceFace faces : RollTableBlack) {
-				if (targFace.equals(faces)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/*
 	 * Method to attempt to change a Dice to a specific Result
 	 */
-
+	
 	public boolean changeFace(DiceFace targFace) {
 		if (canHaveFace(targFace)) {
 			face = targFace;
@@ -127,7 +88,14 @@ public class Dice {
 	}
 
 	/*
-	 * Method to tell if a face is available to a specific folor of dice
+	 * Method to see if a facing is available to a certain Dice. 
+	 */
+	public boolean canHaveFace(DiceFace targFace) {
+		return canColorHaveFace(this.color, targFace);
+	}
+
+	/*
+	 * Method to tell if a face is available to a specific color of dice
 	 */
 	public static boolean canColorHaveFace(DiceColor c, DiceFace f) {
 		if (c.equals(DiceColor.RED)) {
@@ -184,7 +152,7 @@ public class Dice {
 	}
 
 	// total number of Crits on Die (0,1)
-	public int CritCount() {
+	public int critCount() {
 		switch (face) {
 		case CRIT:
 		case HITCRIT:
@@ -193,9 +161,13 @@ public class Dice {
 			return 0;
 		}
 	}
+	
+	public int damageCount(){
+		return critCount() + hitCount();
+	}
 
 	// total number of Blanks on Die (0,1)
-	public int BlankCount() {
+	public int blankCount() {
 		switch (face) {
 		case BLANK:
 			return 1;
