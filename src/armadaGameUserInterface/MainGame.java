@@ -32,7 +32,7 @@ public class MainGame extends BasicGame
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new MainGame("Simple Slick Game"));
-			appgc.setDisplayMode(640, 480, false);
+			appgc.setDisplayMode(1024, 768, false);
 			appgc.start();
 		}
 		catch (SlickException ex)
