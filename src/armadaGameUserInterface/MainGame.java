@@ -16,6 +16,13 @@ public class MainGame extends BasicGame
 	private Image fleetBuilderButton;
 	private Image mainMenuBG;
 	
+	private int mainMenuButtonWidth;
+	private int mainMenuButtonHeight;
+	private int totalWidth;
+	private int totalHeight;
+	
+	
+	
 	public MainGame(String gamename)
 	{
 		super(gamename);
@@ -28,6 +35,10 @@ public class MainGame extends BasicGame
 		fleetBuilderButton = new Image("Graphics/UI/FleetBuilderButton.png");
 		mainMenuBG = new Image("Graphics/UI/MainScreenBG.png");
 		
+		totalWidth = mainMenuBG.getWidth();
+		totalHeight = mainMenuBG.getHeight();
+		mainMenuButtonWidth = demoGameButton.getWidth();
+		mainMenuButtonHeight = demoGameButton.getHeight();
 	}
 
 	@Override
@@ -37,16 +48,13 @@ public class MainGame extends BasicGame
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
 		if(gameMenuState == GameMenuState.MAINMENU){
-			int width = mainMenuBG.getWidth();
-			int height = mainMenuBG.getHeight();
-			int buttonWidth = demoGameButton.getWidth();
-			int buttonHeight = demoGameButton.getHeight();
+			
 			
 			
 			g.drawImage(mainMenuBG, 0, 0);
-			g.drawImage(demoGameButton, width/2-buttonWidth/2, height/2+buttonHeight);
-			g.drawImage(standardGameButton, width/2-buttonWidth/2, height/2-buttonHeight/2);
-			g.drawImage(fleetBuilderButton, width/2-buttonWidth/2, height/2-2*buttonHeight);
+			g.drawImage(demoGameButton, totalWidth/2-mainMenuButtonWidth/2, totalHeight/2+mainMenuButtonHeight);
+			g.drawImage(standardGameButton, totalWidth/2-mainMenuButtonWidth/2, totalHeight/2-mainMenuButtonHeight/2);
+			g.drawImage(fleetBuilderButton, totalWidth/2-mainMenuButtonWidth/2, totalHeight/2-2*mainMenuButtonHeight);
 						
 		}
 	}
