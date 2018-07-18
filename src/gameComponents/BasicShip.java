@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Polygon;
@@ -19,6 +22,7 @@ public class BasicShip {
 	private float yCoord = 0;
 	private final float plasticRailWidth = 2;
 	private Polygon plasticBase;
+	private String name;
 
 	private Faction faction;
 	private BaseSize size;
@@ -38,9 +42,15 @@ public class BasicShip {
 	private float rearArcOffset;
 	private float frontConjunction;
 	private float rearConjunction;
+	
+	private Line FR;
+	private Line FL;
+	private Line RL;
+	private Line RR;
 
 	public BasicShip(String name) {
 		File shipData = new File("shipData");
+		this.name = name;
 		boolean shipFound = false;
 
 		try {
@@ -166,6 +176,27 @@ public class BasicShip {
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
 		right.setGeometry(rightPolygon);
 		
+		FR = new Line((float)this.size.getWidth()/2 + this.xCoord, 
+				(float)this.size.getLength()/2 -frontArcOffset + this.yCoord,
+				(float)0 + this.xCoord, 
+				(float)this.size.getLength()/2 - frontConjunction + this.yCoord);
+		
+		FL = new Line((float)0 + this.xCoord, 
+				(float)this.size.getLength()/2 - frontConjunction + this.yCoord,
+				(float)this.size.getWidth()/-2 + this.xCoord,
+				(float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
+		
+		RL = new Line((float)this.size.getWidth()/-2 + this.xCoord, 
+				(float)this.size.getLength()/-2 +rearArcOffset + this.yCoord,
+				(float)0 + this.xCoord, 
+				(float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
+		
+		RR = new Line((float)0 + this.xCoord, 
+				(float)this.size.getLength()/-2 + rearConjunction + this.yCoord,
+				(float)this.size.getWidth()/2 + this.xCoord, 
+				(float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
+				
+		
 		//build plastic base geometry
 		this.plasticBase = new Polygon();
 		//front left
@@ -250,10 +281,42 @@ public class BasicShip {
 		this.rear.setGeometry((Polygon)this.rear.getGeometry().transform(translate));
 		this.left.setGeometry((Polygon)this.left.getGeometry().transform(translate));
 		this.right.setGeometry((Polygon)this.right.getGeometry().transform(translate));
+		
+		this.FL = (Line) FL.transform(translate);
+		this.RL = (Line) RL.transform(translate);
+		this.RR = (Line) RR.transform(translate);
+		this.FR = (Line) FR.transform(translate);
 
 	}
 	
 	
+	//overloaded method so that I don't have to cast to float all the time
+	public void moveAndRotate(double dX, double dY, double rotate){
+		this.moveAndRotate((float)dX, (float)dY, (float)rotate);
+	}
+	
+	
+
+	//game border is used as the scaling reference
+	public void draw(Image demoGameBorder, Graphics g) {
+		System.out.println("drawing " +name);
+		g.setColor(Color.white);
+		g.fill(plasticBase);
+		
+		g.setColor(new Color(30,30,30));
+		g.fill(this.left.getGeometry());
+		g.fill(this.right.getGeometry());
+		g.fill(this.front.getGeometry());
+		g.fill(this.rear.getGeometry());
+		
+		if(this.faction == Faction.IMPERIAL) g.setColor(Color.green);
+		else g.setColor(Color.red);
+		
+		g.draw(FL);
+		g.draw(FR);
+		g.draw(RL);
+		g.draw(RR);
+	}
 
 	public Faction getFaction() {
 		return faction;

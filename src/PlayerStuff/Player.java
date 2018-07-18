@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import gameComponents.BasicShip;
 
 public class Player {
-	private ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
+	public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
 	private boolean AI = false;
 	private String playerID;
 	
@@ -28,6 +28,10 @@ public class Player {
 	
 	public void setAI(boolean newAIStatus){
 		this.AI = newAIStatus;
+	}
+	
+	public void addShip(BasicShip shipToAdd){
+		ships.add(shipToAdd);
 	}
 
 }

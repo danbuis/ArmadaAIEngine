@@ -11,9 +11,15 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
+import PlayerStuff.Game;
+import PlayerStuff.Player;
+import gameComponents.BasicShip;
+
 public class MainGame extends BasicGame
 {
 	public GameMenuState gameMenuState = GameMenuState.MAINMENU;
+	public Game game;
+	
 	//UI components for main menu
 	private Image demoGameButton;
 	private Rectangle demoButtonRectangle;
@@ -81,7 +87,24 @@ public class MainGame extends BasicGame
 			if(demoButtonRectangle.contains(mouseX, mouseY)){
 				if(Mouse.isButtonDown(0)){
 					gameMenuState = GameMenuState.DEMOGAME;
-					System.out.println("demo button pressed");		
+					System.out.println("demo button pressed");
+					
+					Player P1 = new Player("P1", false);
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer");
+					vic.moveAndRotate(457.2, 100, 0);
+					P1.addShip(vic);
+					
+					Player P2 = new Player("P2", false);
+					BasicShip CR90 = new BasicShip("CR90A Corvette");
+					CR90.moveAndRotate(257.2, 814.4, 0);
+					P2.addShip(CR90);
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate");
+					NebB.moveAndRotate(657.2, 814.4, 0);
+					P2.addShip(NebB);
+					
+					
+					game = new Game(demoGameBorder, P1, P2);
+					
 				}
 			}else if(standardButtonRectangle.contains(mouseX, mouseY)){
 				if(Mouse.isButtonDown(0)){
@@ -112,6 +135,33 @@ public class MainGame extends BasicGame
 			
 			if(gameMenuState == GameMenuState.DEMOGAME) g.drawImage(demoGameBorder, 295, totalHeight-demoGameBorder.getHeight()-237);
 			else g.drawImage(standardGameBorder, 79, totalHeight-demoGameBorder.getHeight()-237);
+			
+			//draw ships for each player
+			double distanceReference = 914.4;
+			int distanceActual = demoGameBorder.getHeight();
+			
+			//914.4mm divided by pixels = mm per pixel scaling
+			float scale = (float)distanceReference/distanceActual;
+			
+			//set origin to origin point of board
+			g.translate(295, totalHeight-demoGameBorder.getHeight()-237);
+			//scale it relative to scale of board
+			g.scale(1/scale, 1/scale);
+			
+			
+			if(game != null){
+				System.out.println("inside game not null loop");
+				for(BasicShip ship: game.getPlayer1().ships){
+					ship.draw(demoGameBorder, g);
+				}
+				for(BasicShip ship: game.getPlayer2().ships){
+					ship.draw(demoGameBorder, g);
+				}
+				
+				//reset Graphics settings
+				g.translate(0, 0);
+				g.scale(1, 1);
+			}
 		}
 	}
 
