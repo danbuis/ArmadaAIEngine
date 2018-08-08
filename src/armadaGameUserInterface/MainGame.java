@@ -41,6 +41,7 @@ public class MainGame extends BasicGame
 	private Image shipDetailWindow1;
 	private Image shipDetailWindow2;
 	private Image gameScreenBackground;
+	private Image textBackground;
 	
 	private int shipDetailWindowWidth;
 	private int shipDetailWindowHeight;
@@ -73,6 +74,7 @@ public class MainGame extends BasicGame
 		shipDetailWindow1 = new Image("Graphics/UI/shipDetailWindow.png");
 		shipDetailWindow2 = new Image("Graphics/UI/shipDetailWindow.png");
 		gameScreenBackground = new Image("Graphics/UI/GameScreenBG.png");
+		textBackground = new Image("Graphics/UI/listbackground.png");
 		
 		shipDetailWindowWidth = shipDetailWindow1.getWidth();
 		shipDetailWindowHeight = shipDetailWindow1.getHeight();
@@ -119,6 +121,8 @@ public class MainGame extends BasicGame
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
+		int translateX;
+		int translateY;
 		if(gameMenuState == GameMenuState.MAINMENU){
 			g.drawString("Mouse loc "+Mouse.getX()+","+Mouse.getY(), 10, 10);
 			g.drawImage(mainMenuBG, 0, 0);
@@ -128,13 +132,21 @@ public class MainGame extends BasicGame
 		}
 		
 		if(gameMenuState == GameMenuState.DEMOGAME || gameMenuState == GameMenuState.REGULARGAME){
-			g.drawImage(background, 10, totalHeight-background.getHeight()-200);
-			g.drawImage(gameScreenBackground, 0, 0);
-			g.drawImage(shipDetailWindow1, 270, totalHeight-shipDetailWindow1.getHeight()-20);
-			g.drawImage(shipDetailWindow2, 643, totalHeight-shipDetailWindow1.getHeight()-20);
+			g.drawImage(background, 0, 0);
 			
-			if(gameMenuState == GameMenuState.DEMOGAME) g.drawImage(demoGameBorder, 295, totalHeight-demoGameBorder.getHeight()-237);
-			else g.drawImage(standardGameBorder, 79, totalHeight-demoGameBorder.getHeight()-237);
+			
+			if(gameMenuState == GameMenuState.DEMOGAME) {
+				g.drawImage(demoGameBorder, 443, 159);
+				//set origin to origin point of board
+				translateX = 443;
+				translateY = 159;
+			}
+			else {
+				g.drawImage(standardGameBorder, 120, 159);
+				//set origin to origin point of board
+				translateX = 120;
+				translateY = 159;
+			}
 			
 			//draw ships for each player
 			double distanceReference = 914.4;
@@ -143,11 +155,10 @@ public class MainGame extends BasicGame
 			//914.4mm divided by pixels = mm per pixel scaling
 			float scale = (float)distanceReference/distanceActual;
 			
-			//set origin to origin point of board
-			g.translate(295, totalHeight-demoGameBorder.getHeight()-237);
-			//scale it relative to scale of board
-			g.scale(1/scale, 1/scale);
 			
+			//scale it relative to scale of board
+			g.translate(translateX, translateY);
+			g.scale(1/scale, 1/scale);
 			
 			if(game != null){
 				System.out.println("inside game not null loop");
@@ -158,10 +169,18 @@ public class MainGame extends BasicGame
 					ship.draw(demoGameBorder, g);
 				}
 				
-				//reset Graphics settings
-				g.translate(0, 0);
-				g.scale(1, 1);
+
 			}
+			//reset Graphics settings
+			g.scale(scale, scale);
+			g.translate(-translateX, -translateY);
+			
+			//render list type stuff
+			g.drawImage(textBackground,0,70);
+			g.drawImage(textBackground, background.getWidth()-textBackground.getWidth(), 70);
+			g.drawImage(gameScreenBackground, 0, 0);
+			g.drawImage(shipDetailWindow1, 270, totalHeight-shipDetailWindow1.getHeight()-20);
+			g.drawImage(shipDetailWindow2, 643, totalHeight-shipDetailWindow1.getHeight()-20);
 		}
 	}
 
@@ -171,7 +190,7 @@ public class MainGame extends BasicGame
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new MainGame("Simple Slick Game"));
-			appgc.setDisplayMode(1024, 768, false);
+			appgc.setDisplayMode(1536, 1152, false);
 			appgc.start();
 		}
 		catch (SlickException ex)
