@@ -35,15 +35,14 @@ public class DefenseToken {
 	 * discarded
 	 */
 	public boolean spendToken() {
-		if (!isDiscarded()) {
-			if (isReady()) {
-				exhaustToken();
-				return true;
-			} else {
-				discardToken();
-				return true;
-			}
+		if (status == DefenseTokenStatus.READY) {
+			exhaustToken();
+			return true;
+		} else if(status == DefenseTokenStatus.EXHAUSTED) {
+			discardToken();
+			return true;
 		}
+		
 		return false;
 	}
 
@@ -51,7 +50,7 @@ public class DefenseToken {
 	 * Exhausting a token will make it no longer ready
 	 */
 	public boolean exhaustToken() {
-		if (isReady()) {
+		if (status == DefenseTokenStatus.READY) {
 			status = DefenseTokenStatus.EXHAUSTED;
 			return true;
 		} else {
