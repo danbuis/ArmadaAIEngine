@@ -1,8 +1,13 @@
-package gameComponents;
+package Attacks;
 
 import java.util.ArrayList;
 
-public class DiceRoll {
+import gameComponents.Dice;
+import gameComponents.Dice.DiceColor;
+import gameComponents.Dice.DiceFace;
+import gameComponents.HullZone;
+
+public class AttackPool {
 	/**
 	 * The DiceRoll Class provides methods for creating manipulating and counting
 	 * multiple dice
@@ -11,17 +16,24 @@ public class DiceRoll {
 	 */
 
 	// fields
-	private ArrayList<Dice> roll;
+	public ArrayList<Dice> roll;
+	private boolean contained = false;
+	private boolean braced = false;
+	private boolean evaded = false;
+	private boolean redirected = false;
+	private int totalDamage;
+	private ArrayList<HullZone> redirectTargets = new ArrayList<HullZone>();
+	
 
 	// Null constructor, on the offchance we have a scenario with 0 dice?
 	// 0 dice are something we need to be aware of happening because of evade
 	// tokens, obstructions, etc.
-	public DiceRoll() {
+	public AttackPool() {
 		roll = new ArrayList<>();
 	}
 
 	// Valued Constructor
-	public DiceRoll(int RedDiceCount, int BlueDiceCount, int BlackDiceCount) {
+	public AttackPool(int RedDiceCount, int BlueDiceCount, int BlackDiceCount) {
 		roll = new ArrayList<>();
 		for (int i = 0; i < RedDiceCount; i++) {
 			addDice(Dice.DiceColor.RED);
@@ -34,7 +46,7 @@ public class DiceRoll {
 		}
 	}
 	// constructor based off a string
-	public DiceRoll(String armament){
+	public AttackPool(String armament){
 		String[] chars = armament.split("");
 		
 		int redDice=0;
@@ -58,7 +70,7 @@ public class DiceRoll {
 			addDice(Dice.DiceColor.BLACK);
 		}
 		
-		
+		getTotalDamage();
 	}
 
 	// Adds and rolls an addition die to an existing roll
@@ -74,6 +86,7 @@ public class DiceRoll {
 			Dice newDice = new Dice(c);
 			newDice.changeFace(f);
 			roll.add(newDice);
+			getTotalDamage();
 			return true;
 		}
 		return false;
@@ -88,6 +101,7 @@ public class DiceRoll {
 			for (int i = 1; i <= roll.size(); i++) {
 				if (roll.get(i).getColor().equals(c) && roll.get(i).getFace().equals(f)) {
 					roll.remove(i);
+					getTotalDamage();
 					return true;
 				}
 			}
@@ -115,7 +129,38 @@ public class DiceRoll {
 				i++;
 			}
 		}
+		
+		getTotalDamage();
 		return diceChanged;
+	}
+	
+	/**
+	 * Rerolls the die at index i
+	 * @param i
+	 * @return
+	 */
+	public boolean rerollDice(int i){
+		if(roll.size()<i){
+			Dice dieToReroll = roll.get(i);
+			dieToReroll = new Dice(dieToReroll.getColor());
+			getTotalDamage();
+			return true;
+		}
+		else return false;
+	}
+	
+	/**
+	 * Removed the die at index i
+	 * @param i
+	 * @return
+	 */
+	public boolean removeDice(int i){
+		if(roll.size()<i){
+			roll.remove(i);
+			getTotalDamage();
+			return true;
+		}
+		else return false;
 	}
 	
 	
@@ -214,5 +259,59 @@ public class DiceRoll {
 				}
 			}
 			return false;
+		}
+
+		private int setTotalDamage() {
+			int total = totalDamage=getHitCount()+getCritCount();
+			if(!braced) return total;
+			else return (int) Math.ceil(total/2.0);
+		}
+		
+		public int getTotalDamage(){
+			return totalDamage;
+		}
+
+		public void setTotalDamage(int totalDamage) {
+			this.totalDamage = totalDamage;
+		}
+
+		public boolean isContained() {
+			return contained;
+		}
+
+		public void setContained(boolean contained) {
+			this.contained = contained;
+		}
+
+		public boolean isBraced() {
+			return braced;
+		}
+
+		public void setBraced(boolean braced) {
+			this.braced = braced;
+		}
+
+		public boolean isEvaded() {
+			return evaded;
+		}
+
+		public void setEvaded(boolean evaded) {
+			this.evaded = evaded;
+		}
+
+		public boolean isRedirected() {
+			return redirected;
+		}
+
+		public void setRedirected(boolean redirected) {
+			this.redirected = redirected;
+		}
+
+		public ArrayList<HullZone> getRedirectTargets() {
+			return redirectTargets;
+		}
+
+		public void setRedirectTargets(ArrayList<HullZone> redirectTargets) {
+			this.redirectTargets = redirectTargets;
 		}
 }

@@ -1,5 +1,9 @@
 package gameComponents;
 
+import Attacks.Attack;
+import Attacks.AttackPool;
+import geometry.Range;
+
 public class DefenseToken {
 
 	/**
@@ -30,20 +34,64 @@ public class DefenseToken {
 		this.type = type;
 	}
 
-	/*
+	/* entry method for spending a token
 	 * spending a token changes a ready token to exhausted. An exhausted token is
 	 * discarded
 	 */
-	public boolean spendToken() {
+	public void spendToken(boolean normalUsage, Attack atk, int index) {
+		if(normalUsage){
+			if(type.equals(DefenseTokenType.CONTAIN)){
+				useContainToken(atk);
+			}else if (type.equals(DefenseTokenType.EVADE)){
+				useEvadeToken(atk, index);
+			}else if (type.equals(DefenseTokenType.BRACE)){
+				useBraceToken(atk);
+			}else if (type.equals(DefenseTokenType.REDIRECT)){
+				useRedirectToken(atk);
+			}else if (type.equals(DefenseTokenType.SCATTER)){
+				useScatterToken(atk);
+			}
+		}
 		if (status == DefenseTokenStatus.READY) {
-			exhaustToken();
-			return true;
+			exhaustToken();			
 		} else if(status == DefenseTokenStatus.EXHAUSTED) {
 			discardToken();
-			return true;
 		}
 		
-		return false;
+	}
+
+	private void useScatterToken(Attack atk) {
+		AttackPool pool = atk.diceRoll;
+		while(pool.roll.size()!=0){
+			pool.roll.remove(0);
+		}
+		
+	}
+
+	private void useRedirectToken(Attack atk) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void useBraceToken(Attack atk) {
+		AttackPool pool = atk.diceRoll;
+		pool.setBraced(true);
+		
+	}
+
+	private void useEvadeToken(Attack atk, int index) {
+		if (atk.getRange()==Range.LONG){
+			atk.diceRoll.removeDice(index);
+		}else if (atk.getRange()==Range.MEDIUM){
+			atk.diceRoll.rerollDice(index);
+		}
+		
+	}
+
+	private void useContainToken(Attack atk) {
+		AttackPool pool = atk.diceRoll;
+		pool.setContained(true);
+		
 	}
 
 	/*
@@ -77,6 +125,8 @@ public class DefenseToken {
 		}
 		return false;
 	}
+	
+
 	
 
 	// shortcuts for defense tokenstatus

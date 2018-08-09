@@ -58,4 +58,15 @@ public abstract class geometryHelper {
 		
 		return returnValue;
 	}
+	
+	public static Range getRange(float range){
+		if(range<=123){
+			return Range.CLOSE;
+		}else if (range<=187){
+			return Range.MEDIUM;
+		}else if (range<=304.8){
+			return Range.LONG;
+		}else return null;
+		
+	}
 }
