@@ -61,9 +61,9 @@ public class DefenseToken {
 	}
 
 	private void useScatterToken(Attack atk) {
-		AttackPool pool = atk.diceRoll;
+		AttackPool pool = atk.diceRoll;		
 		while(pool.roll.size()!=0){
-			pool.roll.remove(0);
+			pool.removeDie(0);
 		}
 		
 	}
@@ -81,7 +81,7 @@ public class DefenseToken {
 
 	private void useEvadeToken(Attack atk, int index) {
 		if (atk.getRange()==Range.LONG){
-			atk.diceRoll.removeDice(index);
+			atk.diceRoll.removeDie(index);
 		}else if (atk.getRange()==Range.MEDIUM){
 			atk.diceRoll.rerollDice(index);
 		}

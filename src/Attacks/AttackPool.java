@@ -70,7 +70,7 @@ public class AttackPool {
 			addDice(Dice.DiceColor.BLACK);
 		}
 		
-		getTotalDamage();
+		totalDamage = calcTotalDamage();
 	}
 
 	// Adds and rolls an addition die to an existing roll
@@ -86,7 +86,7 @@ public class AttackPool {
 			Dice newDice = new Dice(c);
 			newDice.changeFace(f);
 			roll.add(newDice);
-			getTotalDamage();
+			totalDamage = calcTotalDamage();
 			return true;
 		}
 		return false;
@@ -101,7 +101,7 @@ public class AttackPool {
 			for (int i = 1; i <= roll.size(); i++) {
 				if (roll.get(i).getColor().equals(c) && roll.get(i).getFace().equals(f)) {
 					roll.remove(i);
-					getTotalDamage();
+					totalDamage = calcTotalDamage();
 					return true;
 				}
 			}
@@ -130,7 +130,7 @@ public class AttackPool {
 			}
 		}
 		
-		getTotalDamage();
+		totalDamage = calcTotalDamage();
 		return diceChanged;
 	}
 	
@@ -143,7 +143,7 @@ public class AttackPool {
 		if(roll.size()<i){
 			Dice dieToReroll = roll.get(i);
 			dieToReroll = new Dice(dieToReroll.getColor());
-			getTotalDamage();
+			totalDamage = calcTotalDamage();
 			return true;
 		}
 		else return false;
@@ -154,10 +154,10 @@ public class AttackPool {
 	 * @param i
 	 * @return
 	 */
-	public boolean removeDice(int i){
-		if(roll.size()<i){
+	public boolean removeDie(int i){
+		if(roll.size()>i){
 			roll.remove(i);
-			getTotalDamage();
+			totalDamage = calcTotalDamage();
 			return true;
 		}
 		else return false;
@@ -173,7 +173,7 @@ public class AttackPool {
 	public int getHitCount() {
 		int returnThis = 0;
 		if(roll.size()>0) {
-			for(int i = 1 ; i<=roll.size();i++) {
+			for(int i = 0 ; i<=roll.size()-1;i++) {
 				returnThis+=roll.get(i).hitCount();
 			}
 		}
@@ -184,7 +184,7 @@ public class AttackPool {
 	public int getCritCount() {
 		int returnThis = 0;
 		if(roll.size()>0) {
-			for(int i = 1 ; i<=roll.size();i++) {
+			for(int i = 0 ; i<=roll.size()-1;i++) {
 				returnThis+=roll.get(i).critCount();
 			}
 		}
@@ -195,7 +195,7 @@ public class AttackPool {
 	public int getAccuracyCount() {
 		int returnThis = 0;
 		if(roll.size()>0) {
-			for(int i = 1 ; i<=roll.size();i++) {
+			for(int i = 0 ; i<=roll.size()-1;i++) {
 				returnThis+=roll.get(i).accuracyCount();
 			}
 		}
@@ -206,7 +206,7 @@ public class AttackPool {
 	public int getBlankCount() {
 		int returnThis = 0;
 		if(roll.size()>0) {
-			for(int i = 1 ; i<=roll.size();i++) {
+			for(int i = 0 ; i<=roll.size()-1;i++) {
 				returnThis+=roll.get(i).blankCount();
 			}
 		}
@@ -261,8 +261,8 @@ public class AttackPool {
 			return false;
 		}
 
-		private int setTotalDamage() {
-			int total = totalDamage=getHitCount()+getCritCount();
+		public int calcTotalDamage() {
+			int total = getHitCount()+getCritCount();
 			if(!braced) return total;
 			else return (int) Math.ceil(total/2.0);
 		}
