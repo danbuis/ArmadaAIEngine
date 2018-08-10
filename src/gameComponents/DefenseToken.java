@@ -38,59 +38,89 @@ public class DefenseToken {
 	 * spending a token changes a ready token to exhausted. An exhausted token is
 	 * discarded
 	 */
-	public void spendToken(boolean normalUsage, Attack atk, int index) {
-		if(normalUsage){
+	public boolean spendToken(boolean normalUsage, Attack atk, int index) {
+		boolean successfulUse = false;
+		if(normalUsage && status!=DefenseTokenStatus.DISCARDED){
 			if(type.equals(DefenseTokenType.CONTAIN)){
-				useContainToken(atk);
+					atk.diceRoll.setContained(true);
+					successfulUse=true;
+				}
 			}else if (type.equals(DefenseTokenType.EVADE)){
-				useEvadeToken(atk, index);
+					atk.diceRoll.setEvaded(true);
+					successfulUse=true;
+				}
 			}else if (type.equals(DefenseTokenType.BRACE)){
-				useBraceToken(atk);
+					atk.diceRoll.setBraced(true);
+					successfulUse=true;
+				}
 			}else if (type.equals(DefenseTokenType.REDIRECT)){
-				useRedirectToken(atk);
+					atk.diceRoll.setRedirected(true);
+					successfulUse=true;
+				}
 			}else if (type.equals(DefenseTokenType.SCATTER)){
-				useScatterToken(atk);
+				if(useScatterToken(atk)){
+					successfulUse=true;
+				}
 			}
 		}
-		if (status == DefenseTokenStatus.READY) {
-			exhaustToken();			
-		} else if(status == DefenseTokenStatus.EXHAUSTED) {
+		if (successfulUse && normalUsage && status == DefenseTokenStatus.READY) {
+			exhaustToken();	
+			return true;
+		} else if(successfulUse && normalUsage && status == DefenseTokenStatus.EXHAUSTED) {
 			discardToken();
+			return true;
 		}
-		
+		return false;
 	}
 
-	private void useScatterToken(Attack atk) {
-		AttackPool pool = atk.diceRoll;		
+	private boolean useScatterToken(Attack atk) {
+		AttackPool pool = atk.diceRoll;
+	    //if no dmg in pool, no reason to scatter
+		if(pool.getTotalDamage()==0){
+			return false;
+		}
+		//otherwise cancel and remove all dice
 		while(pool.roll.size()!=0){
 			pool.removeDie(0);
 		}
-		
+		return true;
 	}
 
-	private void useRedirectToken(Attack atk) {
+	private boolean useRedirectToken(Attack atk) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void useBraceToken(Attack atk) {
+	private boolean useBraceToken(Attack atk) {
+		//if zero or one damage, no reason to brace
+		if(atk.diceRoll.getTotalDamage()<2){
+			return false;
+		}
 		AttackPool pool = atk.diceRoll;
 		pool.setBraced(true);
-		
+		return true;
 	}
 
-	private void useEvadeToken(Attack atk, int index) {
+	private boolean useEvadeToken(Attack atk, int index) {
 		if (atk.getRange()==Range.LONG){
 			atk.diceRoll.removeDie(index);
+			return true;
 		}else if (atk.getRange()==Range.MEDIUM){
 			atk.diceRoll.rerollDice(index);
+			return true;
 		}
 		
+		return false;
 	}
 
-	private void useContainToken(Attack atk) {
+	private boolean useContainToken(Attack atk) {
 		AttackPool pool = atk.diceRoll;
+		if(pool.getCritCount()==0){
+			return false;
+		}
 		pool.setContained(true);
+		return true;
 		
 	}
 
