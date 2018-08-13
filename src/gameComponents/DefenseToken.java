@@ -42,18 +42,22 @@ public class DefenseToken {
 		boolean successfulUse = false;
 		if(normalUsage && status!=DefenseTokenStatus.DISCARDED){
 			if(type.equals(DefenseTokenType.CONTAIN)){
+				if(!atk.diceRoll.isContained() && useContainToken(atk)){
 					atk.diceRoll.setContained(true);
 					successfulUse=true;
 				}
 			}else if (type.equals(DefenseTokenType.EVADE)){
+				if(!atk.diceRoll.isEvaded() && useEvadeToken(atk, index)){
 					atk.diceRoll.setEvaded(true);
 					successfulUse=true;
 				}
 			}else if (type.equals(DefenseTokenType.BRACE)){
+				if(!atk.diceRoll.isBraced() && useBraceToken(atk)){
 					atk.diceRoll.setBraced(true);
 					successfulUse=true;
 				}
 			}else if (type.equals(DefenseTokenType.REDIRECT)){
+				if(!atk.diceRoll.isRedirected() && useRedirectToken(atk)){
 					atk.diceRoll.setRedirected(true);
 					successfulUse=true;
 				}
