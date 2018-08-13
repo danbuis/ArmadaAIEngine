@@ -16,8 +16,8 @@ public class DefenseTokenTests {
 	@Test
 	public void generalSpendTest() {
 		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER);
-		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer");
-		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
 		
@@ -47,8 +47,8 @@ public class DefenseTokenTests {
 	public void noRepeatTokensTest(){
 		DefenseToken evade = new DefenseToken(DefenseTokenType.EVADE);
 		DefenseToken evade2 = new DefenseToken(DefenseTokenType.EVADE);
-		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer");
-		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
 		

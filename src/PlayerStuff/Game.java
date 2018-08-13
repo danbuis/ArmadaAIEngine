@@ -2,10 +2,14 @@ package PlayerStuff;
 
 import org.newdawn.slick.Image;
 
+import gameComponents.BasicShip;
+
 public class Game {
 	private Image border;
 	private Player player1;
 	private Player player2;
+	public ActivationStep activationStep;
+	private BasicShip activeShip;
 	
 	public Game(Image border, Player P1, Player P2){
 		this.setBorder(border);
@@ -35,6 +39,16 @@ public class Game {
 
 	public void setPlayer2(Player player2) {
 		this.player2 = player2;
+	}
+	
+	public void incrementActivationStep(){
+		if (activationStep.equals(ActivationStep.COMMANDSTEP)) activationStep = ActivationStep.SELECTSHIP;
+		else if (activationStep.equals(ActivationStep.SELECTSHIP)) activationStep = ActivationStep.REVEALCOMMAND;
+		else if (activationStep.equals(ActivationStep.REVEALCOMMAND)) activationStep = ActivationStep.PERFORMATTACKS;
+		else if (activationStep.equals(ActivationStep.PERFORMATTACKS)) activationStep = ActivationStep.MOVEMENT;
+		else if (activationStep.equals(ActivationStep.MOVEMENT)){
+			
+		}
 	}
 
 }

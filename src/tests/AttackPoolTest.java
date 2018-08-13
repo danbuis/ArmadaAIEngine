@@ -33,8 +33,8 @@ public class AttackPoolTest {
 	
 	@Test
 	public void checkScatterToken(){
-		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer");
-		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		
 		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
@@ -50,13 +50,16 @@ public class AttackPoolTest {
 	
 	@Test
 	public void checkEvadeToken(){
-		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer");
-		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		
 		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
 		atk.setRange(Range.LONG);
 
+		assertNotNull(atk);
+		assertNotNull(atk.diceRoll);
+		assertNotNull(atk.diceRoll.roll);
 		atk.diceRoll.roll.get(0).changeFace(DiceFace.HITHIT);
 		int firstDamage = atk.diceRoll.calcTotalDamage();
 		int firstDice = atk.diceRoll.roll.size();

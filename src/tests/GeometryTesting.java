@@ -11,8 +11,8 @@ public class GeometryTesting {
 
 	@Test
 	public void testRangeToPolygon() {
-		BasicShip ship1 = new BasicShip("Nebulon-B Support Frigate");
-		BasicShip ship2 = new BasicShip("Nebulon-B Support Frigate");
+		BasicShip ship1 = new BasicShip("Nebulon-B Support Frigate", null);
+		BasicShip ship2 = new BasicShip("Nebulon-B Support Frigate", null);
 		
 		//move one ship to the right
 		ship2.moveAndRotate(50, 0, 0);

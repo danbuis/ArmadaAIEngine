@@ -11,7 +11,7 @@ public class ShipMovementTests {
 
 	@Test
 	public void testTranslate() {
-BasicShip test = new BasicShip("Victory 1 Star Destroyer");
+BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
 		
 		HullZone front = test.getFront();
 		assertEquals(5, front.getGeometry().getPointCount());

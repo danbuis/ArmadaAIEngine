@@ -92,15 +92,15 @@ public class MainGame extends BasicGame
 					System.out.println("demo button pressed");
 					
 					Player P1 = new Player("P1", false);
-					BasicShip vic = new BasicShip("Victory 2 Star Destroyer");
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1);
 					vic.moveAndRotate(457.2, 100, 0);
 					P1.addShip(vic);
 					
 					Player P2 = new Player("P2", false);
-					BasicShip CR90 = new BasicShip("CR90A Corvette");
+					BasicShip CR90 = new BasicShip("CR90A Corvette", P2);
 					CR90.moveAndRotate(257.2, 814.4, 0);
 					P2.addShip(CR90);
-					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate");
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2);
 					NebB.moveAndRotate(657.2, 814.4, 0);
 					P2.addShip(NebB);
 					

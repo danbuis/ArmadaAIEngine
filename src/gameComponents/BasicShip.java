@@ -14,15 +14,18 @@ import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
+import PlayerStuff.Player;
 import gameComponents.DefenseToken.DefenseTokenType;
 
 public class BasicShip {
 	
+	private Player owner;
 	private float xCoord = 0;
 	private float yCoord = 0;
 	private final float plasticRailWidth = 2;
 	private Polygon plasticBase;
 	private String name;
+	private boolean activated=false;
 
 	private Faction faction;
 	private BaseSize size;
@@ -48,9 +51,10 @@ public class BasicShip {
 	private Line RL;
 	private Line RR;
 
-	public BasicShip(String name) {
+	public BasicShip(String name, Player owner) {
 		File shipData = new File("shipData");
 		this.name = name;
+		this.owner = owner;
 		boolean shipFound = false;
 
 		try {
@@ -448,6 +452,22 @@ public class BasicShip {
 	
 	public Polygon getPlasticBase() {
 		return this.plasticBase;
+	}
+
+	public boolean isActivated() {
+		return activated;
+	}
+
+	public void setActivated(boolean activated) {
+		this.activated = activated;
+	}
+
+	public Player getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Player owner) {
+		this.owner = owner;
 	}
 	
 	
