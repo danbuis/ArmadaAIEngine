@@ -37,8 +37,8 @@ public class AttackPoolTest {
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
 		ship2.moveAndRotate(200, 0, 0);
 		
-		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
-		assertEquals("RRRKKK", ship1.getFront().getArmament());
+		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		assertEquals("RRRKKK", ship1.getHullZone(0).getArmament());
 		assertNotEquals(0, atk.diceRoll.getTotalDamage());
 		
 		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER);
@@ -54,7 +54,7 @@ public class AttackPoolTest {
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
 		ship2.moveAndRotate(200, 0, 0);
 		
-		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
+		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
 		atk.setRange(Range.LONG);
 
 		atk.diceRoll.roll.get(0).changeFace(DiceFace.HITHIT);
