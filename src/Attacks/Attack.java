@@ -1,5 +1,6 @@
 package Attacks;
 
+import PlayerStuff.AttackStep;
 import gameComponents.BasicShip;
 import gameComponents.HullZone;
 import geometry.Range;
@@ -11,7 +12,7 @@ public class Attack {
 	private HullZone attackingZone;
 	private HullZone defendingZone;
 	private Range range;
-	public AttackStep step = AttackStep.GATHERPOOL;
+	public AttackStep step = AttackStep.DECLARETARGET;
 
 	public AttackPool diceRoll;
 	private String armament;
@@ -26,9 +27,16 @@ public class Attack {
 		formAttackPool();
 	}
 	
-	public void formAttackPool(){
+	public String formAttackPool(){
+		//grab entirety of armament dice
 		String returnString = armament;
-		//modifyString....
+		if(!range.equals(Range.CLOSE)){
+			returnString.replaceAll("K", "");
+		}
+		
+		if(!range.equals(Range.MEDIUM)){
+			returnString.replaceAll("B", "");
+		}
 		
 		this.armament=returnString;
 		
@@ -37,19 +45,19 @@ public class Attack {
 		this.diceRoll=new AttackPool(armament);
 		
 		nextAttackStep();
+		
+		return returnString;
 	}
 
 	private void nextAttackStep() {
-		if(step.equals(AttackStep.GATHERPOOL)){
-			step=AttackStep.ROLLPOOL;
-		}else if(step.equals(AttackStep.ROLLPOOL)){
-			step=AttackStep.ATTACKERMODIFIES;
-		}else if(step.equals(AttackStep.ATTACKERMODIFIES)){
+		if(step.equals(AttackStep.DECLARETARGET)){
+			step=AttackStep.ROLLATTACKDICE;
+		}else if(step.equals(AttackStep.ROLLATTACKDICE)){
+			step=AttackStep.RESOLVEATTACKEFFECTS;
+		}else if(step.equals(AttackStep.RESOLVEATTACKEFFECTS)){
 			step=AttackStep.SPENDDEFENSETOKENS;
 		}else if(step.equals(AttackStep.SPENDDEFENSETOKENS)){
-			step=AttackStep.SELECTCRIT;
-		}else if(step.equals(AttackStep.SELECTCRIT)){
-			step=AttackStep.APPLYDAMAGE;
+			step=AttackStep.RESOLVEDAMAGE;
 		}
 		
 	}

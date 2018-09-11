@@ -9,7 +9,7 @@ public enum AttackStep {
 		return label;
 	}
 	
-	private AttackStep(String lable){
+	private AttackStep(String label){
 		this.label = label;
 	}
 }
