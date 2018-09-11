@@ -9,7 +9,7 @@ public enum ActivationStep {
 		return label;
 	}
 	
-	ActivationStep(String lable){
+	ActivationStep(String label){
 		this.label = label;
 	}
 }

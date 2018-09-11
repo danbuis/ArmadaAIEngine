@@ -6,10 +6,10 @@ public enum TurnStep {
 	private String label;
 	
 	public String getLabel(){
-		return label;
+		return this.label;
 	}
 	
-	TurnStep(String lable){
+	TurnStep(String label){
 		this.label = label;
 	}
 }
