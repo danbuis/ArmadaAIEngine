@@ -5,11 +5,11 @@ public enum ActivationStep {
 	
 	private String label;
 	
-	private String getLabel(){
+	public String getLabel(){
 		return label;
 	}
 	
-	private ActivationStep(String lable){
+	ActivationStep(String lable){
 		this.label = label;
 	}
 }

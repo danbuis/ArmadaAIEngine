@@ -189,6 +189,7 @@ public class MainGame extends BasicGame
 			g.setColor(Color.black);
 			TrueTypeFont trueTypeFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
 			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0), (float)15,"Turn "+game.getTurn());
+			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0), (float)30, game.turnStep.getLabel());
 		}
 	}
 

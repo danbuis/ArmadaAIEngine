@@ -9,6 +9,8 @@ public class Game {
 	private Player player1;
 	private Player player2;
 	public ActivationStep activationStep;
+	public AttackStep attackStep;
+	public TurnStep turnStep;
 	private BasicShip activeShip;
 	private int turn=0;
 	
@@ -16,6 +18,9 @@ public class Game {
 		this.setBorder(border);
 		this.setPlayer1(P1);
 		this.setPlayer2(P2);
+		this.activationStep = ActivationStep.REVEALCOMMAND;
+		this.attackStep = AttackStep.DECLARETARGET;
+		this.turnStep = TurnStep.DEPLOYMENT;
 	}
 
 	public Image getBorder() {
@@ -50,8 +55,15 @@ public class Game {
 		}
 	}
 	
+	public void incrementTurnStep(){
+		if(turnStep.equals(TurnStep.COMMANDPHASE)) turnStep = TurnStep.SHIPPHASE;
+		else if (turnStep.equals(TurnStep.SHIPPHASE)) turnStep = TurnStep.SQUADRONPHASE;
+		else if (turnStep.equals(TurnStep.SQUADRONPHASE)) turnStep = TurnStep.STATUSPHASE;
+	}
+	
 	public void incrementTurn(){
 		setTurn(getTurn() + 1);
+		turnStep = TurnStep.COMMANDPHASE;
 	}
 
 	public int getTurn() {
