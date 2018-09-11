@@ -41,10 +41,10 @@ public class MainGame extends BasicGame
 	private Image standardGameBorder;
 	private Image demoGameBorder;
 	private Image background;
-	private Image shipDetailWindow1;
-	private Image shipDetailWindow2;
 	private Image gameScreenBackground;
 	private Image textBackground;
+	private ShipTray shipTray1;
+	private ShipTray shipTray2;
 	
 	private int shipDetailWindowWidth;
 	private int shipDetailWindowHeight;
@@ -74,13 +74,12 @@ public class MainGame extends BasicGame
 		standardGameBorder = new Image("Graphics/UI/3x6border.png");
 		demoGameBorder = new Image("Graphics/UI/3x3border.png");
 		background = new Image("Graphics/UI/blackBackground.png");
-		shipDetailWindow1 = new Image("Graphics/UI/shipDetailWindow.png");
-		shipDetailWindow2 = new Image("Graphics/UI/shipDetailWindow.png");
+		Image shipDetailWindow = new Image("Graphics/UI/shipDetailWindow.png");
+		shipTray1 = new ShipTray(20, totalHeight-shipDetailWindow.getHeight()-20, shipDetailWindow);
+		shipTray2 = new ShipTray(totalWidth-20-shipDetailWindow.getWidth(), totalHeight-shipDetailWindow.getHeight()-20, shipDetailWindow);
+		
 		gameScreenBackground = new Image("Graphics/UI/GameScreenBG.png");
 		textBackground = new Image("Graphics/UI/listbackground.png");
-		
-		shipDetailWindowWidth = shipDetailWindow1.getWidth();
-		shipDetailWindowHeight = shipDetailWindow1.getHeight();
 	}
 
 	@Override
@@ -183,14 +182,22 @@ public class MainGame extends BasicGame
 			g.drawImage(textBackground,0,70);
 			g.drawImage(textBackground, background.getWidth()-textBackground.getWidth(), 70);
 			g.drawImage(gameScreenBackground, 0, 0);
-			g.drawImage(shipDetailWindow1, 270, totalHeight-shipDetailWindow1.getHeight()-20);
-			g.drawImage(shipDetailWindow2, 643, totalHeight-shipDetailWindow1.getHeight()-20);
+			shipTray1.render(g);
+			shipTray2.render(g);
 			
 			//Adding in game state headers (turn #, turn step, attack step, etc.
 			g.setColor(Color.black);
 			TrueTypeFont trueTypeFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
-			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0), (float)15,"Turn "+game.getTurn());
-			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0), (float)35, game.turnStep.getLabel());
+			int height = trueTypeFont.getHeight();
+			int gap = 5;
+			
+			String temp = "Turn "+game.getTurn();
+			int width = trueTypeFont.getWidth(temp);
+			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)gap, temp);
+			
+			temp = game.turnStep.getLabel();
+			width=trueTypeFont.getWidth(temp);
+			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)height+gap, temp);
 		}
 	}
 

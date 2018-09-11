@@ -149,40 +149,46 @@ public class BasicShip {
 	 * builds hull zone and plastic base geometry.
 	 */
 	private void calculateHullZoneGeometry() {
+		int index;
+		
 		// build hull zone geometry
 		// front hullzone
 		Polygon frontPolygon = new Polygon();
+		index = 0;
 		frontPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
 		frontPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord,(float)this.size.getLength()/2 + this.yCoord);
 		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 + this.yCoord);
 		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 -frontArcOffset + this.yCoord);
 		frontPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
-		hullzones.get(0).setGeometry(frontPolygon);
+		hullzones.get(index).initializeGeometry(frontPolygon, index);
 		
 		//rear hullzone
 		Polygon rearPolygon = new Polygon();
+		index = 2;
 		rearPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
 		rearPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
 		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
 		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 +rearArcOffset + this.yCoord);
 		rearPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
-		hullzones.get(2).setGeometry(rearPolygon);
+		hullzones.get(index).initializeGeometry(rearPolygon, index);
 		
 		//left hullzone
 		Polygon leftPolygon = new Polygon();
+		index = 3;
 		leftPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 +rearArcOffset + this.yCoord);
 		leftPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
 		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
 		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
-		hullzones.get(3).setGeometry(leftPolygon);
+		hullzones.get(index).initializeGeometry(leftPolygon, index);
 		
 		//right hullzone
 		Polygon rightPolygon = new Polygon();
+		index = 1;
 		rightPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 -frontArcOffset + this.yCoord);
 		rightPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
-		hullzones.get(1).setGeometry(rightPolygon);
+		hullzones.get(index).initializeGeometry(rightPolygon, index);
 		
 		FR = new Line((float)this.size.getWidth()/2 + this.xCoord, 
 				(float)this.size.getLength()/2 -frontArcOffset + this.yCoord,
@@ -288,6 +294,7 @@ public class BasicShip {
 		
 		for(HullZone zone: hullzones){
 			zone.setGeometry((Polygon)zone.getGeometry().transform(translate));
+			zone.setYellowDot((Point)zone.getYellowDot().transform(translate));
 		}
 
 		

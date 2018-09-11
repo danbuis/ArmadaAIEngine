@@ -7,6 +7,7 @@ public class HullZone {
 
 	private int shields;
 	private String armament;
+	private Point yellowDot;
 	
 	/**
 	 * Polygon is created in the ship's constructor.  the 0th point is always the
@@ -64,8 +65,41 @@ public class HullZone {
 		return geometry;
 	}
 
+	public void initializeGeometry(Polygon geometry, int i) {
+		this.geometry = geometry;
+		createYellowDot(i);
+	}
+	
 	public void setGeometry(Polygon geometry) {
 		this.geometry = geometry;
+	}
+
+	private void createYellowDot(int i) {
+		float gap = 8f;
+		// Dot goes between first and 2nd points
+		if(i==0){
+			setYellowDot(new Point(0,this.geometry.getMaxX()-gap));
+		}else if(i==2){
+			setYellowDot(new Point(0, this.geometry.getMinX()+gap));
+		}else if (i==1){
+			//find midpoint of first 2 point's Y values
+			float midPoint = (this.geometry.getPoint(0)[1]+this.geometry.getPoint(1)[1])/2f;
+			setYellowDot(new Point(this.geometry.getPoint(0)[0]-gap, midPoint));	
+		}
+		else if (i==3){
+			//find midpoint of first 2 point's Y values
+			float midPoint = (this.geometry.getPoint(0)[1]+this.geometry.getPoint(1)[1])/2f;
+			setYellowDot(new Point(this.geometry.getPoint(0)[0]+gap, midPoint));	
+		}
+		
+	}
+
+	public Point getYellowDot() {
+		return yellowDot;
+	}
+
+	public void setYellowDot(Point yellowDot) {
+		this.yellowDot = yellowDot;
 	}
 
 }
