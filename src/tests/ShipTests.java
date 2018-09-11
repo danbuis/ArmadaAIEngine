@@ -78,17 +78,17 @@ public class ShipTests {
 	public void testHullZones(){
 		BasicShip vic1 = new BasicShip ("Victory 1 Star Destroyer", null);
 		
-		assertEquals(3, vic1.getFront().getShields());
-		assertEquals("RRRKKK", vic1.getFront().getArmament());
+		assertEquals(3, vic1.getHullZone(0).getShields());
+		assertEquals("RRRKKK", vic1.getHullZone(0).getArmament());
 		
-		assertEquals(3, vic1.getLeft().getShields());
-		assertEquals("RRK", vic1.getLeft().getArmament());
+		assertEquals(3, vic1.getHullZone(3).getShields());
+		assertEquals("RRK", vic1.getHullZone(3).getArmament());
 		
-		assertEquals(3, vic1.getRight().getShields());
-		assertEquals("RRK", vic1.getRight().getArmament());
+		assertEquals(3, vic1.getHullZone(1).getShields());
+		assertEquals("RRK", vic1.getHullZone(1).getArmament());
 		
-		assertEquals(2, vic1.getRear().getShields());
-		assertEquals("RR", vic1.getRear().getArmament());
+		assertEquals(2, vic1.getHullZone(2).getShields());
+		assertEquals("RR", vic1.getHullZone(2).getArmament());
 	}
 	
 	@Test
@@ -120,7 +120,7 @@ public class ShipTests {
 	public void testHullZoneGeometryNebB(){
 		BasicShip test = new BasicShip("Nebulon-B Support Frigate", null);
 		
-		HullZone front = test.getFront();
+		HullZone front = test.getHullZone(0);
 		assertEquals(3, front.getGeometry().getPointCount());
 		
 		assertEquals(-20.5, front.getNthPointOfGeometry(0).getX(), 0.001);
@@ -132,7 +132,7 @@ public class ShipTests {
 		assertEquals(0, front.getNthPointOfGeometry(2).getX(), 0.001);
 		assertEquals(0, front.getNthPointOfGeometry(2).getY(), 0.001);
 		
-		HullZone rear = test.getRear();
+		HullZone rear = test.getHullZone(2);
 		assertEquals(3, rear.getGeometry().getPointCount());
 		
 		assertEquals(20.5, rear.getNthPointOfGeometry(0).getX(), 0.001);
@@ -144,7 +144,7 @@ public class ShipTests {
 		assertEquals(0, rear.getNthPointOfGeometry(2).getX(), 0.001);
 		assertEquals(0, rear.getNthPointOfGeometry(2).getY(), 0.001);
 		
-		HullZone left = test.getLeft();
+		HullZone left = test.getHullZone(3);
 		assertEquals(3, left.getGeometry().getPointCount());
 		
 		assertEquals(-20.5, left.getNthPointOfGeometry(0).getX(), 0.001);
@@ -156,7 +156,7 @@ public class ShipTests {
 		assertEquals(0, left.getNthPointOfGeometry(2).getX(), 0.001);
 		assertEquals(0, left.getNthPointOfGeometry(2).getY(), 0.001);
 		
-		HullZone right = test.getRight();
+		HullZone right = test.getHullZone(1);
 		assertEquals(3, right.getGeometry().getPointCount());
 		
 		assertEquals(20.5, right.getNthPointOfGeometry(0).getX(), 0.001);
@@ -173,7 +173,7 @@ public class ShipTests {
 	public void testHullZoneGeometryVic(){
 		BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
 		
-		HullZone front = test.getFront();
+		HullZone front = test.getHullZone(0);
 		assertEquals(5, front.getGeometry().getPointCount());
 		
 		assertEquals(-30.5, front.getNthPointOfGeometry(0).getX(), 0.001);
@@ -191,7 +191,7 @@ public class ShipTests {
 		assertEquals(0, front.getNthPointOfGeometry(4).getX(), 0.001);
 		assertEquals(3.38, front.getNthPointOfGeometry(4).getY(), 0.001);
 		
-		HullZone rear = test.getRear();
+		HullZone rear = test.getHullZone(2);
 		assertEquals(5, rear.getGeometry().getPointCount());
 		
 		assertEquals(30.5, rear.getNthPointOfGeometry(0).getX(), 0.001);
@@ -209,7 +209,7 @@ public class ShipTests {
 		assertEquals(0, rear.getNthPointOfGeometry(4).getX(), 0.001);
 		assertEquals(-3.38, rear.getNthPointOfGeometry(4).getY(), 0.001);
 		
-		HullZone left = test.getLeft();
+		HullZone left = test.getHullZone(3);
 		assertEquals(4, left.getGeometry().getPointCount());
 		
 		assertEquals(-30.5, left.getNthPointOfGeometry(0).getX(), 0.001);
@@ -224,7 +224,7 @@ public class ShipTests {
 		assertEquals(0, left.getNthPointOfGeometry(3).getX(), 0.001);
 		assertEquals(-3.38, left.getNthPointOfGeometry(3).getY(), 0.001);
 		
-		HullZone right = test.getRight();
+		HullZone right = test.getHullZone(1);
 		assertEquals(4, right.getGeometry().getPointCount());
 		
 		assertEquals(30.5, right.getNthPointOfGeometry(0).getX(), 0.001);

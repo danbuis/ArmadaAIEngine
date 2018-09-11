@@ -19,7 +19,7 @@ public class DefenseTokenTests {
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
-		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
+		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
 		
 		//token initialized as ready
 		assertEquals(DefenseTokenStatus.READY, scatter.getStatus());
@@ -32,13 +32,13 @@ public class DefenseTokenTests {
 		assertEquals(DefenseTokenStatus.EXHAUSTED, scatter.getStatus());
 		
 		//new attack, so it will spend and then be discarded
-		atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
+		atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
 		assertTrue(scatter.spendToken(true, atk, 0));
 		
 		assertEquals(DefenseTokenStatus.DISCARDED, scatter.getStatus());
 		
 		//new attack, so it will normally spend, but since it is discarded the whole thing doesn't go off.
-		atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
+		atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
 		assertFalse(scatter.spendToken(true, atk, 0));
 	}
 
@@ -50,7 +50,7 @@ public class DefenseTokenTests {
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
-		Attack atk = new Attack(ship1, ship2, ship1.getFront(), ship2.getRear());
+		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
 		
 		atk.setRange(Range.LONG);
 		assertTrue(evade.spendToken(true, atk, 0));

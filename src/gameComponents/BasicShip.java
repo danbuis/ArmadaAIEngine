@@ -30,10 +30,11 @@ public class BasicShip {
 	private Faction faction;
 	private BaseSize size;
 	private int hull;
-	private HullZone front;
-	private HullZone left;
-	private HullZone right;
-	private HullZone rear;
+	private ArrayList<HullZone> hullzones = new ArrayList<HullZone>();
+	//private HullZone front;
+	//private HullZone left;
+	//private HullZone right;
+	//private HullZone rear;
 	private String antiSquad;
 	private int command;
 	private int squadron;
@@ -92,15 +93,18 @@ public class BasicShip {
 					String hull = sc.nextLine();
 					this.setHull(Integer.parseInt(hull.split(" ")[1]));
 
+					//adding hullzones to arraylist, start at front and going clockwisem ie 
+					//front, right, rear, left
 					String frontZone = sc.nextLine();
-					this.setFront(new HullZone(frontZone));
+					hullzones.add(new HullZone(frontZone));
 
 					String sideZone = sc.nextLine();
-					this.setRight(new HullZone(sideZone));
-					this.setLeft(new HullZone(sideZone));
+					hullzones.add(new HullZone(sideZone));
 
 					String rearZone = sc.nextLine();
-					this.setRear(new HullZone(rearZone));
+					hullzones.add(new HullZone(rearZone));
+					//and the other side
+					hullzones.add(new HullZone(sideZone));
 
 					String antiSquad = sc.nextLine();
 					this.setAntiSquad(antiSquad.split(" ")[1]);
@@ -153,7 +157,7 @@ public class BasicShip {
 		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 + this.yCoord);
 		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 -frontArcOffset + this.yCoord);
 		frontPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
-		front.setGeometry(frontPolygon);
+		hullzones.get(0).setGeometry(frontPolygon);
 		
 		//rear hullzone
 		Polygon rearPolygon = new Polygon();
@@ -162,7 +166,7 @@ public class BasicShip {
 		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
 		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 +rearArcOffset + this.yCoord);
 		rearPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
-		rear.setGeometry(rearPolygon);
+		hullzones.get(2).setGeometry(rearPolygon);
 		
 		//left hullzone
 		Polygon leftPolygon = new Polygon();
@@ -170,7 +174,7 @@ public class BasicShip {
 		leftPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
 		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
 		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
-		left.setGeometry(leftPolygon);
+		hullzones.get(3).setGeometry(leftPolygon);
 		
 		//right hullzone
 		Polygon rightPolygon = new Polygon();
@@ -178,7 +182,7 @@ public class BasicShip {
 		rightPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
-		right.setGeometry(rightPolygon);
+		hullzones.get(1).setGeometry(rightPolygon);
 		
 		FR = new Line((float)this.size.getWidth()/2 + this.xCoord, 
 				(float)this.size.getLength()/2 -frontArcOffset + this.yCoord,
@@ -281,10 +285,11 @@ public class BasicShip {
 		//translate geometry
 		Transform translate = Transform.createTranslateTransform(dX, dY);
 		this.plasticBase = (Polygon)this.plasticBase.transform(translate);
-		this.front.setGeometry((Polygon)this.front.getGeometry().transform(translate));
-		this.rear.setGeometry((Polygon)this.rear.getGeometry().transform(translate));
-		this.left.setGeometry((Polygon)this.left.getGeometry().transform(translate));
-		this.right.setGeometry((Polygon)this.right.getGeometry().transform(translate));
+		
+		for(HullZone zone: hullzones){
+			zone.setGeometry((Polygon)zone.getGeometry().transform(translate));
+		}
+
 		
 		this.FL = (Line) FL.transform(translate);
 		this.RL = (Line) RL.transform(translate);
@@ -299,6 +304,27 @@ public class BasicShip {
 		this.moveAndRotate((float)dX, (float)dY, (float)rotate);
 	}
 	
+	public ArrayList<HullZone> getAdjacentHullZones(HullZone targetZone){
+		ArrayList<HullZone> adjacentHullZones = new ArrayList<HullZone>();
+		
+		//first find the index of the targetZone
+		int index=0;
+		for(HullZone zone: hullzones){
+			if(zone.equals(targetZone))
+				break;
+			else index++;
+		}
+		
+		//next add in the zone clockwise
+		adjacentHullZones.add(hullzones.get((index+1)%hullzones.size()));
+		
+		//next add in the zone counterclockwise.  Need to add in the whole size() so
+		//that we don't try to mod a (-1), which would clearly be bad.
+		adjacentHullZones.add(hullzones.get((index+hullzones.size()-1)%hullzones.size()));
+		return adjacentHullZones;
+		
+	}
+	
 	
 
 	//game border is used as the scaling reference
@@ -308,10 +334,10 @@ public class BasicShip {
 		g.fill(plasticBase);
 		
 		g.setColor(new Color(30,30,30));
-		g.fill(this.left.getGeometry());
-		g.fill(this.right.getGeometry());
-		g.fill(this.front.getGeometry());
-		g.fill(this.rear.getGeometry());
+		
+		for(HullZone zone:hullzones){
+			g.fill(zone.getGeometry());
+		}
 		
 		if(this.faction == Faction.IMPERIAL) g.setColor(Color.green);
 		else g.setColor(Color.red);
@@ -338,36 +364,16 @@ public class BasicShip {
 		this.hull = hull;
 	}
 
-	public HullZone getFront() {
-		return front;
-	}
-
-	public void setFront(HullZone front) {
-		this.front = front;
-	}
-
-	public HullZone getLeft() {
-		return left;
-	}
-
-	public void setLeft(HullZone left) {
-		this.left = left;
-	}
-
-	public HullZone getRight() {
-		return right;
-	}
-
-	public void setRight(HullZone right) {
-		this.right = right;
-	}
-
-	public HullZone getRear() {
-		return rear;
-	}
-
-	public void setRear(HullZone rear) {
-		this.rear = rear;
+	/**
+	 * 0 = front
+	 * 1 = right
+	 * 2 = rear
+	 * 3 = left
+	 * @param i
+	 * @return
+	 */
+	public HullZone getHullZone(int i){
+		return hullzones.get(i);
 	}
 
 	public String getAntiSquad() {
