@@ -10,6 +10,7 @@ public class Game {
 	private Player player2;
 	public ActivationStep activationStep;
 	private BasicShip activeShip;
+	private int turn=0;
 	
 	public Game(Image border, Player P1, Player P2){
 		this.setBorder(border);
@@ -42,13 +43,31 @@ public class Game {
 	}
 	
 	public void incrementActivationStep(){
-		if (activationStep.equals(ActivationStep.COMMANDSTEP)) activationStep = ActivationStep.SELECTSHIP;
-		else if (activationStep.equals(ActivationStep.SELECTSHIP)) activationStep = ActivationStep.REVEALCOMMAND;
-		else if (activationStep.equals(ActivationStep.REVEALCOMMAND)) activationStep = ActivationStep.PERFORMATTACKS;
+		if (activationStep.equals(ActivationStep.REVEALCOMMAND)) activationStep = ActivationStep.PERFORMATTACKS;
 		else if (activationStep.equals(ActivationStep.PERFORMATTACKS)) activationStep = ActivationStep.MOVEMENT;
 		else if (activationStep.equals(ActivationStep.MOVEMENT)){
 			
 		}
+	}
+	
+	public void incrementTurn(){
+		setTurn(getTurn() + 1);
+	}
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public void setTurn(int turn) {
+		this.turn = turn;
+	}
+
+	public BasicShip getActiveShip() {
+		return activeShip;
+	}
+
+	public void setActiveShip(BasicShip activeShip) {
+		this.activeShip = activeShip;
 	}
 
 }

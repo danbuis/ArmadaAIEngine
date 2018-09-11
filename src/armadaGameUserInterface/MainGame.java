@@ -1,14 +1,17 @@
 package armadaGameUserInterface;
+import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 
 import PlayerStuff.Game;
@@ -181,6 +184,11 @@ public class MainGame extends BasicGame
 			g.drawImage(gameScreenBackground, 0, 0);
 			g.drawImage(shipDetailWindow1, 270, totalHeight-shipDetailWindow1.getHeight()-20);
 			g.drawImage(shipDetailWindow2, 643, totalHeight-shipDetailWindow1.getHeight()-20);
+			
+			//Adding in game state headers (turn #, turn step, attack step, etc.
+			g.setColor(Color.black);
+			TrueTypeFont trueTypeFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
+			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0), (float)15,"Turn "+game.getTurn());
 		}
 	}
 
