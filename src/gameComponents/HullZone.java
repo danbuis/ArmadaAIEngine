@@ -78,9 +78,9 @@ public class HullZone {
 		float gap = 8f;
 		// Dot goes between first and 2nd points
 		if(i==0){
-			setYellowDot(new Point(0,this.geometry.getMaxX()-gap));
+			setYellowDot(new Point(0,this.geometry.getMaxY()-gap));
 		}else if(i==2){
-			setYellowDot(new Point(0, this.geometry.getMinX()+gap));
+			setYellowDot(new Point(0, this.geometry.getMinY()+gap));
 		}else if (i==1){
 			//find midpoint of first 2 point's Y values
 			float midPoint = (this.geometry.getPoint(0)[1]+this.geometry.getPoint(1)[1])/2f;
