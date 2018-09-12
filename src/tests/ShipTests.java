@@ -2,6 +2,8 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.newdawn.slick.geom.Polygon;
 
@@ -250,6 +252,27 @@ public class ShipTests {
 		assertTrue(plasticBase.contains((float)-22.5, (float)-35.5));
 		assertTrue(plasticBase.contains((float)-22.5, (float)35.5));
 		
+	}
+	
+	@Test
+	public void testAdjacentHullZones(){
+		BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
+		
+		ArrayList<HullZone> adjacents = test.getAdjacentHullZones(test.getHullZone(0));
+		assertTrue(adjacents.contains(test.getHullZone(1)));
+		assertTrue(adjacents.contains(test.getHullZone(3)));
+		
+		adjacents = test.getAdjacentHullZones(test.getHullZone(3));
+		assertTrue(adjacents.contains(test.getHullZone(0)));
+		assertTrue(adjacents.contains(test.getHullZone(2)));
+		
+		adjacents = test.getAdjacentHullZones(test.getHullZone(2));
+		assertTrue(adjacents.contains(test.getHullZone(1)));
+		assertTrue(adjacents.contains(test.getHullZone(3)));
+		
+		adjacents = test.getAdjacentHullZones(test.getHullZone(1));
+		assertTrue(adjacents.contains(test.getHullZone(0)));
+		assertTrue(adjacents.contains(test.getHullZone(2)));
 	}
 
 }

@@ -30,22 +30,16 @@ public class Attack {
 	public String formAttackPool(){
 		//grab entirety of armament dice
 		String returnString = armament;
-		if(!range.equals(Range.CLOSE)){
-			returnString.replaceAll("K", "");
+		if(range.equals(Range.MEDIUM)){
+			returnString = returnString.replaceAll("K", "");
 		}
 		
-		if(!range.equals(Range.MEDIUM)){
-			returnString.replaceAll("B", "");
+		if(range.equals(Range.LONG)){
+			returnString = returnString.replaceAll("K", "");
+			returnString = returnString.replaceAll("B", "");
 		}
 		
-		this.armament=returnString;
-		
-		nextAttackStep();
-		
-		this.diceRoll=new AttackPool(armament);
-		
-		nextAttackStep();
-		
+		diceRoll = new AttackPool(returnString);
 		return returnString;
 	}
 
