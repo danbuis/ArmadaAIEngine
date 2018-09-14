@@ -8,6 +8,7 @@ import java.util.Scanner;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Polygon;
@@ -46,6 +47,7 @@ public class BasicShip {
 	private float rearArcOffset;
 	private float frontConjunction;
 	private float rearConjunction;
+	private Image shipImage;
 	
 	private Line FR;
 	private Line FL;
@@ -130,6 +132,8 @@ public class BasicShip {
 					this.rearConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
 
 					calculateHullZoneGeometry();
+					
+					setShipImage(sc.nextLine());
 					
 					//set boolean to true in order to exit while loop
 					shipFound=true;
@@ -336,7 +340,6 @@ public class BasicShip {
 
 	//game border is used as the scaling reference
 	public void draw(Image demoGameBorder, Graphics g) {
-		System.out.println("drawing " +name);
 		g.setColor(Color.white);
 		g.fill(plasticBase);
 		
@@ -353,6 +356,10 @@ public class BasicShip {
 		g.draw(FR);
 		g.draw(RL);
 		g.draw(RR);
+		
+		float scale = plasticBase.getHeight()/shipImage.getHeight();
+		Image copy = shipImage.getScaledCopy(scale);
+		g.drawImage(copy, xCoord-copy.getWidth()/2, yCoord-copy.getHeight()/2);
 	}
 
 	public Faction getFaction() {
@@ -481,6 +488,23 @@ public class BasicShip {
 
 	public void setOwner(Player owner) {
 		this.owner = owner;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public Image getShipImage() {
+		return shipImage;
+	}
+
+	public void setShipImage(String string) {
+		try {
+			this.shipImage = new Image(string);
+		} catch (SlickException e) {
+			System.out.println("failed to find image file at : "+string);
+			e.printStackTrace();
+		}
 	}
 	
 	

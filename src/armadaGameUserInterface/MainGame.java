@@ -46,8 +46,8 @@ public class MainGame extends BasicGame
 	private ShipTray shipTray1;
 	private ShipTray shipTray2;
 	
-	private int shipDetailWindowWidth;
-	private int shipDetailWindowHeight;
+	private ListDisplay listPlayer1;
+	private ListDisplay listPlayer2;
 	
 	
 	public MainGame(String gamename)
@@ -108,6 +108,8 @@ public class MainGame extends BasicGame
 					
 					
 					game = new Game(demoGameBorder, P1, P2);
+					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
+					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
 					game.incrementTurn();
 					
 				}
@@ -115,6 +117,48 @@ public class MainGame extends BasicGame
 				if(Mouse.isButtonDown(0)){
 					gameMenuState = GameMenuState.REGULARGAME;
 					System.out.println("standard game button pressed");
+					
+					Player P1 = new Player("P1", false);
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1);
+					vic.moveAndRotate(657.2, 600, 0);
+					P1.addShip(vic);
+					BasicShip vic2 = new BasicShip("Victory 2 Star Destroyer", P1);
+					vic2.moveAndRotate(457.2, 600, 0);
+					P1.addShip(vic2);
+					
+					Player P2 = new Player("P2", false);
+					BasicShip CR90 = new BasicShip("CR90A Corvette", P2);
+					CR90.moveAndRotate(457.2, 414.4, 0);
+					P2.addShip(CR90);
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2);
+					NebB.moveAndRotate(857.2, 814.4, 0);
+					P2.addShip(NebB);
+					BasicShip NebB2 = new BasicShip("Nebulon-B Escort Frigate", P2);
+					NebB2.moveAndRotate(657.2, 914.4, 0);
+					P2.addShip(NebB2);
+					BasicShip NebB3 = new BasicShip("Nebulon-B Escort Frigate", P2);
+					NebB3.moveAndRotate(627.2, 714.4, 0);
+					P2.addShip(NebB3);
+					
+					
+					game = new Game(demoGameBorder, P1, P2);
+					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
+					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
+
+					game.incrementTurn();
+				}
+			}
+		}
+		
+		if (gameMenuState == GameMenuState.REGULARGAME || gameMenuState == GameMenuState.DEMOGAME){
+			for(BasicShip ship : game.getPlayer1().ships){
+				if(ship.getPlasticBase().contains(mouseX, mouseY)){
+					shipTray1.setShip(ship);
+				}
+			}
+			for(BasicShip ship : game.getPlayer2().ships){
+				if(ship.getPlasticBase().contains(mouseX, mouseY)){
+					shipTray2.setShip(ship);
 				}
 			}
 		}
@@ -179,8 +223,10 @@ public class MainGame extends BasicGame
 			g.translate(-translateX, -translateY);
 			
 			//render list type stuff
-			g.drawImage(textBackground,0,70);
-			g.drawImage(textBackground, background.getWidth()-textBackground.getWidth(), 70);
+			System.out.println("about to start rendering lists");
+			System.out.println(listPlayer1);
+			listPlayer1.render(g);
+			listPlayer2.render(g);
 			g.drawImage(gameScreenBackground, 0, 0);
 			shipTray1.render(g);
 			shipTray2.render(g);
