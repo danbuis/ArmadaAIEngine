@@ -16,6 +16,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import PlayerStuff.Game;
 import PlayerStuff.Player;
+import PlayerStuff.TurnStep;
 import gameComponents.BasicShip;
 
 public class MainGame extends BasicGame
@@ -97,24 +98,25 @@ public class MainGame extends BasicGame
 					gameMenuState = GameMenuState.DEMOGAME;
 					System.out.println("demo button pressed");
 					
-					Player P1 = new Player("P1", false);
-					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1);
+					Player P2 = new Player("P2", true);
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P2);
 					vic.moveAndRotate(457.2, 100, 0);
-					P1.addShip(vic);
+					P2.addShip(vic);
 					
-					Player P2 = new Player("P2", false);
-					BasicShip CR90 = new BasicShip("CR90A Corvette", P2);
+					Player P1 = new Player("P1", false);
+					BasicShip CR90 = new BasicShip("CR90A Corvette", P1);
 					CR90.moveAndRotate(257.2, 814.4, 0);
-					P2.addShip(CR90);
-					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2);
+					P1.addShip(CR90);
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P1);
 					NebB.moveAndRotate(657.2, 814.4, 0);
-					P2.addShip(NebB);
+					P1.addShip(NebB);
 					
 					
 					game = new Game(demoGameBorder, P1, P2);
 					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
 					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
 					game.incrementTurn();
+					game.turnStep = TurnStep.SHIPPHASE;
 					
 				}
 			}else if(standardButtonRectangle.contains(mouseX, mouseY)){
@@ -122,7 +124,7 @@ public class MainGame extends BasicGame
 					gameMenuState = GameMenuState.REGULARGAME;
 					System.out.println("standard game button pressed");
 					
-					Player P1 = new Player("P1", false);
+					Player P1 = new Player("P1", true);
 					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1);
 					vic.moveAndRotate(657.2, 600, 0);
 					P1.addShip(vic);
@@ -150,6 +152,7 @@ public class MainGame extends BasicGame
 					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
 
 					game.incrementTurn();
+					game.turnStep = TurnStep.SHIPPHASE;
 				}
 			}
 		}
