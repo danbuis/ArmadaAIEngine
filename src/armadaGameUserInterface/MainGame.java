@@ -44,6 +44,12 @@ public class MainGame extends BasicGame
 	private Image background;
 	private Image gameScreenBackground;
 	private Image textBackground;
+	
+	private Image contextButton1;
+	private Rectangle contextRect1;
+	private int context1X = 500;
+	private int context1Y = 900;
+	
 	private ShipTray shipTray1;
 	private ShipTray shipTray2;
 	
@@ -74,7 +80,9 @@ public class MainGame extends BasicGame
 		demoButtonRectangle = new Rectangle(totalWidth/2-mainMenuButtonWidth/2, totalHeight/2+mainMenuButtonHeight, mainMenuButtonWidth, mainMenuButtonHeight);
 		standardButtonRectangle = new Rectangle(totalWidth/2-mainMenuButtonWidth/2, totalHeight/2-mainMenuButtonHeight/2, mainMenuButtonWidth, mainMenuButtonHeight);
 		fleetBuilderButton = new Image("Graphics/UI/FleetBuilderButton.png");
-		System.out.println("demo rectangle "+demoButtonRectangle.getCenterX()+","+demoButtonRectangle.getCenterY());
+		contextButton1 = new Image("Graphics/UI/ContextButton.png");
+		contextRect1= new Rectangle(context1X, context1Y, contextButton1.getWidth(), contextButton1.getHeight());
+	
 
 		standardGameBorder = new Image("Graphics/UI/3x6border.png");
 		demoGameBorder = new Image("Graphics/UI/3x3border.png");
@@ -163,16 +171,23 @@ public class MainGame extends BasicGame
 				System.out.println("click : "+mouseX+","+mouseY);
 				System.out.println("translates to :"+convertedClick[0]+","+convertedClick[1]);
 				for(BasicShip ship : game.getPlayer1().ships){
-					if(ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+					if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
 						shipTray1.setShip(ship);
 						System.out.println("Sending ship to tray 1");
 					}
 				}
 				for(BasicShip ship : game.getPlayer2().ships){
-					if(ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+					if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
 						shipTray2.setShip(ship);
 						System.out.println("Sending ship to tray 2");
 					}
+				}
+				//if ship phase and no active ship, activate a pick active ship button
+				System.out.println(contextRect1.contains(mouseX, mouseY));
+				System.out.println(game.getActiveShip());
+				if(contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.turnStep.equals(TurnStep.SHIPPHASE) && game.getActiveShip()==null){
+					System.out.println("Setting active ship");
+					game.setActiveShip(shipTray1.getShip());
 				}
 			}
 		}
@@ -252,6 +267,20 @@ public class MainGame extends BasicGame
 			temp = game.turnStep.getLabel();
 			width=trueTypeFont.getWidth(temp);
 			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)height+gap, temp);
+			
+			if (game.getActiveShip()!=null){
+				temp = game.activationStep.getLabel();
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2f-width/2f), height*2+gap, temp);
+			}
+			
+			//if ship phase and no active ship, render a pick active ship button
+			if(shipTray1.getShip()!=null && game.turnStep.equals(TurnStep.SHIPPHASE) && game.getActiveShip()==null){
+				g.drawImage(contextButton1, context1X, context1Y);
+				temp = "ACTIVATE THIS SHIP";
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+			}
 		}
 	}
 	

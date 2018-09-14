@@ -80,6 +80,11 @@ public class Game {
 
 	public void setActiveShip(BasicShip activeShip) {
 		this.activeShip = activeShip;
+		activationStep = ActivationStep.PERFORMATTACKS;
+	}
+	
+	public void cancelActiveShip(){
+		this.activeShip = null;
 	}
 
 }
