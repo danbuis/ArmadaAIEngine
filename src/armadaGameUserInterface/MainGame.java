@@ -49,6 +49,10 @@ public class MainGame extends BasicGame
 	private ListDisplay listPlayer1;
 	private ListDisplay listPlayer2;
 	
+	private int translateX;
+	private int translateY;
+	private float scale;
+	
 	
 	public MainGame(String gamename)
 	{
@@ -151,14 +155,21 @@ public class MainGame extends BasicGame
 		}
 		
 		if (gameMenuState == GameMenuState.REGULARGAME || gameMenuState == GameMenuState.DEMOGAME){
-			for(BasicShip ship : game.getPlayer1().ships){
-				if(ship.getPlasticBase().contains(mouseX, mouseY)){
-					shipTray1.setShip(ship);
+			if(Mouse.isButtonDown(0)){
+				float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
+				System.out.println("click : "+mouseX+","+mouseY);
+				System.out.println("translates to :"+convertedClick[0]+","+convertedClick[1]);
+				for(BasicShip ship : game.getPlayer1().ships){
+					if(ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+						shipTray1.setShip(ship);
+						System.out.println("Sending ship to tray 1");
+					}
 				}
-			}
-			for(BasicShip ship : game.getPlayer2().ships){
-				if(ship.getPlasticBase().contains(mouseX, mouseY)){
-					shipTray2.setShip(ship);
+				for(BasicShip ship : game.getPlayer2().ships){
+					if(ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+						shipTray2.setShip(ship);
+						System.out.println("Sending ship to tray 2");
+					}
 				}
 			}
 		}
@@ -168,8 +179,6 @@ public class MainGame extends BasicGame
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
-		int translateX;
-		int translateY;
 		if(gameMenuState == GameMenuState.MAINMENU){
 			g.drawString("Mouse loc "+Mouse.getX()+","+Mouse.getY(), 10, 10);
 			g.drawImage(mainMenuBG, 0, 0);
@@ -200,15 +209,13 @@ public class MainGame extends BasicGame
 			int distanceActual = demoGameBorder.getHeight();
 			
 			//914.4mm divided by pixels = mm per pixel scaling
-			float scale = (float)distanceReference/distanceActual;
-			
+			scale = (float)(distanceActual/distanceReference);
 			
 			//scale it relative to scale of board
 			g.translate(translateX, translateY);
-			g.scale(1/scale, 1/scale);
+			g.scale(scale, scale);
 			
 			if(game != null){
-				System.out.println("inside game not null loop");
 				for(BasicShip ship: game.getPlayer1().ships){
 					ship.draw(demoGameBorder, g);
 				}
@@ -219,12 +226,10 @@ public class MainGame extends BasicGame
 
 			}
 			//reset Graphics settings
-			g.scale(scale, scale);
+			g.scale(1/scale, 1/scale);
 			g.translate(-translateX, -translateY);
 			
 			//render list type stuff
-			System.out.println("about to start rendering lists");
-			System.out.println(listPlayer1);
 			listPlayer1.render(g);
 			listPlayer2.render(g);
 			g.drawImage(gameScreenBackground, 0, 0);
@@ -245,6 +250,17 @@ public class MainGame extends BasicGame
 			width=trueTypeFont.getWidth(temp);
 			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)height+gap, temp);
 		}
+	}
+	
+	private float[] convertClickToBoardCoords(int mouseX, int mouseY){
+		float[] returnArray = new float[2];
+		
+		returnArray[0] = (mouseX-translateX)/scale;
+		//render coords have origin at UL
+		//mouse coords have origin at LL
+		returnArray[1] = (914.4f-(mouseY-(gameScreenBackground.getHeight()-translateY-demoGameBorder.getHeight()))/scale);
+		
+		return returnArray;
 	}
 
 	public static void main(String[] args)
