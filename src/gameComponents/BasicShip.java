@@ -28,10 +28,6 @@ public class BasicShip {
 	private BaseSize size;
 	private int hull;
 	private ArrayList<HullZone> hullzones = new ArrayList<HullZone>();
-	//private HullZone front;
-	//private HullZone left;
-	//private HullZone right;
-	//private HullZone rear;
 	private String antiSquad;
 	private int command;
 	private int squadron;
