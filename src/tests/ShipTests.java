@@ -2,6 +2,8 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.newdawn.slick.geom.Polygon;
 
@@ -18,7 +20,7 @@ public class ShipTests {
 	 */
 	@Test
 	public void testBasicShipNebSupport() {
-		BasicShip testShip = new BasicShip("Nebulon-B Support Frigate");
+		BasicShip testShip = new BasicShip("Nebulon-B Support Frigate", null);
 		
 		//check that it even exists...
 		assertTrue(testShip!=null);
@@ -49,7 +51,7 @@ public class ShipTests {
 	 */
 	@Test
 	public void testBasicShipVictory() {
-		BasicShip testShip = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip testShip = new BasicShip("Victory 1 Star Destroyer", null);
 		
 		//check that it even exists...
 		assertTrue(testShip!=null);
@@ -76,7 +78,7 @@ public class ShipTests {
 	
 	@Test
 	public void testHullZones(){
-		BasicShip vic1 = new BasicShip ("Victory 1 Star Destroyer");
+		BasicShip vic1 = new BasicShip ("Victory 1 Star Destroyer", null);
 		
 		assertEquals(3, vic1.getHullZone(0).getShields());
 		assertEquals("RRRKKK", vic1.getHullZone(0).getArmament());
@@ -93,13 +95,13 @@ public class ShipTests {
 	
 	@Test
 	public void testNavChart(){
-		BasicShip vic1 = new BasicShip ("Victory 1 Star Destroyer");
+		BasicShip vic1 = new BasicShip ("Victory 1 Star Destroyer", null);
 		
 		assertEquals(1, vic1.getNavChart()[1][0]);
 		assertEquals(0, vic1.getNavChart()[2][0]);
 		assertEquals(1, vic1.getNavChart()[2][1]);
 		
-		BasicShip CR90B = new BasicShip("CR90B Corvette");
+		BasicShip CR90B = new BasicShip("CR90B Corvette", null);
 		assertEquals(2, CR90B.getNavChart()[1][0]);
 		
 		assertEquals(1, CR90B.getNavChart()[2][0]);
@@ -118,7 +120,7 @@ public class ShipTests {
 	
 	@Test
 	public void testHullZoneGeometryNebB(){
-		BasicShip test = new BasicShip("Nebulon-B Support Frigate");
+		BasicShip test = new BasicShip("Nebulon-B Support Frigate", null);
 		
 		HullZone front = test.getHullZone(0);
 		assertEquals(3, front.getGeometry().getPointCount());
@@ -171,7 +173,7 @@ public class ShipTests {
 	
 	@Test
 	public void testHullZoneGeometryVic(){
-		BasicShip test = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
 		
 		HullZone front = test.getHullZone(0);
 		assertEquals(5, front.getGeometry().getPointCount());
@@ -242,7 +244,7 @@ public class ShipTests {
 	
 	@Test
 	public void testPlasicBase(){
-		BasicShip test = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
 		Polygon plasticBase = test.getPlasticBase();
 		
 		assertTrue(plasticBase.contains((float)22.5, (float)35.5));
@@ -250,6 +252,27 @@ public class ShipTests {
 		assertTrue(plasticBase.contains((float)-22.5, (float)-35.5));
 		assertTrue(plasticBase.contains((float)-22.5, (float)35.5));
 		
+	}
+	
+	@Test
+	public void testAdjacentHullZones(){
+		BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
+		
+		ArrayList<HullZone> adjacents = test.getAdjacentHullZones(test.getHullZone(0));
+		assertTrue(adjacents.contains(test.getHullZone(1)));
+		assertTrue(adjacents.contains(test.getHullZone(3)));
+		
+		adjacents = test.getAdjacentHullZones(test.getHullZone(3));
+		assertTrue(adjacents.contains(test.getHullZone(0)));
+		assertTrue(adjacents.contains(test.getHullZone(2)));
+		
+		adjacents = test.getAdjacentHullZones(test.getHullZone(2));
+		assertTrue(adjacents.contains(test.getHullZone(1)));
+		assertTrue(adjacents.contains(test.getHullZone(3)));
+		
+		adjacents = test.getAdjacentHullZones(test.getHullZone(1));
+		assertTrue(adjacents.contains(test.getHullZone(0)));
+		assertTrue(adjacents.contains(test.getHullZone(2)));
 	}
 
 }

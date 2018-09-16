@@ -1,18 +1,22 @@
 package armadaGameUserInterface;
+import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 
 import PlayerStuff.Game;
 import PlayerStuff.Player;
+import PlayerStuff.TurnStep;
 import gameComponents.BasicShip;
 
 public class MainGame extends BasicGame
@@ -38,13 +42,23 @@ public class MainGame extends BasicGame
 	private Image standardGameBorder;
 	private Image demoGameBorder;
 	private Image background;
-	private Image shipDetailWindow1;
-	private Image shipDetailWindow2;
 	private Image gameScreenBackground;
 	private Image textBackground;
 	
-	private int shipDetailWindowWidth;
-	private int shipDetailWindowHeight;
+	private Image contextButton1;
+	private Rectangle contextRect1;
+	private int context1X = 500;
+	private int context1Y = 900;
+	
+	private ShipTray shipTray1;
+	private ShipTray shipTray2;
+	
+	private ListDisplay listPlayer1;
+	private ListDisplay listPlayer2;
+	
+	private int translateX;
+	private int translateY;
+	private float scale;
 	
 	
 	public MainGame(String gamename)
@@ -66,18 +80,19 @@ public class MainGame extends BasicGame
 		demoButtonRectangle = new Rectangle(totalWidth/2-mainMenuButtonWidth/2, totalHeight/2+mainMenuButtonHeight, mainMenuButtonWidth, mainMenuButtonHeight);
 		standardButtonRectangle = new Rectangle(totalWidth/2-mainMenuButtonWidth/2, totalHeight/2-mainMenuButtonHeight/2, mainMenuButtonWidth, mainMenuButtonHeight);
 		fleetBuilderButton = new Image("Graphics/UI/FleetBuilderButton.png");
-		System.out.println("demo rectangle "+demoButtonRectangle.getCenterX()+","+demoButtonRectangle.getCenterY());
+		contextButton1 = new Image("Graphics/UI/ContextButton.png");
+		contextRect1= new Rectangle(context1X, context1Y, contextButton1.getWidth(), contextButton1.getHeight());
+	
 
 		standardGameBorder = new Image("Graphics/UI/3x6border.png");
 		demoGameBorder = new Image("Graphics/UI/3x3border.png");
 		background = new Image("Graphics/UI/blackBackground.png");
-		shipDetailWindow1 = new Image("Graphics/UI/shipDetailWindow.png");
-		shipDetailWindow2 = new Image("Graphics/UI/shipDetailWindow.png");
+		Image shipDetailWindow = new Image("Graphics/UI/shipDetailWindow.png");
+		shipTray1 = new ShipTray(20, totalHeight-shipDetailWindow.getHeight()-20, shipDetailWindow);
+		shipTray2 = new ShipTray(totalWidth-20-shipDetailWindow.getWidth(), totalHeight-shipDetailWindow.getHeight()-20, shipDetailWindow);
+		
 		gameScreenBackground = new Image("Graphics/UI/GameScreenBG.png");
 		textBackground = new Image("Graphics/UI/listbackground.png");
-		
-		shipDetailWindowWidth = shipDetailWindow1.getWidth();
-		shipDetailWindowHeight = shipDetailWindow1.getHeight();
 	}
 
 	@Override
@@ -91,27 +106,88 @@ public class MainGame extends BasicGame
 					gameMenuState = GameMenuState.DEMOGAME;
 					System.out.println("demo button pressed");
 					
-					Player P1 = new Player("P1", false);
-					BasicShip vic = new BasicShip("Victory 2 Star Destroyer");
+					Player P2 = new Player("P2", true);
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P2);
 					vic.moveAndRotate(457.2, 100, 0);
-					P1.addShip(vic);
+					P2.addShip(vic);
 					
-					Player P2 = new Player("P2", false);
-					BasicShip CR90 = new BasicShip("CR90A Corvette");
+					Player P1 = new Player("P1", false);
+					BasicShip CR90 = new BasicShip("CR90A Corvette", P1);
 					CR90.moveAndRotate(257.2, 814.4, 0);
-					P2.addShip(CR90);
-					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate");
+					P1.addShip(CR90);
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P1);
 					NebB.moveAndRotate(657.2, 814.4, 0);
-					P2.addShip(NebB);
+					P1.addShip(NebB);
 					
 					
 					game = new Game(demoGameBorder, P1, P2);
+					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
+					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
+					game.incrementTurn();
+					game.turnStep = TurnStep.SHIPPHASE;
 					
 				}
 			}else if(standardButtonRectangle.contains(mouseX, mouseY)){
 				if(Mouse.isButtonDown(0)){
 					gameMenuState = GameMenuState.REGULARGAME;
 					System.out.println("standard game button pressed");
+					
+					Player P1 = new Player("P1", true);
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1);
+					vic.moveAndRotate(657.2, 600, 0);
+					P1.addShip(vic);
+					BasicShip vic2 = new BasicShip("Victory 2 Star Destroyer", P1);
+					vic2.moveAndRotate(457.2, 600, 0);
+					P1.addShip(vic2);
+					
+					Player P2 = new Player("P2", false);
+					BasicShip CR90 = new BasicShip("CR90A Corvette", P2);
+					CR90.moveAndRotate(457.2, 414.4, 0);
+					P2.addShip(CR90);
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2);
+					NebB.moveAndRotate(857.2, 814.4, 0);
+					P2.addShip(NebB);
+					BasicShip NebB2 = new BasicShip("Nebulon-B Escort Frigate", P2);
+					NebB2.moveAndRotate(657.2, 914.4, 0);
+					P2.addShip(NebB2);
+					BasicShip NebB3 = new BasicShip("Nebulon-B Escort Frigate", P2);
+					NebB3.moveAndRotate(627.2, 714.4, 0);
+					P2.addShip(NebB3);
+					
+					
+					game = new Game(demoGameBorder, P1, P2);
+					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
+					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
+
+					game.incrementTurn();
+					game.turnStep = TurnStep.SHIPPHASE;
+				}
+			}
+		}
+		
+		if (gameMenuState == GameMenuState.REGULARGAME || gameMenuState == GameMenuState.DEMOGAME){
+			if(Mouse.isButtonDown(0)){
+				float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
+				System.out.println("click : "+mouseX+","+mouseY);
+				System.out.println("translates to :"+convertedClick[0]+","+convertedClick[1]);
+				for(BasicShip ship : game.getPlayer1().ships){
+					if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+						shipTray1.setShip(ship);
+						System.out.println("Sending ship to tray 1");
+					}
+				}
+				for(BasicShip ship : game.getPlayer2().ships){
+					if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+						shipTray2.setShip(ship);
+						System.out.println("Sending ship to tray 2");
+					}
+				}
+				//if ship phase and no active ship, activate a pick active ship button
+				System.out.println(contextRect1.contains(mouseX, mouseY));
+				System.out.println(game.getActiveShip());
+				if(contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.turnStep.equals(TurnStep.SHIPPHASE) && game.getActiveShip()==null){
+					System.out.println("Setting active ship");
+					game.setActiveShip(shipTray1.getShip());
 				}
 			}
 		}
@@ -121,8 +197,6 @@ public class MainGame extends BasicGame
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
-		int translateX;
-		int translateY;
 		if(gameMenuState == GameMenuState.MAINMENU){
 			g.drawString("Mouse loc "+Mouse.getX()+","+Mouse.getY(), 10, 10);
 			g.drawImage(mainMenuBG, 0, 0);
@@ -153,15 +227,13 @@ public class MainGame extends BasicGame
 			int distanceActual = demoGameBorder.getHeight();
 			
 			//914.4mm divided by pixels = mm per pixel scaling
-			float scale = (float)distanceReference/distanceActual;
-			
+			scale = (float)(distanceActual/distanceReference);
 			
 			//scale it relative to scale of board
 			g.translate(translateX, translateY);
-			g.scale(1/scale, 1/scale);
+			g.scale(scale, scale);
 			
 			if(game != null){
-				System.out.println("inside game not null loop");
 				for(BasicShip ship: game.getPlayer1().ships){
 					ship.draw(demoGameBorder, g);
 				}
@@ -172,16 +244,55 @@ public class MainGame extends BasicGame
 
 			}
 			//reset Graphics settings
-			g.scale(scale, scale);
+			g.scale(1/scale, 1/scale);
 			g.translate(-translateX, -translateY);
 			
 			//render list type stuff
-			g.drawImage(textBackground,0,70);
-			g.drawImage(textBackground, background.getWidth()-textBackground.getWidth(), 70);
+			listPlayer1.render(g);
+			listPlayer2.render(g);
 			g.drawImage(gameScreenBackground, 0, 0);
-			g.drawImage(shipDetailWindow1, 270, totalHeight-shipDetailWindow1.getHeight()-20);
-			g.drawImage(shipDetailWindow2, 643, totalHeight-shipDetailWindow1.getHeight()-20);
+			shipTray1.render(g);
+			shipTray2.render(g);
+			
+			//Adding in game state headers (turn #, turn step, attack step, etc.
+			g.setColor(Color.black);
+			TrueTypeFont trueTypeFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
+			int height = trueTypeFont.getHeight();
+			int gap = 5;
+			
+			String temp = "Turn "+game.getTurn();
+			int width = trueTypeFont.getWidth(temp);
+			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)gap, temp);
+			
+			temp = game.turnStep.getLabel();
+			width=trueTypeFont.getWidth(temp);
+			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)height+gap, temp);
+			
+			if (game.getActiveShip()!=null){
+				temp = game.activationStep.getLabel();
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2f-width/2f), height*2+gap, temp);
+			}
+			
+			//if ship phase and no active ship, render a pick active ship button
+			if(shipTray1.getShip()!=null && game.turnStep.equals(TurnStep.SHIPPHASE) && game.getActiveShip()==null){
+				g.drawImage(contextButton1, context1X, context1Y);
+				temp = "ACTIVATE THIS SHIP";
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+			}
 		}
+	}
+	
+	private float[] convertClickToBoardCoords(int mouseX, int mouseY){
+		float[] returnArray = new float[2];
+		
+		returnArray[0] = (mouseX-translateX)/scale;
+		//render coords have origin at UL
+		//mouse coords have origin at LL
+		returnArray[1] = (914.4f-(mouseY-(gameScreenBackground.getHeight()-translateY-demoGameBorder.getHeight()))/scale);
+		
+		return returnArray;
 	}
 
 	public static void main(String[] args)

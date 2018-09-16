@@ -15,6 +15,7 @@ FrontArcOffset 0
 RearArcOffset 0
 FrontArcConjunction 35.5
 RearArcConjunction 35.5
+Graphics/UI/Neb B.png
 
 Nebulon-B Support Frigate
 Size Small
@@ -33,6 +34,7 @@ FrontArcOffset 0
 RearArcOffset 0
 FrontArcConjunction 35.5
 RearArcConjunction 35.5
+Graphics/UI/Neb B.png
 
 CR90A Corvette
 Size Small
@@ -51,6 +53,7 @@ FrontArcOffset 22.22
 RearArcOffset 6.1
 FrontArcConjunction 41.28
 RearArcConjunction 41.28
+Graphics/UI/CR90.png
 
 CR90B Corvette
 Size Small
@@ -69,6 +72,7 @@ FrontArcOffset 22.22
 RearArcOffset 6.1
 FrontArcConjunction 41.28
 RearArcConjunction 41.28
+Graphics/UI/CR90.png
 
 Victory 1 Star Destroyer
 Size Medium
@@ -87,6 +91,7 @@ FrontArcOffset 23.81
 RearArcOffset 23.81
 FrontArcConjunction 47.62
 RearArcConjunction 47.62
+Graphics/UI/Vic.png
 
 Victory 2 Star Destroyer
 Size Medium
@@ -105,3 +110,4 @@ FrontArcOffset 23.81
 RearArcOffset 23.81
 FrontArcConjunction 47.62
 RearArcConjunction 47.62
+Graphics/UI/Vic.png

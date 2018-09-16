@@ -8,21 +8,25 @@ import java.util.Scanner;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
+import PlayerStuff.Player;
 import gameComponents.DefenseToken.DefenseTokenType;
 
 public class BasicShip {
 	
+	private Player owner;
 	private float xCoord = 0;
 	private float yCoord = 0;
 	private final float plasticRailWidth = 2;
 	private Polygon plasticBase;
 	private String name;
+	private boolean activated=false;
 
 	private Faction faction;
 	private BaseSize size;
@@ -39,15 +43,17 @@ public class BasicShip {
 	private float rearArcOffset;
 	private float frontConjunction;
 	private float rearConjunction;
+	private Image shipImage;
 	
 	private Line FR;
 	private Line FL;
 	private Line RL;
 	private Line RR;
 
-	public BasicShip(String name) {
+	public BasicShip(String name, Player owner) {
 		File shipData = new File("shipData");
 		this.name = name;
+		this.owner = owner;
 		boolean shipFound = false;
 
 		try {
@@ -123,6 +129,8 @@ public class BasicShip {
 
 					calculateHullZoneGeometry();
 					
+					setShipImage(sc.nextLine());
+					
 					//set boolean to true in order to exit while loop
 					shipFound=true;
 					
@@ -141,40 +149,46 @@ public class BasicShip {
 	 * builds hull zone and plastic base geometry.
 	 */
 	private void calculateHullZoneGeometry() {
+		int index;
+		
 		// build hull zone geometry
 		// front hullzone
 		Polygon frontPolygon = new Polygon();
+		index = 0;
 		frontPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
 		frontPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord,(float)this.size.getLength()/2 + this.yCoord);
 		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 + this.yCoord);
 		frontPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 -frontArcOffset + this.yCoord);
 		frontPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
-		hullzones.get(0).setGeometry(frontPolygon);
+		hullzones.get(index).initializeGeometry(frontPolygon, index);
 		
 		//rear hullzone
 		Polygon rearPolygon = new Polygon();
+		index = 2;
 		rearPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
 		rearPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
 		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 + this.yCoord);
 		rearPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 +rearArcOffset + this.yCoord);
 		rearPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
-		hullzones.get(2).setGeometry(rearPolygon);
+		hullzones.get(index).initializeGeometry(rearPolygon, index);
 		
 		//left hullzone
 		Polygon leftPolygon = new Polygon();
+		index = 3;
 		leftPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/-2 +rearArcOffset + this.yCoord);
 		leftPolygon.addPoint((float)this.size.getWidth()/-2 + this.xCoord, (float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
 		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
 		leftPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
-		hullzones.get(3).setGeometry(leftPolygon);
+		hullzones.get(index).initializeGeometry(leftPolygon, index);
 		
 		//right hullzone
 		Polygon rightPolygon = new Polygon();
+		index = 1;
 		rightPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/2 -frontArcOffset + this.yCoord);
 		rightPolygon.addPoint((float)this.size.getWidth()/2 + this.xCoord, (float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
-		hullzones.get(1).setGeometry(rightPolygon);
+		hullzones.get(index).initializeGeometry(rightPolygon, index);
 		
 		FR = new Line((float)this.size.getWidth()/2 + this.xCoord, 
 				(float)this.size.getLength()/2 -frontArcOffset + this.yCoord,
@@ -280,6 +294,7 @@ public class BasicShip {
 		
 		for(HullZone zone: hullzones){
 			zone.setGeometry((Polygon)zone.getGeometry().transform(translate));
+			zone.setYellowDot((Point)zone.getYellowDot().transform(translate));
 		}
 
 		
@@ -321,7 +336,6 @@ public class BasicShip {
 
 	//game border is used as the scaling reference
 	public void draw(Image demoGameBorder, Graphics g) {
-		System.out.println("drawing " +name);
 		g.setColor(Color.white);
 		g.fill(plasticBase);
 		
@@ -338,6 +352,10 @@ public class BasicShip {
 		g.draw(FR);
 		g.draw(RL);
 		g.draw(RR);
+		
+		float scale = plasticBase.getHeight()/shipImage.getHeight();
+		Image copy = shipImage.getScaledCopy(scale);
+		g.drawImage(copy, xCoord-copy.getWidth()/2, yCoord-copy.getHeight()/2);
 	}
 
 	public Faction getFaction() {
@@ -450,6 +468,39 @@ public class BasicShip {
 	
 	public Polygon getPlasticBase() {
 		return this.plasticBase;
+	}
+
+	public boolean isActivated() {
+		return activated;
+	}
+
+	public void setActivated(boolean activated) {
+		this.activated = activated;
+	}
+
+	public Player getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Player owner) {
+		this.owner = owner;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public Image getShipImage() {
+		return shipImage;
+	}
+
+	public void setShipImage(String string) {
+		try {
+			this.shipImage = new Image(string);
+		} catch (SlickException e) {
+			System.out.println("failed to find image file at : "+string);
+			e.printStackTrace();
+		}
 	}
 	
 	

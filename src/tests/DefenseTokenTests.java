@@ -16,14 +16,18 @@ public class DefenseTokenTests {
 	@Test
 	public void generalSpendTest() {
 		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER);
-		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer");
-		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
 		
 		//token initialized as ready
 		assertEquals(DefenseTokenStatus.READY, scatter.getStatus());
 		//should be damage, so it should spend
+		while(atk.diceRoll.getTotalDamage()==0){
+			atk.formAttackPool();
+		}
+		
 		assertTrue(scatter.spendToken(true, atk, 0));
 		//now it is exhausted
 		assertEquals(DefenseTokenStatus.EXHAUSTED, scatter.getStatus());
@@ -33,6 +37,10 @@ public class DefenseTokenTests {
 		
 		//new attack, so it will spend and then be discarded
 		atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		
+		while(atk.diceRoll.getTotalDamage()==0){
+			atk.formAttackPool();
+		}
 		assertTrue(scatter.spendToken(true, atk, 0));
 		
 		assertEquals(DefenseTokenStatus.DISCARDED, scatter.getStatus());
@@ -47,13 +55,38 @@ public class DefenseTokenTests {
 	public void noRepeatTokensTest(){
 		DefenseToken evade = new DefenseToken(DefenseTokenType.EVADE);
 		DefenseToken evade2 = new DefenseToken(DefenseTokenType.EVADE);
-		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer");
-		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer");
+		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
 		
 		atk.setRange(Range.LONG);
 		assertTrue(evade.spendToken(true, atk, 0));
 		assertFalse(evade2.spendToken(true, atk, 0));
+	}
+	
+	@Test
+	public void testReadyDefenseToken(){
+		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
+		ship2.moveAndRotate(200, 0, 0);
+		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		
+		while(atk.diceRoll.getTotalDamage()<2){
+			atk.formAttackPool();
+		}
+		DefenseToken brace = new DefenseToken(DefenseTokenType.BRACE);
+		
+		assertTrue(brace.isReady());
+		assertFalse(brace.isExhausted());
+		
+		brace.spendToken(true, atk, 1);
+		
+		assertFalse(brace.isReady());
+		assertTrue(brace.isExhausted());
+		
+		brace.readyToken();
+		assertTrue(brace.isReady());
+		assertFalse(brace.isExhausted());
 	}
 }
