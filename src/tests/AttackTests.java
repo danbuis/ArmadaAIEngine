@@ -16,7 +16,7 @@ public class AttackTests {
 		BasicShip ship2 = new BasicShip("Victory 2 Star Destroyer", null);
 		ship2.moveAndRotate(40, 0, 0);
 		
-		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		Attack atk = new Attack(ship1, ship2, 0, 2);
 		
 		assertEquals("RRRKKK", atk.formAttackPool());
 		
@@ -26,7 +26,7 @@ public class AttackTests {
 		atk.setRange(Range.MEDIUM);
 		assertEquals("RRR", atk.formAttackPool());
 		
-		atk = new Attack(ship2, ship1, ship2.getHullZone(0), ship1.getHullZone(2));
+		atk = new Attack(ship2, ship1, 0, 2);
 		
 		assertEquals("RRRBBB", ship2.getHullZone(0).getArmament());
 		

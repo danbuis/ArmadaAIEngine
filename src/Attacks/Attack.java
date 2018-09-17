@@ -17,13 +17,13 @@ public class Attack {
 	public AttackPool diceRoll;
 	private String armament;
 	
-	public Attack(BasicShip attackingShip, BasicShip defendingShip, HullZone attackingZone, HullZone defendingZone){
+	public Attack(BasicShip attackingShip, BasicShip defendingShip, int attackingZone, int defendingZone){
 		this.attackingShip = attackingShip;
 		this.defendingShip = defendingShip;
-		this.attackingZone = attackingZone;
-		this.defendingZone = defendingZone;
-		this.setRange(geometryHelper.getRange(geometryHelper.rangeToPolygon(attackingZone.getGeometry(), defendingZone.getGeometry())));
-		this.armament = attackingZone.getArmament();
+		this.attackingZone = attackingShip.getHullZone(attackingZone);
+		this.defendingZone = defendingShip.getHullZone(defendingZone);
+		this.setRange(geometryHelper.getRange(geometryHelper.rangeToPolygon(this.attackingZone.getGeometry(), this.defendingZone.getGeometry())));
+		this.armament = this.attackingZone.getArmament();
 		formAttackPool();
 	}
 	

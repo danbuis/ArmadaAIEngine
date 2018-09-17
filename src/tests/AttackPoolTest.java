@@ -37,7 +37,7 @@ public class AttackPoolTest {
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		
-		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		Attack atk = new Attack(ship1, ship2, 0, 2);
 		assertEquals("RRRKKK", ship1.getHullZone(0).getArmament());
 		
 		while(atk.diceRoll.getTotalDamage()==0){
@@ -59,7 +59,7 @@ public class AttackPoolTest {
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		
-		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		Attack atk = new Attack(ship1, ship2, 0, 2);
 		atk.setRange(Range.LONG);
 
 		assertNotNull(atk);

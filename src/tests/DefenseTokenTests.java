@@ -19,7 +19,7 @@ public class DefenseTokenTests {
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
-		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		Attack atk = new Attack(ship1, ship2, 0, 2);
 		
 		//token initialized as ready
 		assertEquals(DefenseTokenStatus.READY, scatter.getStatus());
@@ -36,7 +36,7 @@ public class DefenseTokenTests {
 		assertEquals(DefenseTokenStatus.EXHAUSTED, scatter.getStatus());
 		
 		//new attack, so it will spend and then be discarded
-		atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		atk = new Attack(ship1, ship2, 0, 2);
 		
 		while(atk.diceRoll.getTotalDamage()==0){
 			atk.formAttackPool();
@@ -46,7 +46,7 @@ public class DefenseTokenTests {
 		assertEquals(DefenseTokenStatus.DISCARDED, scatter.getStatus());
 		
 		//new attack, so it will normally spend, but since it is discarded the whole thing doesn't go off.
-		atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		atk = new Attack(ship1, ship2, 0, 2);
 		assertFalse(scatter.spendToken(true, atk, 0));
 	}
 
@@ -58,7 +58,7 @@ public class DefenseTokenTests {
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
-		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		Attack atk = new Attack(ship1, ship2, 0, 2);
 		
 		atk.setRange(Range.LONG);
 		assertTrue(evade.spendToken(true, atk, 0));
@@ -70,7 +70,7 @@ public class DefenseTokenTests {
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
-		Attack atk = new Attack(ship1, ship2, ship1.getHullZone(0), ship2.getHullZone(2));
+		Attack atk = new Attack(ship1, ship2, 0, 2);
 		
 		while(atk.diceRoll.getTotalDamage()<2){
 			atk.formAttackPool();
