@@ -3,6 +3,7 @@ package tests;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
 
 import gameComponents.BasicShip;
@@ -52,6 +53,26 @@ public class GeometryTesting {
 		
 		assertEquals(-12.5f, point.getPoints()[0], 0.001);
 		assertEquals(0, point.getPoints()[1], 0.001);
+		
+	}
+	
+	@Test
+	public void testLineIntersections(){
+		Line vert1 = new Line(0,5,0,-5);
+		Line vert2 = new Line(0,10,0,0);
+		Line hori1 = new Line(5,0,-5,0);
+		Line hori2 = new Line(5,-1,-5,-1);
+		
+		Line diagonal1 = new Line(10,10,0,0);
+		Line diagonal2 = new Line(11,11,1,1);
+		Line diagonal3 = new Line(0,10,10,0);
+		
+		assertTrue(vert1.intersects(hori1));
+		assertTrue(vert2.intersects(hori1));
+		assertFalse(vert2.intersects(hori2));
+		assertFalse(hori1.intersects(hori2));
+		
+		assertTrue(diagonal1.intersects(diagonal3));
 		
 	}
 

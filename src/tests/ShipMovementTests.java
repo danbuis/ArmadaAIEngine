@@ -78,10 +78,12 @@ BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
 		
 		assertEquals(0, right.getNthPointOfGeometry(3).getX(), 0.001);
 		assertEquals(3.38, right.getNthPointOfGeometry(3).getY(), 0.001);
+		assertEquals(43, front.getYellowDot().getMaxY(), 0.001);
 		
 		test.moveAndRotate(10, 10, 0);
 		
 		front = test.getHullZone(0);
+		assertEquals(53, front.getYellowDot().getMaxY(), 0.001);
 		assertEquals(5, front.getGeometry().getPointCount());
 		
 		assertEquals(-20.5, front.getNthPointOfGeometry(0).getX(), 0.001);

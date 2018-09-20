@@ -1,5 +1,6 @@
 package armadaGameUserInterface;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,9 +16,11 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 
 import PlayerStuff.Game;
+import PlayerStuff.GameStep;
 import PlayerStuff.Player;
 import PlayerStuff.TurnStep;
 import gameComponents.BasicShip;
+import gameComponents.HullZone;
 
 public class MainGame extends BasicGame
 {
@@ -107,15 +110,15 @@ public class MainGame extends BasicGame
 					System.out.println("demo button pressed");
 					
 					Player P2 = new Player("P2", true);
-					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P2);
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P2, false);
 					vic.moveAndRotate(457.2, 100, 0);
 					P2.addShip(vic);
 					
 					Player P1 = new Player("P1", false);
-					BasicShip CR90 = new BasicShip("CR90A Corvette", P1);
+					BasicShip CR90 = new BasicShip("CR90A Corvette", P1, false);
 					CR90.moveAndRotate(257.2, 814.4, 0);
 					P1.addShip(CR90);
-					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P1);
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P1, false);
 					NebB.moveAndRotate(657.2, 814.4, 0);
 					P1.addShip(NebB);
 					
@@ -124,7 +127,7 @@ public class MainGame extends BasicGame
 					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
 					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
 					game.incrementTurn();
-					game.turnStep = TurnStep.SHIPPHASE;
+					game.setGameStep(GameStep.SELECTSHIPTOACTIVATE);
 					
 				}
 			}else if(standardButtonRectangle.contains(mouseX, mouseY)){
@@ -133,24 +136,24 @@ public class MainGame extends BasicGame
 					System.out.println("standard game button pressed");
 					
 					Player P1 = new Player("P1", true);
-					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1);
+					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1, false);
 					vic.moveAndRotate(657.2, 600, 0);
 					P1.addShip(vic);
-					BasicShip vic2 = new BasicShip("Victory 2 Star Destroyer", P1);
+					BasicShip vic2 = new BasicShip("Victory 2 Star Destroyer", P1, false);
 					vic2.moveAndRotate(457.2, 600, 0);
 					P1.addShip(vic2);
 					
 					Player P2 = new Player("P2", false);
-					BasicShip CR90 = new BasicShip("CR90A Corvette", P2);
+					BasicShip CR90 = new BasicShip("CR90A Corvette", P2, false);
 					CR90.moveAndRotate(457.2, 414.4, 0);
 					P2.addShip(CR90);
-					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2);
+					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2, false);
 					NebB.moveAndRotate(857.2, 814.4, 0);
 					P2.addShip(NebB);
-					BasicShip NebB2 = new BasicShip("Nebulon-B Escort Frigate", P2);
+					BasicShip NebB2 = new BasicShip("Nebulon-B Escort Frigate", P2, false);
 					NebB2.moveAndRotate(657.2, 914.4, 0);
 					P2.addShip(NebB2);
-					BasicShip NebB3 = new BasicShip("Nebulon-B Escort Frigate", P2);
+					BasicShip NebB3 = new BasicShip("Nebulon-B Escort Frigate", P2, false);
 					NebB3.moveAndRotate(627.2, 714.4, 0);
 					P2.addShip(NebB3);
 					
@@ -160,38 +163,96 @@ public class MainGame extends BasicGame
 					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
 
 					game.incrementTurn();
-					game.turnStep = TurnStep.SHIPPHASE;
+					game.setGameStep(GameStep.SELECTSHIPTOACTIVATE);
 				}
 			}
 		}
 		
 		if (gameMenuState == GameMenuState.REGULARGAME || gameMenuState == GameMenuState.DEMOGAME){
-			if(Mouse.isButtonDown(0)){
-				float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
-				System.out.println("click : "+mouseX+","+mouseY);
-				System.out.println("translates to :"+convertedClick[0]+","+convertedClick[1]);
-				for(BasicShip ship : game.getPlayer1().ships){
-					if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
-						shipTray1.setShip(ship);
-						System.out.println("Sending ship to tray 1");
+			switch (game.getGameStep()){
+			//deployment
+			case DEPLOYMENT: //TODO
+				break;
+			//commandPhase
+			case COMMANDPHASE: 
+				break;
+			//select ship for activation
+			case SELECTSHIPTOACTIVATE:
+				if(Mouse.isButtonDown(0)){
+					float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
+					System.out.println("click : "+mouseX+","+mouseY);
+					System.out.println("translates to :"+convertedClick[0]+","+convertedClick[1]);
+					for(BasicShip ship : game.getPlayer1().ships){
+						if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+							shipTray1.setShip(ship);
+							System.out.println("Sending ship to tray 1");
+						}
+					}
+					for(BasicShip ship : game.getPlayer2().ships){
+						if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
+							shipTray2.setShip(ship);
+							System.out.println("Sending ship to tray 2");
+						}
 					}
 				}
-				for(BasicShip ship : game.getPlayer2().ships){
-					if(game.getActiveShip()==null && ship.getPlasticBase().contains(convertedClick[0], convertedClick[1])){
-						shipTray2.setShip(ship);
-						System.out.println("Sending ship to tray 2");
-					}
-				}
+				
 				//if ship phase and no active ship, activate a pick active ship button
 				System.out.println(contextRect1.contains(mouseX, mouseY));
 				System.out.println(game.getActiveShip());
-				if(contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.turnStep.equals(TurnStep.SHIPPHASE) && game.getActiveShip()==null){
+				if(Mouse.isButtonDown(0) && contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.getGameStep().equals(GameStep.SELECTSHIPTOACTIVATE) && game.getActiveShip()==null){
 					System.out.println("Setting active ship");
 					game.setActiveShip(shipTray1.getShip());
+					game.incrementGameStep();
 				}
-			}
+				break;
+			case SELECTATTACK:
+				if(Mouse.isButtonDown(0)){
+					System.out.println("registering click");
+					float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
+					boolean clickFound = false;
+					for(HullZone zone : game.getActiveShip().getAllHullZones()){
+						if (zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
+							// the click is on the active ship 
+							//set att zone in game
+							game.setAttackingHullZoneSelection(zone);
+							//clear the defending zones in game
+							game.setDefendingHullZoneSelection(null);
+							game.setDefendingHullZone(null);
+							//repopulate defending zones
+							game.populateDefendingHullZoneList(game.getActiveShip(), zone);
+							clickFound = true;
+							System.out.println("Click found for an attacking zone");
+						}
+					}
+					
+					//if defending choices list isn't empty or null
+					if(!clickFound && game.getDefendingHullZoneChoices()!=null && !game.getDefendingHullZoneChoices().isEmpty()){
+						System.out.println("inside arraylist check");
+						for(HullZone zone : game.getDefendingHullZoneChoices()){
+							if(game.getDefendingHullZone()==null && zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
+								System.out.println("setting a defending hullzone");
+								game.setDefendingHullZone(zone);
+								clickFound=true;
+								break;
+							}
+						}
+						
+						//if the click is in the defending hull zone
+						if(!clickFound && game.getDefendingHullZone()!=null && game.getDefendingHullZone().getGeometry().contains(convertedClick[0], convertedClick[1])){
+							//set to null
+							System.out.println("removing defending hullzone");
+							game.setDefendingHullZone(null);
+						}
+						
+						
+					}
+					
+				}
+				break;
+			
+			default: System.out.println("Invalid currentState in game update "+game.getGameStep());
+			}//END SWITCH
 		}
-		
 	}
 
 	@Override
@@ -264,22 +325,45 @@ public class MainGame extends BasicGame
 			int width = trueTypeFont.getWidth(temp);
 			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)gap, temp);
 			
-			temp = game.turnStep.getLabel();
+			temp = game.getGameStep().getLabel();
 			width=trueTypeFont.getWidth(temp);
 			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)height+gap, temp);
 			
-			if (game.getActiveShip()!=null){
-				temp = game.activationStep.getLabel();
-				width = trueTypeFont.getWidth(temp);
-				trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2f-width/2f), height*2+gap, temp);
-			}
-			
 			//if ship phase and no active ship, render a pick active ship button
-			if(shipTray1.getShip()!=null && game.turnStep.equals(TurnStep.SHIPPHASE) && game.getActiveShip()==null){
+			switch(game.getGameStep()){
+			case SELECTSHIPTOACTIVATE:
 				g.drawImage(contextButton1, context1X, context1Y);
 				temp = "ACTIVATE THIS SHIP";
 				width = trueTypeFont.getWidth(temp);
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+				break;
+			case SELECTATTACK:
+				//highlight attacking hullzone
+				if(game.getAttackingHullZoneSelection()!=null){
+					g.setColor(Color.gray);
+					g.fill(game.getAttackingHullZoneSelection().getGeometry());
+				}
+				
+				//highlight defending options
+				g.setColor(Color.darkGray);
+				
+				//if a defender is selected...
+				if(game.getDefendingHullZone()!=null){
+					g.fill(game.getDefendingHullZone().getGeometry());
+				}
+				//else check if the list is available and non empty
+				else if(game.getDefendingHullZoneChoices()!=null && !game.getDefendingHullZoneChoices().isEmpty()){
+	
+					for(HullZone zone:game.getDefendingHullZoneChoices()){
+						g.fill(zone.getGeometry());
+					}
+				}
+				break;
+				
+			default:
+				System.out.println("missing gamestep in render "+game.getGameStep());
+				break;
+			
 			}
 		}
 	}

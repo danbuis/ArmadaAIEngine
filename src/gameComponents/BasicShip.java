@@ -45,12 +45,17 @@ public class BasicShip {
 	private float rearConjunction;
 	private Image shipImage;
 	
-	private Line FR;
-	private Line FL;
-	private Line RL;
-	private Line RR;
+	//private Line FR;
+	//private Line FL;
+	//private Line RL;
+	//private Line RR;
+	private ArrayList<Line> lineList;
 
 	public BasicShip(String name, Player owner) {
+		this(name, owner, true);
+	}
+	
+	public BasicShip(String name, Player owner, boolean test) {
 		File shipData = new File("shipData");
 		this.name = name;
 		this.owner = owner;
@@ -128,8 +133,9 @@ public class BasicShip {
 					this.rearConjunction = Float.parseFloat((sc.nextLine().split(" "))[1]);
 
 					calculateHullZoneGeometry();
-					
-					setShipImage(sc.nextLine());
+					if(!test){
+						setShipImage(sc.nextLine());
+					} else sc.nextLine();
 					
 					//set boolean to true in order to exit while loop
 					shipFound=true;
@@ -144,6 +150,7 @@ public class BasicShip {
 		}
 
 	}
+	
 
 	/**
 	 * builds hull zone and plastic base geometry.
@@ -189,27 +196,32 @@ public class BasicShip {
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
 		rightPolygon.addPoint((float)0 + this.xCoord, (float)this.size.getLength()/2 - frontConjunction + this.yCoord);
 		hullzones.get(index).initializeGeometry(rightPolygon, index);
-		
-		FR = new Line((float)this.size.getWidth()/2 + this.xCoord, 
+	
+		lineList = new ArrayList<Line>();
+		Line temp;
+		temp = new Line((float)this.size.getWidth()/2 + this.xCoord, 
 				(float)this.size.getLength()/2 -frontArcOffset + this.yCoord,
 				(float)0 + this.xCoord, 
 				(float)this.size.getLength()/2 - frontConjunction + this.yCoord);
+		lineList.add(temp);
 		
-		FL = new Line((float)0 + this.xCoord, 
+		temp = new Line((float)0 + this.xCoord, 
 				(float)this.size.getLength()/2 - frontConjunction + this.yCoord,
 				(float)this.size.getWidth()/-2 + this.xCoord,
 				(float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
+		lineList.add(temp);
 		
-		RL = new Line((float)this.size.getWidth()/-2 + this.xCoord, 
+		temp = new Line((float)this.size.getWidth()/-2 + this.xCoord, 
 				(float)this.size.getLength()/-2 +rearArcOffset + this.yCoord,
 				(float)0 + this.xCoord, 
 				(float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
+		lineList.add(temp);
 		
-		RR = new Line((float)0 + this.xCoord, 
+		temp = new Line((float)0 + this.xCoord, 
 				(float)this.size.getLength()/-2 + rearConjunction + this.yCoord,
 				(float)this.size.getWidth()/2 + this.xCoord, 
 				(float)this.size.getLength()/-2 + rearArcOffset + this.yCoord);
-				
+		lineList.add(temp);		
 		
 		//build plastic base geometry
 		this.plasticBase = new Polygon();
@@ -281,7 +293,7 @@ public class BasicShip {
 	/**Function to move and rotate the ship.  
 	 * 
 	 * @param dX difference in x, can be positive or negative
-	 * @param dY difference in y, can be positve or negative
+	 * @param dY difference in y, can be positIve or negative
 	 * @param rotate difference in degrees, can be positive or negative
 	 */
 	public void moveAndRotate(float dX, float dY, float rotate){
@@ -294,15 +306,16 @@ public class BasicShip {
 		
 		for(HullZone zone: hullzones){
 			zone.setGeometry((Polygon)zone.getGeometry().transform(translate));
-			zone.setYellowDot((Point)zone.getYellowDot().transform(translate));
+			Point oldPoint = zone.getYellowDot();
+			zone.setYellowDot(new Point(oldPoint.getX()+dX, oldPoint.getY()+dY));
 		}
 
-		
-		this.FL = (Line) FL.transform(translate);
-		this.RL = (Line) RL.transform(translate);
-		this.RR = (Line) RR.transform(translate);
-		this.FR = (Line) FR.transform(translate);
-
+		Line temp;
+		for(int i=0; i<4; i++){
+			temp = (Line) lineList.get(i).transform(translate);
+			lineList.remove(i);
+			lineList.add(i, temp);
+		}
 	}
 	
 	
@@ -348,14 +361,14 @@ public class BasicShip {
 		if(this.faction == Faction.IMPERIAL) g.setColor(Color.green);
 		else g.setColor(Color.red);
 		
-		g.draw(FL);
-		g.draw(FR);
-		g.draw(RL);
-		g.draw(RR);
-		
-		float scale = plasticBase.getHeight()/shipImage.getHeight();
-		Image copy = shipImage.getScaledCopy(scale);
-		g.drawImage(copy, xCoord-copy.getWidth()/2, yCoord-copy.getHeight()/2);
+		for(Line line:lineList){
+			g.draw(line);
+		}
+		if(shipImage!=null){
+			float scale = plasticBase.getHeight()/shipImage.getHeight();
+			Image copy = shipImage.getScaledCopy(scale);
+			g.drawImage(copy, xCoord-copy.getWidth()/2, yCoord-copy.getHeight()/2);
+		}
 	}
 
 	public Faction getFaction() {
@@ -364,6 +377,10 @@ public class BasicShip {
 
 	public void setFaction(Faction faction) {
 		this.faction = faction;
+	}
+	
+	public ArrayList<Line> getHullZoneLines(){
+		return this.lineList;
 	}
 
 	public int getHull() {
@@ -384,6 +401,10 @@ public class BasicShip {
 	 */
 	public HullZone getHullZone(int i){
 		return hullzones.get(i);
+	}
+	
+	public ArrayList<HullZone> getAllHullZones(){
+		return hullzones;
 	}
 
 	public String getAntiSquad() {
