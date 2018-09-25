@@ -59,6 +59,8 @@ public class MainGame extends BasicGame
 	private ListDisplay listPlayer1;
 	private ListDisplay listPlayer2;
 	
+	private DiceTray diceTray;
+	
 	private int translateX;
 	private int translateY;
 	private float scale;
@@ -93,6 +95,8 @@ public class MainGame extends BasicGame
 		Image shipDetailWindow = new Image("Graphics/UI/shipDetailWindow.png");
 		shipTray1 = new ShipTray(20, totalHeight-shipDetailWindow.getHeight()-20, shipDetailWindow);
 		shipTray2 = new ShipTray(totalWidth-20-shipDetailWindow.getWidth(), totalHeight-shipDetailWindow.getHeight()-20, shipDetailWindow);
+		Image diceTrayBG = new Image("Graphics/UI/DiceTray.png");
+		diceTray = new DiceTray(totalWidth/2 - diceTrayBG.getWidth()/2, totalHeight-108, diceTrayBG);
 		
 		gameScreenBackground = new Image("Graphics/UI/GameScreenBG.png");
 		textBackground = new Image("Graphics/UI/listbackground.png");
@@ -233,6 +237,8 @@ public class MainGame extends BasicGame
 								System.out.println("setting a defending hullzone");
 								game.setDefendingHullZone(zone);
 								clickFound=true;
+								diceTray.setString(game.getAttackingHullZoneSelection().getArmament());
+								System.out.println("Setting attack armament");
 								break;
 							}
 						}
@@ -242,6 +248,7 @@ public class MainGame extends BasicGame
 							//set to null
 							System.out.println("removing defending hullzone");
 							game.setDefendingHullZone(null);
+							diceTray.clearString();
 						}
 						
 						
@@ -338,6 +345,9 @@ public class MainGame extends BasicGame
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 				break;
 			case SELECTATTACK:
+				
+				diceTray.renderDiceTray(g);
+				
 				//highlight attacking hullzone
 				if(game.getAttackingHullZoneSelection()!=null){
 					g.setColor(Color.gray);

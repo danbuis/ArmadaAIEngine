@@ -43,19 +43,6 @@ public class Attack {
 		return returnString;
 	}
 
-	private void nextAttackStep() {
-		if(step.equals(AttackStep.DECLARETARGET)){
-			step=AttackStep.ROLLATTACKDICE;
-		}else if(step.equals(AttackStep.ROLLATTACKDICE)){
-			step=AttackStep.RESOLVEATTACKEFFECTS;
-		}else if(step.equals(AttackStep.RESOLVEATTACKEFFECTS)){
-			step=AttackStep.SPENDDEFENSETOKENS;
-		}else if(step.equals(AttackStep.SPENDDEFENSETOKENS)){
-			step=AttackStep.RESOLVEDAMAGE;
-		}
-		
-	}
-
 	public Range getRange() {
 		return range;
 	}
