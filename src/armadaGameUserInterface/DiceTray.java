@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import Attacks.Attack;
 import gameComponents.Dice;
 
 public class DiceTray {
@@ -13,8 +14,7 @@ public class DiceTray {
 	private int xCoord;
 	private int yCoord;
 	private Image background;
-	private ArrayList<Dice> diceList;
-	private String diceString;
+	private Attack attack;
 	private int offset = 40;
 	private int vertOffset;
 	
@@ -33,19 +33,22 @@ public class DiceTray {
 	public void renderDiceTray(Graphics g){
 		g.drawImage(background, xCoord, yCoord);
 		
-		if (diceList != null && !diceList.isEmpty()){
-		} else if(diceString!= null && diceString!=""){
-			try {
-				drawString(g);
-			} catch (SlickException e) {
-				e.printStackTrace();
+		if (attack != null){
+			if(attack.diceRoll != null){
+				
+			}else {
+				try {
+					drawArmament(g);
+				} catch (SlickException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
-	private void drawString(Graphics g) throws SlickException {
-		System.out.println("xxx"+diceString+"xxx");
-		char[] armament = diceString.toCharArray();
+	private void drawArmament(Graphics g) throws SlickException {
+		System.out.println("xxx"+attack.getArmament()+"xxx");
+		char[] armament = attack.getArmament().toCharArray();
 		for(int i=0; i<armament.length; i++){
 			Image diceBG = null;
 			if(armament[i] == 'R'){
@@ -62,13 +65,13 @@ public class DiceTray {
 		}
 		
 	}
-	
-	public void setString(String string){
-		this.diceString = string;
+
+	public Attack getAttack() {
+		return attack;
 	}
-	
-	public void clearString(){
-		this.diceString="";
+
+	public void setAttack(Attack attack) {
+		this.attack = attack;
 	}
 
 }

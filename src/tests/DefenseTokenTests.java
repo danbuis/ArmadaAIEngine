@@ -20,12 +20,13 @@ public class DefenseTokenTests {
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		Attack atk = new Attack(ship1, ship2, 0, 2);
+		atk.rollDice();
 		
 		//token initialized as ready
 		assertEquals(DefenseTokenStatus.READY, scatter.getStatus());
 		//should be damage, so it should spend
 		while(atk.diceRoll.getTotalDamage()==0){
-			atk.formAttackPool();
+			atk.formAttackPool(ship1.getHullZone(0).getArmament());
 		}
 		
 		assertTrue(scatter.spendToken(true, atk, 0));
@@ -37,9 +38,10 @@ public class DefenseTokenTests {
 		
 		//new attack, so it will spend and then be discarded
 		atk = new Attack(ship1, ship2, 0, 2);
+		atk.rollDice();
 		
 		while(atk.diceRoll.getTotalDamage()==0){
-			atk.formAttackPool();
+			atk.formAttackPool(ship1.getHullZone(0).getArmament());
 		}
 		assertTrue(scatter.spendToken(true, atk, 0));
 		
@@ -59,6 +61,7 @@ public class DefenseTokenTests {
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		Attack atk = new Attack(ship1, ship2, 0, 2);
+		atk.rollDice();
 		
 		atk.setRange(Range.LONG);
 		assertTrue(evade.spendToken(true, atk, 0));
@@ -71,9 +74,10 @@ public class DefenseTokenTests {
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
 		Attack atk = new Attack(ship1, ship2, 0, 2);
+		atk.rollDice();
 		
 		while(atk.diceRoll.getTotalDamage()<2){
-			atk.formAttackPool();
+			atk.formAttackPool(ship1.getHullZone(0).getArmament());
 		}
 		DefenseToken brace = new DefenseToken(DefenseTokenType.BRACE);
 		

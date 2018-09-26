@@ -99,15 +99,15 @@ public class BasicShip {
 					//adding hullzones to arraylist, start at front and going clockwisem ie 
 					//front, right, rear, left
 					String frontZone = sc.nextLine();
-					hullzones.add(new HullZone(frontZone));
+					hullzones.add(new HullZone(frontZone, this));
 
 					String sideZone = sc.nextLine();
-					hullzones.add(new HullZone(sideZone));
+					hullzones.add(new HullZone(sideZone, this));
 
 					String rearZone = sc.nextLine();
-					hullzones.add(new HullZone(rearZone));
+					hullzones.add(new HullZone(rearZone, this));
 					//and the other side
-					hullzones.add(new HullZone(sideZone));
+					hullzones.add(new HullZone(sideZone, this));
 
 					String antiSquad = sc.nextLine();
 					this.setAntiSquad(antiSquad.split(" ")[1]);

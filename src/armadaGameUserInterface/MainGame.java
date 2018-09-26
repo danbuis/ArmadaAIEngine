@@ -15,6 +15,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 
+import Attacks.Attack;
 import PlayerStuff.Game;
 import PlayerStuff.GameStep;
 import PlayerStuff.Player;
@@ -223,6 +224,7 @@ public class MainGame extends BasicGame
 							if(game.getAttackingHullZoneSelection()!=null) game.getAttackingHullZoneSelection().renderColor=zone.normalColor;
 							game.setAttackingHullZoneSelection(zone);
 							zone.renderColor=zone.attacker;
+							diceTray.setAttack(null);
 							
 							//clear the defending zones in game
 							if(game.getDefendingHullZoneChoices()!=null){
@@ -254,7 +256,7 @@ public class MainGame extends BasicGame
 								}
 								
 								clickFound=true;
-								diceTray.setString(game.getAttackingHullZoneSelection().getArmament());
+								diceTray.setAttack(new Attack(game.getAttackingHullZoneSelection(), zone));
 								System.out.println("Setting attack armament");
 								break;
 							}
@@ -266,7 +268,7 @@ public class MainGame extends BasicGame
 							System.out.println("removing defending hullzone");
 							game.setDefendingHullZone(null);
 
-							diceTray.clearString();
+							diceTray.setAttack(null);
 
 							game.populateDefendingHullZoneList(game.getActiveShip(), game.getAttackingHullZoneSelection());
 
@@ -366,6 +368,8 @@ public class MainGame extends BasicGame
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 				break;
 			case SELECTATTACK:
+				
+				diceTray.renderDiceTray(g);
 
 
 				break;

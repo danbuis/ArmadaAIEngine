@@ -38,10 +38,11 @@ public class AttackPoolTest {
 		ship2.moveAndRotate(200, 0, 0);
 		
 		Attack atk = new Attack(ship1, ship2, 0, 2);
+		atk.rollDice();
 		assertEquals("RRRKKK", ship1.getHullZone(0).getArmament());
 		
 		while(atk.diceRoll.getTotalDamage()==0){
-			atk.formAttackPool();
+			atk.formAttackPool(ship1.getHullZone(0).getArmament());
 		}
 		
 		assertNotEquals(0, atk.diceRoll.getTotalDamage());
@@ -63,6 +64,7 @@ public class AttackPoolTest {
 		atk.setRange(Range.LONG);
 
 		assertNotNull(atk);
+		atk.rollDice();
 		assertNotNull(atk.diceRoll);
 		assertNotNull(atk.diceRoll.roll);
 		atk.diceRoll.roll.get(0).changeFace(DiceFace.HITHIT);

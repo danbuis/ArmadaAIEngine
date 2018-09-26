@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Polygon;
 
 public class HullZone {
 
+	private final BasicShip parentShip;
 	private int shields;
 	private String armament;
 	private Point yellowDot;
@@ -34,11 +35,12 @@ public class HullZone {
 	 * 
 	 * @param constructorString
 	 */
-	public HullZone(String constructorString) {
+	public HullZone(String constructorString, BasicShip parent) {
 		String[] splitString = constructorString.split(" ");
 		this.shields = Integer.parseInt(splitString[1]);
-		
 		this.armament = splitString[2];
+		
+		this.parentShip = parent;
 	}
 	
 	/**
@@ -107,6 +109,10 @@ public class HullZone {
 
 	public void setYellowDot(Point yellowDot) {
 		this.yellowDot = yellowDot;
+	}
+	
+	public BasicShip getParent(){
+		return this.parentShip;
 	}
 
 }

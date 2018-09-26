@@ -16,28 +16,28 @@ public class AttackTests {
 		BasicShip ship2 = new BasicShip("Victory 2 Star Destroyer", null);
 		ship2.moveAndRotate(40, 0, 0);
 		
-		Attack atk = new Attack(ship1, ship2, 0, 2);
+		Attack atk = new Attack(ship1.getHullZone(0), ship2.getHullZone(2));
 		
-		assertEquals("RRRKKK", atk.formAttackPool());
+		assertEquals("RRRKKK", atk.getArmament());
 		
 		atk.setRange(Range.LONG);
-		assertEquals("RRR", atk.formAttackPool());
+		assertEquals("RRR", atk.formAttackPool(ship1.getHullZone(0).getArmament()));
 		
 		atk.setRange(Range.MEDIUM);
-		assertEquals("RRR", atk.formAttackPool());
+		assertEquals("RRR", atk.formAttackPool(ship1.getHullZone(0).getArmament()));
 		
 		atk = new Attack(ship2, ship1, 0, 2);
 		
-		assertEquals("RRRBBB", ship2.getHullZone(0).getArmament());
+		assertEquals("RRRBBB", atk.getArmament());
 		
 		atk.setRange(Range.CLOSE);
-		assertEquals("RRRBBB", atk.formAttackPool());
+		assertEquals("RRRBBB", atk.formAttackPool(ship2.getHullZone(0).getArmament()));
 		
 		atk.setRange(Range.LONG);
-		assertEquals("RRR", atk.formAttackPool());
+		assertEquals("RRR", atk.formAttackPool(ship2.getHullZone(0).getArmament()));
 		
 		atk.setRange(Range.MEDIUM);
-		assertEquals("RRRBBB", atk.formAttackPool());
+		assertEquals("RRRBBB", atk.formAttackPool(ship2.getHullZone(0).getArmament()));
 	}
 	
 }
