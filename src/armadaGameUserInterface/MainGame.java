@@ -209,6 +209,7 @@ public class MainGame extends BasicGame
 					game.incrementGameStep();
 				}
 				break;
+				
 			case SELECTATTACK:
 				if(Mouse.isButtonDown(0)){
 					System.out.println("registering click");
@@ -217,11 +218,21 @@ public class MainGame extends BasicGame
 					for(HullZone zone : game.getActiveShip().getAllHullZones()){
 						if (zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
 							// the click is on the active ship 
+							
 							//set att zone in game
+							if(game.getAttackingHullZoneSelection()!=null) game.getAttackingHullZoneSelection().renderColor=zone.normalColor;
 							game.setAttackingHullZoneSelection(zone);
+							zone.renderColor=zone.attacker;
+							
 							//clear the defending zones in game
-							game.setDefendingHullZoneSelection(null);
+							if(game.getDefendingHullZoneChoices()!=null){
+								for(HullZone defZone:game.getDefendingHullZoneChoices()){
+									defZone.renderColor=defZone.normalColor;
+								}
+							}
+							game.setDefendingHullZoneChoices(null);
 							game.setDefendingHullZone(null);
+							
 							//repopulate defending zones
 							game.populateDefendingHullZoneList(game.getActiveShip(), zone);
 							clickFound = true;
@@ -236,6 +247,12 @@ public class MainGame extends BasicGame
 							if(game.getDefendingHullZone()==null && zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
 								System.out.println("setting a defending hullzone");
 								game.setDefendingHullZone(zone);
+								for (HullZone defZone:game.getDefendingHullZoneChoices()){
+									if(!defZone.equals(zone)){
+										defZone.renderColor=defZone.normalColor;
+									}
+								}
+								
 								clickFound=true;
 								diceTray.setString(game.getAttackingHullZoneSelection().getArmament());
 								System.out.println("Setting attack armament");
@@ -248,7 +265,11 @@ public class MainGame extends BasicGame
 							//set to null
 							System.out.println("removing defending hullzone");
 							game.setDefendingHullZone(null);
+
 							diceTray.clearString();
+
+							game.populateDefendingHullZoneList(game.getActiveShip(), game.getAttackingHullZoneSelection());
+
 						}
 						
 						
@@ -345,29 +366,8 @@ public class MainGame extends BasicGame
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 				break;
 			case SELECTATTACK:
-				
-				diceTray.renderDiceTray(g);
-				
-				//highlight attacking hullzone
-				if(game.getAttackingHullZoneSelection()!=null){
-					g.setColor(Color.gray);
-					g.fill(game.getAttackingHullZoneSelection().getGeometry());
-				}
-				
-				//highlight defending options
-				g.setColor(Color.darkGray);
-				
-				//if a defender is selected...
-				if(game.getDefendingHullZone()!=null){
-					g.fill(game.getDefendingHullZone().getGeometry());
-				}
-				//else check if the list is available and non empty
-				else if(game.getDefendingHullZoneChoices()!=null && !game.getDefendingHullZoneChoices().isEmpty()){
-	
-					for(HullZone zone:game.getDefendingHullZoneChoices()){
-						g.fill(zone.getGeometry());
-					}
-				}
+
+
 				break;
 				
 			default:

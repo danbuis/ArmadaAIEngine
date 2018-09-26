@@ -60,6 +60,7 @@ public abstract class geometryHelper {
 	}
 	
 	public static Range getRange(float range){
+		System.out.println("Range is..."+range);
 		if(range<=123){
 			return Range.CLOSE;
 		}else if (range<=187){
