@@ -2,6 +2,7 @@ package PlayerStuff;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
@@ -136,7 +137,7 @@ public class Game {
 		return defendingHullZoneChoices;
 	}
 
-	public void setDefendingHullZoneSelection(ArrayList<HullZone> defendingHullZoneSelection) {
+	public void setDefendingHullZoneChoices(ArrayList<HullZone> defendingHullZoneSelection) {
 		this.defendingHullZoneChoices = defendingHullZoneSelection;
 	}
 
@@ -181,11 +182,24 @@ public class Game {
 				}//end lines
 				
 				//if after all these checks it is still a valid zone... add it to the list
+				Range range = geometryHelper.getRange(
+						geometryHelper.rangeToPolygon(
+						zone.getGeometry(), attackingZone.getGeometry()));
+				
+				System.out.println(range);
+				if(validZone){
+					if(range.equals(Range.CLOSE))
+						zone.renderColor=zone.defendClose;
+					else if(range.equals(Range.MEDIUM))zone.renderColor=zone.defendMedium;
+					else if(range.equals(Range.LONG))zone.renderColor=zone.defendLong;
+					else zone.renderColor=Color.red;
+				}
+				
 				if(validZone) returnList.add(zone);
 			}//end zone list
 		}//end ship loop
 		
-		setDefendingHullZoneSelection(returnList);
+		setDefendingHullZoneChoices(returnList);
 	}
 
 	public HullZone getDefendingHullZone() {

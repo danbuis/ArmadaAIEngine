@@ -352,9 +352,10 @@ public class BasicShip {
 		g.setColor(Color.white);
 		g.fill(plasticBase);
 		
-		g.setColor(new Color(30,30,30));
+		
 		
 		for(HullZone zone:hullzones){
+			if(zone.renderColor!=g.getColor()) g.setColor(zone.renderColor);
 			g.fill(zone.getGeometry());
 		}
 		

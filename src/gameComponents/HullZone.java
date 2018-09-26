@@ -1,5 +1,6 @@
 package gameComponents;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Polygon;
 
@@ -8,6 +9,12 @@ public class HullZone {
 	private int shields;
 	private String armament;
 	private Point yellowDot;
+	public final Color normalColor = new Color(30,30,30);
+	public final Color attacker = new Color(49,117,40);
+	public final Color defendClose = new Color(50,50,50);
+	public final Color defendMedium = new Color(39,45,105);
+	public final Color defendLong = new Color(137,34,26);
+	public Color renderColor = normalColor;
 	
 	/**
 	 * Polygon is created in the ship's constructor.  the 0th point is always the
