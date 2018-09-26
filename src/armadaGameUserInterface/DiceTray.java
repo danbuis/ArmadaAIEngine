@@ -35,7 +35,11 @@ public class DiceTray {
 		
 		if (attack != null){
 			if(attack.diceRoll != null){
-				
+				try {
+					drawAttackPool(g);
+				} catch (SlickException e) {
+					e.printStackTrace();
+				}
 			}else {
 				try {
 					drawArmament(g);
@@ -46,8 +50,47 @@ public class DiceTray {
 		}
 	}
 
+	private void drawAttackPool(Graphics g) throws SlickException {
+		for(int i=0; i<attack.diceRoll.roll.size(); i++){
+			Dice die = attack.diceRoll.roll.get(i);
+			Image diceBG = null;
+			if(die.getColor() == Dice.DiceColor.RED){
+				diceBG = new Image("Graphics/UI/redDieBG.png");
+			} else if(die.getColor() == Dice.DiceColor.BLACK){
+				diceBG = new Image("Graphics/UI/blackDieBG.png");
+			} else if(die.getColor() == Dice.DiceColor.BLUE){
+				diceBG = new Image("Graphics/UI/blueDieBG.png");
+			} else System.out.println("Could not find background of the die in dice pool");
+			
+			//render dice colors
+			if(i%2==1) diceBG.rotate(180);
+			g.drawImage(diceBG, xCoord+10+i*offset, yCoord+vertOffset);
+			
+			Image facing = null;
+			if(die.getFace().equals(Dice.DiceFace.ACCURACY)) 
+				facing = new Image("Graphics/UI/Icon_Dice_Accuracy.png");
+			else if(die.getFace().equals(Dice.DiceFace.HIT)) 
+				facing = new Image("Graphics/UI/Icon_Dice_Hit.png");
+			else if(die.getFace().equals(Dice.DiceFace.CRIT)) 
+				facing = new Image("Graphics/UI/Icon_Dice_Crit.png");
+			else if(die.getFace().equals(Dice.DiceFace.HITHIT)) 
+				facing = new Image("Graphics/UI/Icon_Dice_HitHit.png");
+			else if(die.getFace().equals(Dice.DiceFace.HITCRIT)) 
+				facing = new Image("Graphics/UI/Icon_Dice_HitCrit.png");
+			
+			//will be null if blank
+			if(facing != null){
+				//render dice facing
+				if(i%2==1) facing.rotate(180);
+				g.drawImage(facing,
+						xCoord+10+i*offset+diceBG.getWidth()/2-facing.getWidth()/2, 
+						yCoord+vertOffset+diceBG.getHeight()/2-facing.getHeight()/2);
+			}
+		}
+		
+	}
+
 	private void drawArmament(Graphics g) throws SlickException {
-		System.out.println("xxx"+attack.getArmament()+"xxx");
 		char[] armament = attack.getArmament().toCharArray();
 		for(int i=0; i<armament.length; i++){
 			Image diceBG = null;

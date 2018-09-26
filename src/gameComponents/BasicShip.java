@@ -23,6 +23,7 @@ public class BasicShip {
 	private Player owner;
 	private float xCoord = 0;
 	private float yCoord = 0;
+	private float rotation = 0; //in degrees
 	private final float plasticRailWidth = 2;
 	private Polygon plasticBase;
 	private String name;
@@ -368,6 +369,7 @@ public class BasicShip {
 		if(shipImage!=null){
 			float scale = plasticBase.getHeight()/shipImage.getHeight();
 			Image copy = shipImage.getScaledCopy(scale);
+			copy.setRotation(180);;
 			g.drawImage(copy, xCoord-copy.getWidth()/2, yCoord-copy.getHeight()/2);
 		}
 	}

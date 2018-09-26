@@ -88,6 +88,9 @@ public class Game {
 		case SELECTSHIPTOACTIVATE:
 			gameStep = GameStep.SELECTATTACK;
 			break;
+		case SELECTATTACK:
+			gameStep = GameStep.MODIFYATTACK;
+			break;
 		case STATUSPHASE:
 			incrementTurn();
 			gameStep = GameStep.COMMANDPHASE;

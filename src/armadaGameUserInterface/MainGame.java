@@ -240,7 +240,7 @@ public class MainGame extends BasicGame
 							clickFound = true;
 							System.out.println("Click found for an attacking zone");
 						}
-					}
+					} //end for each loop
 					
 					//if defending choices list isn't empty or null
 					if(!clickFound && game.getDefendingHullZoneChoices()!=null && !game.getDefendingHullZoneChoices().isEmpty()){
@@ -253,14 +253,14 @@ public class MainGame extends BasicGame
 									if(!defZone.equals(zone)){
 										defZone.renderColor=defZone.normalColor;
 									}
-								}
+								}//end inner for each loop
 								
 								clickFound=true;
 								diceTray.setAttack(new Attack(game.getAttackingHullZoneSelection(), zone));
 								System.out.println("Setting attack armament");
 								break;
 							}
-						}
+						}//end outer for each loop
 						
 						//if the click is in the defending hull zone
 						if(!clickFound && game.getDefendingHullZone()!=null && game.getDefendingHullZone().getGeometry().contains(convertedClick[0], convertedClick[1])){
@@ -271,15 +271,26 @@ public class MainGame extends BasicGame
 							diceTray.setAttack(null);
 
 							game.populateDefendingHullZoneList(game.getActiveShip(), game.getAttackingHullZoneSelection());
-
+						}
+					}//end if block for defending zones
+					
+					//click button and advance
+					if(!clickFound && game.getDefendingHullZone()!=null && game.getAttackingHullZoneSelection()!=null){
+						if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+							diceTray.getAttack().rollDice();
+							game.incrementGameStep();
 						}
 						
-						
 					}
+
 					
-				}
+				}//end if button down
 				break;
-			
+			case MODIFYATTACK:
+				
+				
+				break;
+				
 			default: System.out.println("Invalid currentState in game update "+game.getGameStep());
 			}//END SWITCH
 		}
@@ -363,17 +374,35 @@ public class MainGame extends BasicGame
 			switch(game.getGameStep()){
 			case SELECTSHIPTOACTIVATE:
 				g.drawImage(contextButton1, context1X, context1Y);
-				temp = "ACTIVATE THIS SHIP";
+				temp = "Activate this ship";
 				width = trueTypeFont.getWidth(temp);
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 				break;
 			case SELECTATTACK:
 				
 				diceTray.renderDiceTray(g);
+				
+				//if we have a valid attack selected, draw the button to commit to it
+				if(game.getDefendingHullZone()!=null && game.getAttackingHullZoneSelection()!=null){
+					g.drawImage(contextButton1, context1X, context1Y);
+					temp = "Perform this attack";
+					width = trueTypeFont.getWidth(temp);
+					trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);	
+				}
 
 
 				break;
-				
+			
+			case MODIFYATTACK:
+				diceTray.renderDiceTray(g);
+				//if we have a valid attack selected, draw the button to commit to it
+				if(game.getDefendingHullZone()!=null && game.getAttackingHullZoneSelection()!=null){
+					g.drawImage(contextButton1, context1X, context1Y);
+					temp = "Finished";
+					width = trueTypeFont.getWidth(temp);
+					trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+					break;
+				}
 			default:
 				System.out.println("missing gamestep in render "+game.getGameStep());
 				break;
