@@ -311,8 +311,13 @@ public class MainGame extends BasicGame
 				}//end if button down
 				break;
 			case MODIFYATTACK:
+				if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+					game.incrementGameStep();
+				}
 				
+				break;
 				
+			case SPENDDEFENSETOKENS:
 				break;
 				
 			default: System.out.println("Invalid currentState in game update "+game.getGameStep());
@@ -411,6 +416,14 @@ public class MainGame extends BasicGame
 					trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 					break;
 				}
+				
+			case SPENDDEFENSETOKENS:
+				g.drawImage(contextButton1, context1X, context1Y);
+				temp = "Finished";
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+				
+				break;
 			default:
 				System.out.println("missing gamestep in render "+game.getGameStep());
 				break;
@@ -438,6 +451,7 @@ public class MainGame extends BasicGame
 			appgc = new AppGameContainer(new MainGame("Simple Slick Game"));
 			appgc.setDisplayMode(1536, 1152, false);
 			appgc.start();
+			appgc.setTargetFrameRate(20);
 		}
 		catch (SlickException ex)
 		{

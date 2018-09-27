@@ -91,9 +91,16 @@ public class Game {
 		case SELECTATTACK:
 			gameStep = GameStep.MODIFYATTACK;
 			break;
+		case MODIFYATTACK:
+			gameStep = GameStep.SPENDDEFENSETOKENS;
+			break;
+		case SPENDDEFENSETOKENS:
+			gameStep = GameStep.SELECTCRIT;
+			break;
 		case STATUSPHASE:
 			incrementTurn();
 			gameStep = GameStep.COMMANDPHASE;
+			break;
 		default:
 			System.out.println("invalid game step in switch statement : game class "+gameStep);
 			break;
