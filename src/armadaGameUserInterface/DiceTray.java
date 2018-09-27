@@ -51,6 +51,7 @@ public class DiceTray {
 	}
 
 	private void drawAttackPool(Graphics g) throws SlickException {
+		int iconShimmy = 7;
 		for(int i=0; i<attack.diceRoll.roll.size(); i++){
 			Dice die = attack.diceRoll.roll.get(i);
 			Image diceBG = null;
@@ -81,10 +82,15 @@ public class DiceTray {
 			//will be null if blank
 			if(facing != null){
 				//render dice facing
-				if(i%2==1) facing.rotate(180);
+				if(i%2==1) {facing.rotate(180);
 				g.drawImage(facing,
 						xCoord+10+i*offset+diceBG.getWidth()/2-facing.getWidth()/2, 
-						yCoord+vertOffset+diceBG.getHeight()/2-facing.getHeight()/2);
+						yCoord-iconShimmy+vertOffset+diceBG.getHeight()/2-facing.getHeight()/2);
+				}else{
+					g.drawImage(facing,
+							xCoord+10+i*offset+diceBG.getWidth()/2-facing.getWidth()/2, 
+							yCoord+iconShimmy+vertOffset+diceBG.getHeight()/2-facing.getHeight()/2);
+				}
 			}
 		}
 		
