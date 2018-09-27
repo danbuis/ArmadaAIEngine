@@ -19,6 +19,9 @@ public class ListDisplay {
 	private int y;
 	private ArrayList<BasicShip> shipList;
 	private Game game;
+	private int gap = 2;
+	private int initialY = 50;
+	int height = 26;
 	
 	public ListDisplay(Image bg, int xCoord, int yCoord, Player player, Game g){
 		background = bg;
@@ -29,10 +32,6 @@ public class ListDisplay {
 	}
 	
 	public void render(Graphics g){
-		TrueTypeFont trueTypeFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
-		int height = trueTypeFont.getHeight();
-		int initialY = 50;
-		int gap = 2;
 		int count=0;
 		g.setColor(Color.white);
 		

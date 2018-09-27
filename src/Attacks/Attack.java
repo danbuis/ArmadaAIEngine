@@ -38,20 +38,20 @@ public class Attack {
 	}
 	
 	public String formAttackPool(String str){
-		System.out.println(str);
+		//System.out.println(str);
 		//grab entirety of armament dice
 		//String returnString = str;
 		if(range.equals(Range.MEDIUM)){
-			System.out.println("Medium");
+			//System.out.println("Medium");
 			str = str.replaceAll("K", "");
-			System.out.println(str);
+			//System.out.println(str);
 		}
 		
 		else if(range.equals(Range.LONG)){
-			System.out.println("Long");
+			//System.out.println("Long");
 			str = str.replaceAll("K", "");
 			str = str.replaceAll("B", "");
-			System.out.println(str);
+			//System.out.println(str);
 		}
 		return str;
 	}

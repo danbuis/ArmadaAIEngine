@@ -46,7 +46,7 @@ public class MainGame extends BasicGame
 	private Image standardGameBorder;
 	private Image demoGameBorder;
 	private Image background;
-	private Image gameScreenBackground;
+	private Image gameScreenFrame;
 	private Image textBackground;
 	
 	private Image contextButton1;
@@ -65,6 +65,11 @@ public class MainGame extends BasicGame
 	private int translateX;
 	private int translateY;
 	private float scale;
+	double distanceReference = 914.4;
+	
+	private TrueTypeFont trueTypeFont;
+	private int height;
+	private int gap = 5;
 	
 	
 	public MainGame(String gamename)
@@ -92,6 +97,13 @@ public class MainGame extends BasicGame
 
 		standardGameBorder = new Image("Graphics/UI/3x6border.png");
 		demoGameBorder = new Image("Graphics/UI/3x3border.png");
+		
+		//draw ships for each player
+		int distanceActual = demoGameBorder.getHeight();
+		
+		//914.4mm divided by pixels = mm per pixel scaling
+		scale = (float)(distanceActual/distanceReference);
+		
 		background = new Image("Graphics/UI/blackBackground.png");
 		Image shipDetailWindow = new Image("Graphics/UI/shipDetailWindow.png");
 		shipTray1 = new ShipTray(20, totalHeight-shipDetailWindow.getHeight()-20, shipDetailWindow);
@@ -99,12 +111,16 @@ public class MainGame extends BasicGame
 		Image diceTrayBG = new Image("Graphics/UI/DiceTray.png");
 		diceTray = new DiceTray(totalWidth/2 - diceTrayBG.getWidth()/2, totalHeight-108, diceTrayBG);
 		
-		gameScreenBackground = new Image("Graphics/UI/GameScreenBG.png");
+		gameScreenFrame= new Image("Graphics/UI/GameScreenBG.png");
 		textBackground = new Image("Graphics/UI/listbackground.png");
+		
+		trueTypeFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
+		height = trueTypeFont.getHeight();
 	}
 
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
+		
 		int mouseX = Mouse.getX();
 		int mouseY = Mouse.getY();
 		
@@ -113,6 +129,10 @@ public class MainGame extends BasicGame
 				if(Mouse.isButtonDown(0)){
 					gameMenuState = GameMenuState.DEMOGAME;
 					System.out.println("demo button pressed");
+					
+					//set origin to origin point of board
+					translateX = 443;
+					translateY = 159;
 					
 					Player P2 = new Player("P2", true);
 					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P2, false);
@@ -139,6 +159,10 @@ public class MainGame extends BasicGame
 				if(Mouse.isButtonDown(0)){
 					gameMenuState = GameMenuState.REGULARGAME;
 					System.out.println("standard game button pressed");
+					
+					//set origin to origin point of board
+					translateX = 120;
+					translateY = 159;
 					
 					Player P1 = new Player("P1", true);
 					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1, false);
@@ -202,8 +226,8 @@ public class MainGame extends BasicGame
 				}
 				
 				//if ship phase and no active ship, activate a pick active ship button
-				System.out.println(contextRect1.contains(mouseX, mouseY));
-				System.out.println(game.getActiveShip());
+				//System.out.println(contextRect1.contains(mouseX, mouseY));
+				//System.out.println(game.getActiveShip());
 				if(Mouse.isButtonDown(0) && contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.getGameStep().equals(GameStep.SELECTSHIPTOACTIVATE) && game.getActiveShip()==null){
 					System.out.println("Setting active ship");
 					game.setActiveShip(shipTray1.getShip());
@@ -298,7 +322,7 @@ public class MainGame extends BasicGame
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
-	{
+	{		
 		if(gameMenuState == GameMenuState.MAINMENU){
 			g.drawString("Mouse loc "+Mouse.getX()+","+Mouse.getY(), 10, 10);
 			g.drawImage(mainMenuBG, 0, 0);
@@ -312,25 +336,12 @@ public class MainGame extends BasicGame
 			
 			
 			if(gameMenuState == GameMenuState.DEMOGAME) {
-				g.drawImage(demoGameBorder, 443, 159);
-				//set origin to origin point of board
-				translateX = 443;
-				translateY = 159;
+				g.drawImage(demoGameBorder, translateX, translateY);
 			}
 			else {
-				g.drawImage(standardGameBorder, 120, 159);
-				//set origin to origin point of board
-				translateX = 120;
-				translateY = 159;
+				g.drawImage(standardGameBorder, translateX, translateY);
 			}
-			
-			//draw ships for each player
-			double distanceReference = 914.4;
-			int distanceActual = demoGameBorder.getHeight();
-			
-			//914.4mm divided by pixels = mm per pixel scaling
-			scale = (float)(distanceActual/distanceReference);
-			
+				
 			//scale it relative to scale of board
 			g.translate(translateX, translateY);
 			g.scale(scale, scale);
@@ -352,23 +363,20 @@ public class MainGame extends BasicGame
 			//render list type stuff
 			listPlayer1.render(g);
 			listPlayer2.render(g);
-			g.drawImage(gameScreenBackground, 0, 0);
+			g.drawImage(gameScreenFrame, 0, 0);
 			shipTray1.render(g);
 			shipTray2.render(g);
 			
 			//Adding in game state headers (turn #, turn step, attack step, etc.
 			g.setColor(Color.black);
-			TrueTypeFont trueTypeFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
-			int height = trueTypeFont.getHeight();
-			int gap = 5;
 			
 			String temp = "Turn "+game.getTurn();
 			int width = trueTypeFont.getWidth(temp);
-			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)gap, temp);
+			trueTypeFont.drawString((float)(gameScreenFrame.getWidth()/2.0-width/2.0), (float)gap, temp);
 			
 			temp = game.getGameStep().getLabel();
 			width=trueTypeFont.getWidth(temp);
-			trueTypeFont.drawString((float)(gameScreenBackground.getWidth()/2.0-width/2.0), (float)height+gap, temp);
+			trueTypeFont.drawString((float)(gameScreenFrame.getWidth()/2.0-width/2.0), (float)height+gap, temp);
 			
 			//if ship phase and no active ship, render a pick active ship button
 			switch(game.getGameStep()){
@@ -407,9 +415,9 @@ public class MainGame extends BasicGame
 				System.out.println("missing gamestep in render "+game.getGameStep());
 				break;
 			
-			}
-		}
-	}
+			}//end switch block
+		}//end if in a game block
+	}//end render method
 	
 	private float[] convertClickToBoardCoords(int mouseX, int mouseY){
 		float[] returnArray = new float[2];
@@ -417,7 +425,7 @@ public class MainGame extends BasicGame
 		returnArray[0] = (mouseX-translateX)/scale;
 		//render coords have origin at UL
 		//mouse coords have origin at LL
-		returnArray[1] = (914.4f-(mouseY-(gameScreenBackground.getHeight()-translateY-demoGameBorder.getHeight()))/scale);
+		returnArray[1] = (914.4f-(mouseY-(gameScreenFrame.getHeight()-translateY-demoGameBorder.getHeight()))/scale);
 		
 		return returnArray;
 	}
