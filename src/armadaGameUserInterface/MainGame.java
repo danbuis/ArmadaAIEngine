@@ -11,6 +11,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
@@ -71,6 +72,8 @@ public class MainGame extends BasicGame
 	private int height;
 	private int gap = 5;
 	
+	public boolean mouseLeft = false;
+	
 	
 	public MainGame(String gamename)
 	{
@@ -121,12 +124,22 @@ public class MainGame extends BasicGame
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
 		
+		if(gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
+			mouseLeft = true;
+			System.out.println("Click on");
+		} else {
+			if (mouseLeft) {
+				mouseLeft = false;
+				System.out.println("Click off");
+			}
+		}
+		
 		int mouseX = Mouse.getX();
 		int mouseY = Mouse.getY();
 		
 		if(gameMenuState == GameMenuState.MAINMENU){
 			if(demoButtonRectangle.contains(mouseX, mouseY)){
-				if(Mouse.isButtonDown(0)){
+				if(mouseLeft){
 					gameMenuState = GameMenuState.DEMOGAME;
 					System.out.println("demo button pressed");
 					
@@ -156,7 +169,7 @@ public class MainGame extends BasicGame
 					
 				}
 			}else if(standardButtonRectangle.contains(mouseX, mouseY)){
-				if(Mouse.isButtonDown(0)){
+				if(mouseLeft){
 					gameMenuState = GameMenuState.REGULARGAME;
 					System.out.println("standard game button pressed");
 					
@@ -207,7 +220,7 @@ public class MainGame extends BasicGame
 				break;
 			//select ship for activation
 			case SELECTSHIPTOACTIVATE:
-				if(Mouse.isButtonDown(0)){
+				if(mouseLeft){
 					float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
 					System.out.println("click : "+mouseX+","+mouseY);
 					System.out.println("translates to :"+convertedClick[0]+","+convertedClick[1]);
@@ -228,7 +241,7 @@ public class MainGame extends BasicGame
 				//if ship phase and no active ship, activate a pick active ship button
 				//System.out.println(contextRect1.contains(mouseX, mouseY));
 				//System.out.println(game.getActiveShip());
-				if(Mouse.isButtonDown(0) && contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.getGameStep().equals(GameStep.SELECTSHIPTOACTIVATE) && game.getActiveShip()==null){
+				if(mouseLeft && contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.getGameStep().equals(GameStep.SELECTSHIPTOACTIVATE) && game.getActiveShip()==null){
 					System.out.println("Setting active ship");
 					game.setActiveShip(shipTray1.getShip());
 					game.incrementGameStep();
@@ -236,11 +249,12 @@ public class MainGame extends BasicGame
 				break;
 				
 			case SELECTATTACK:
-				if(Mouse.isButtonDown(0)){
-					System.out.println("registering click");
+				if(mouseLeft){
+					System.out.println("top of select attack update");
 					float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
 					boolean clickFound = false;
 					for(HullZone zone : game.getActiveShip().getAllHullZones()){
+						System.out.println("looking at active ships");
 						if (zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
 							// the click is on the active ship 
 							
@@ -268,7 +282,7 @@ public class MainGame extends BasicGame
 					
 					//if defending choices list isn't empty or null
 					if(!clickFound && game.getDefendingHullZoneChoices()!=null && !game.getDefendingHullZoneChoices().isEmpty()){
-						System.out.println("inside arraylist check");
+						System.out.println("attempting to set defending hull zone");
 						for(HullZone zone : game.getDefendingHullZoneChoices()){
 							if(game.getDefendingHullZone()==null && zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
 								System.out.println("setting a defending hullzone");
@@ -286,6 +300,7 @@ public class MainGame extends BasicGame
 							}
 						}//end outer for each loop
 						
+						System.out.println("about to check the current defending hull zone to remove it");
 						//if the click is in the defending hull zone
 						if(!clickFound && game.getDefendingHullZone()!=null && game.getDefendingHullZone().getGeometry().contains(convertedClick[0], convertedClick[1])){
 							//set to null
@@ -295,6 +310,7 @@ public class MainGame extends BasicGame
 							diceTray.setAttack(null);
 
 							game.populateDefendingHullZoneList(game.getActiveShip(), game.getAttackingHullZoneSelection());
+							clickFound=true;
 						}
 					}//end if block for defending zones
 					
@@ -311,7 +327,7 @@ public class MainGame extends BasicGame
 				}//end if button down
 				break;
 			case MODIFYATTACK:
-				if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+				if(mouseLeft && contextRect1.contains(mouseX, this.totalHeight-mouseY)){
 					game.incrementGameStep();
 				}
 				
