@@ -200,10 +200,11 @@ public class BasicShip {
 	
 		lineList = new ArrayList<Line>();
 		Line temp;
-		temp = new Line((float)this.size.getWidth()/2 + this.xCoord, 
-				(float)this.size.getLength()/2 -frontArcOffset + this.yCoord,
-				(float)0 + this.xCoord, 
-				(float)this.size.getLength()/2 - frontConjunction + this.yCoord);
+		temp = new Line((float)0 + this.xCoord, 
+				(float)this.size.getLength()/2 - frontConjunction + this.yCoord,
+				(float)this.size.getWidth()/2 + this.xCoord, 
+				(float)this.size.getLength()/2 -frontArcOffset + this.yCoord
+				);
 		lineList.add(temp);
 		
 		temp = new Line((float)0 + this.xCoord, 
@@ -212,10 +213,11 @@ public class BasicShip {
 				(float)this.size.getLength()/2 - frontArcOffset + this.yCoord);
 		lineList.add(temp);
 		
-		temp = new Line((float)this.size.getWidth()/-2 + this.xCoord, 
-				(float)this.size.getLength()/-2 +rearArcOffset + this.yCoord,
-				(float)0 + this.xCoord, 
-				(float)this.size.getLength()/-2 + rearConjunction + this.yCoord);
+		temp = new Line((float)0 + this.xCoord, 
+				(float)this.size.getLength()/-2 + rearConjunction + this.yCoord,
+				(float)this.size.getWidth()/-2 + this.xCoord, 
+				(float)this.size.getLength()/-2 +rearArcOffset + this.yCoord
+				);
 		lineList.add(temp);
 		
 		temp = new Line((float)0 + this.xCoord, 

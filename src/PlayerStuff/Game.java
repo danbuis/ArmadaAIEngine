@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Polygon;
 
 import gameComponents.BasicShip;
 import gameComponents.HullZone;
@@ -182,6 +183,7 @@ public class Game {
 						attPoint.getMaxX(), attPoint.getMaxY());
 				
 				//does the yellow-yellow line cross any hull zone lines
+				//checking LOS
 
 				for(Line hullZoneLine : ship.getHullZoneLines()){
 					if(hullZoneLine.intersects(testLine)){
@@ -191,12 +193,20 @@ public class Game {
 					}
 				}//end lines
 				
+				//checking if it is in arc.
+				Range range=null;
+				Polygon portionInArc = geometryHelper.getPortionInHullZone(attackingZone, zone);
+				System.out.println(portionInArc);
+				if (portionInArc == null){
+					validZone=false;
+				}else{
 				//if after all these checks it is still a valid zone... add it to the list
-				Range range = geometryHelper.getRange(
-						geometryHelper.rangeToPolygon(
-						zone.getGeometry(), attackingZone.getGeometry()));
+					range = geometryHelper.getRange(
+					geometryHelper.rangeToPolygon(
+					portionInArc, attackingZone.getGeometry()));
+				}
 				
-				System.out.println(range);
+				//System.out.println(range);
 				if(validZone){
 					if(range.equals(Range.CLOSE))
 						zone.renderColor=zone.defendClose;

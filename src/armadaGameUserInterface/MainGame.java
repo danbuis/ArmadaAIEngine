@@ -14,6 +14,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 
 import Attacks.Attack;
@@ -23,6 +24,7 @@ import PlayerStuff.Player;
 import PlayerStuff.TurnStep;
 import gameComponents.BasicShip;
 import gameComponents.HullZone;
+import geometry.geometryHelper;
 
 public class MainGame extends BasicGame
 {
@@ -196,7 +198,7 @@ public class MainGame extends BasicGame
 					NebB2.moveAndRotate(657.2, 914.4, 0);
 					P2.addShip(NebB2);
 					BasicShip NebB3 = new BasicShip("Nebulon-B Escort Frigate", P2, false);
-					NebB3.moveAndRotate(627.2, 714.4, 0);
+					NebB3.moveAndRotate(657.2, 714.4, 0);
 					P2.addShip(NebB3);
 					
 					
@@ -253,6 +255,7 @@ public class MainGame extends BasicGame
 					System.out.println("top of select attack update");
 					float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
 					boolean clickFound = false;
+					
 					for(HullZone zone : game.getActiveShip().getAllHullZones()){
 						System.out.println("looking at active ships");
 						if (zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
@@ -375,6 +378,11 @@ public class MainGame extends BasicGame
 					ship.draw(demoGameBorder, g);
 				}
 				
+				/*if(game.getAttackingHullZoneSelection()!=null){
+					Polygon poly = geometryHelper.getExtendedZone(game.getAttackingHullZoneSelection());
+					g.setColor(Color.orange);
+					g.draw(poly);
+				}*/
 
 			}
 			//reset Graphics settings
@@ -418,6 +426,8 @@ public class MainGame extends BasicGame
 					width = trueTypeFont.getWidth(temp);
 					trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);	
 				}
+				
+	
 
 
 				break;

@@ -2,9 +2,13 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Rectangle;
 
 import gameComponents.BasicShip;
 import gameComponents.HullZone;
@@ -73,6 +77,37 @@ public class GeometryTesting {
 		assertFalse(hori1.intersects(hori2));
 		
 		assertTrue(diagonal1.intersects(diagonal3));
+		
+	}
+	
+	@Test
+	public void testSlickGeometryStuff(){
+		Rectangle rect1 = new Rectangle(-2,-2,4,4);
+		Rectangle rect2 = new Rectangle(-1,-1,2,2);
+		Rectangle rect3 = new Rectangle (0,0,4,4);
+		Point point1 = new Point(0,0);
+		
+		assertTrue(rect1.contains(point1));
+	}
+	
+	@Test
+	public void testIntersections(){
+		
+		float[] temp = {-2f,-2f, 2f, -2f, 2f,2f, -2f,2f};
+		Polygon poly1 = new Polygon(temp);
+		
+		float[] temp2 = {-1f, -1f,1f,-1f,1f,1f,-1f,1f};
+		Polygon poly2 = new Polygon(temp2);
+		
+		float[] temp3 = {0f, 0f,0f,4f,4f,4f,4f,0f};
+		Polygon poly3 = new Polygon(temp3);
+		
+		ArrayList<Point> result = (ArrayList<Point>) geometryHelper.findIntersectingPoints(poly1, poly2);
+		assertEquals(0, result.size());
+		
+		result = (ArrayList<Point>) geometryHelper.findIntersectingPoints(poly1, poly3);
+		assertEquals(2, result.size());
+		
 		
 	}
 
