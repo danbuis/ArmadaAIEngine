@@ -8,6 +8,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.TrueTypeFont;
 
 import gameComponents.BasicShip;
+import gameComponents.DefenseToken;
 
 public class ShipTray {
 	
@@ -73,6 +74,13 @@ public class ShipTray {
 			//rear
 			drawCenteredString(font, xCoord+imageX, yCoord+imageY+scaledShipImage.getHeight()/2+gap, ""+ship.getHullZone(2).getShields(), Color.cyan);
 			
+			//render defense tokens
+			int defTokenX = 10;
+			int defTokenY = 70;
+			for(DefenseToken token : ship.getDefenseTokens()){
+				token.renderToken(g, xCoord+defTokenX, yCoord+defTokenY);
+				defTokenX+=(65);
+			}
 			}
 	}
 	

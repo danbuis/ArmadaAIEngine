@@ -61,6 +61,9 @@ public class DefenseToken {
 			redSide=new Image("Graphics/UI/Red-defensetokenScatter.png");
 			break;
 		}
+		
+		greenSide = greenSide.getScaledCopy(0.6f);
+		redSide = redSide.getScaledCopy(0.6f);
 	}
 	
 	public void renderToken(Graphics g, int x, int y){
