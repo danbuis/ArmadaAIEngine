@@ -261,12 +261,20 @@ public class AttackPool {
 			return false;
 		}
 
+		/**
+		 * return braced damage quantity
+		 * @return
+		 */
 		public int calcTotalDamage() {
 			int total = getHitCount()+getCritCount();
 			if(!braced) return total;
 			else return (int) Math.ceil(total/2.0);
 		}
 		
+		/**
+		 * return unbraced damage quantity
+		 * @return
+		 */
 		public int getTotalDamage(){
 			return totalDamage;
 		}

@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Rectangle;
 
 import gameComponents.BasicShip;
 import gameComponents.DefenseToken;
@@ -21,8 +22,15 @@ public class ShipTray {
 	private int imageX = 350;
 	private int imageY;
 	
+	private int defTokenX = 10;
+	private int defTokenY = 70;
+	private int defTokenGap = 65;
+	
 	TrueTypeFont font;
 	TrueTypeFont fontSmaller;
+	
+	Rectangle[] defenseRects;
+	boolean[] defenseBools;
 	
 	
 	public ShipTray(int x, int y, Image background){
@@ -44,6 +52,44 @@ public class ShipTray {
 		System.out.println("Getting a new ship");
 		this.ship = ship;
 		scaledShipImage = getScaledImage();
+		
+		defenseRects =  new Rectangle[ship.getDefenseTokens().length];
+		defenseBools = new boolean[ship.getDefenseTokens().length];
+		for(int i=0; i<ship.getDefenseTokens().length; i++){
+			defenseRects[i]=new Rectangle(xCoord+defTokenX+defTokenGap*i, yCoord+defTokenY, 
+					ship.getDefenseTokens()[i].getImage().getWidth(),
+					ship.getDefenseTokens()[i].getImage().getHeight());
+		}
+	}
+	
+	public void clearShip(){
+		this.ship = null;
+	}
+	
+	public void clearSelectedDefenseTokens(){
+		for(boolean bool : defenseBools){
+			bool = false;
+		}
+	}
+	
+	public void checkClick(int mouseX, int mouseY){
+		System.out.println("Checking a click in the tray "+mouseX+","+ mouseY);
+		
+		//Convert the YCoord
+		mouseY = -mouseY+1152;
+		System.out.println("Converted mouseY = "+mouseY);
+		//check if one of the defense tokens contains the click...
+		for(int i=0; i<defenseRects.length; i++){
+			Rectangle rect = defenseRects[i];
+			
+			System.out.println("Rectangle coords "+rect.getX()+","+rect.getY());
+			System.out.println("Rectangle dims "+rect.getWidth()+","+rect.getHeight());
+			
+			if(defenseRects[i].contains(mouseX, mouseY)){
+				System.out.println("Found a click on element "+1);
+				defenseBools[i] = !defenseBools[i];
+			}
+		}
 	}
 	
 	private Image getScaledImage() {
@@ -75,13 +121,19 @@ public class ShipTray {
 			drawCenteredString(font, xCoord+imageX, yCoord+imageY+scaledShipImage.getHeight()/2+gap, ""+ship.getHullZone(2).getShields(), Color.cyan);
 			
 			//render defense tokens
-			int defTokenX = 10;
-			int defTokenY = 70;
+			int defenseRenderX = defTokenX;
 			for(DefenseToken token : ship.getDefenseTokens()){
-				token.renderToken(g, xCoord+defTokenX, yCoord+defTokenY);
-				defTokenX+=(65);
+				token.renderToken(g, xCoord+defenseRenderX, yCoord+defTokenY);
+				defenseRenderX += defTokenGap;
+				}
+			
+			for(int i=0; i<defenseBools.length;i++){
+				if(defenseBools[i]){
+					g.setColor(Color.yellow);
+					g.draw(defenseRects[i]);
+				}
 			}
-			}
+		}
 	}
 	
 	private void drawCenteredString(TrueTypeFont font, int x, int y, String text, Color color){

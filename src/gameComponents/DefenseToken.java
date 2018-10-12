@@ -232,6 +232,10 @@ public class DefenseToken {
 	public DefenseTokenStatus getStatus() {
 		return status;
 	}
+	
+	public Image getImage(){
+		return redSide;
+	}
 
 
 }

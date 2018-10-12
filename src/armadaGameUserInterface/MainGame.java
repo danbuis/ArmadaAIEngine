@@ -57,8 +57,8 @@ public class MainGame extends BasicGame
 	private int context1X = 500;
 	private int context1Y = 900;
 	
-	private ShipTray shipTray1;
-	private ShipTray shipTray2;
+	public ShipTray shipTray1;
+	public ShipTray shipTray2;
 	
 	private ListDisplay listPlayer1;
 	private ListDisplay listPlayer2;
@@ -75,6 +75,7 @@ public class MainGame extends BasicGame
 	private int gap = 5;
 	
 	public boolean mouseLeft = false;
+	private boolean downFlag;
 	
 	
 	public MainGame(String gamename)
@@ -125,15 +126,16 @@ public class MainGame extends BasicGame
 
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
+		mouseLeft = false;
 		
 		if(gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
+			downFlag = true;
+		}
+		
+		if(downFlag && !gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
 			mouseLeft = true;
-			System.out.println("Click on");
-		} else {
-			if (mouseLeft) {
-				mouseLeft = false;
-				System.out.println("Click off");
-			}
+			downFlag = false;
+			System.out.println("Mouse released");
 		}
 		
 		int mouseX = Mouse.getX();
@@ -163,7 +165,7 @@ public class MainGame extends BasicGame
 					P1.addShip(NebB);
 					
 					
-					game = new Game(demoGameBorder, P1, P2);
+					game = new Game(demoGameBorder, P1, P2, this);
 					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
 					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
 					game.incrementTurn();
@@ -202,7 +204,7 @@ public class MainGame extends BasicGame
 					P2.addShip(NebB3);
 					
 					
-					game = new Game(demoGameBorder, P1, P2);
+					game = new Game(demoGameBorder, P1, P2, this);
 					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
 					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
 
@@ -243,7 +245,7 @@ public class MainGame extends BasicGame
 				//if ship phase and no active ship, activate a pick active ship button
 				//System.out.println(contextRect1.contains(mouseX, mouseY));
 				//System.out.println(game.getActiveShip());
-				if(mouseLeft && contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.getGameStep().equals(GameStep.SELECTSHIPTOACTIVATE) && game.getActiveShip()==null){
+				if(shipTray1.getShip()!=null && mouseLeft && contextRect1.contains(mouseX, this.totalHeight-mouseY) && game.getGameStep().equals(GameStep.SELECTSHIPTOACTIVATE) && game.getActiveShip()==null){
 					System.out.println("Setting active ship");
 					game.setActiveShip(shipTray1.getShip());
 					game.incrementGameStep();
@@ -290,6 +292,7 @@ public class MainGame extends BasicGame
 							if(game.getDefendingHullZone()==null && zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
 								System.out.println("setting a defending hullzone");
 								game.setDefendingHullZone(zone);
+								shipTray2.setShip(zone.getParent());
 								for (HullZone defZone:game.getDefendingHullZoneChoices()){
 									if(!defZone.equals(zone)){
 										defZone.renderColor=defZone.normalColor;
@@ -309,7 +312,7 @@ public class MainGame extends BasicGame
 							//set to null
 							System.out.println("removing defending hullzone");
 							game.setDefendingHullZone(null);
-
+							shipTray2.clearShip();
 							diceTray.setAttack(null);
 
 							game.populateDefendingHullZoneList(game.getActiveShip(), game.getAttackingHullZoneSelection());
@@ -337,6 +340,16 @@ public class MainGame extends BasicGame
 				break;
 				
 			case SPENDDEFENSETOKENS:
+				if(mouseLeft){
+					//check if the click is in the player's ship tray
+					shipTray1.checkClick(mouseX, mouseY);
+					if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+						game.incrementGameStep();
+						}
+					}
+				break;
+			case SELECTCRIT:
+			
 				break;
 				
 			default: System.out.println("Invalid currentState in game update "+game.getGameStep());
@@ -444,11 +457,15 @@ public class MainGame extends BasicGame
 				}
 				
 			case SPENDDEFENSETOKENS:
+				diceTray.renderDiceTray(g);
 				g.drawImage(contextButton1, context1X, context1Y);
 				temp = "Finished";
 				width = trueTypeFont.getWidth(temp);
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 				
+				break;
+				
+			case SELECTCRIT:
 				break;
 			default:
 				System.out.println("missing gamestep in render "+game.getGameStep());

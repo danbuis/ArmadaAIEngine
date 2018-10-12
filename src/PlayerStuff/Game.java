@@ -8,7 +8,9 @@ import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Polygon;
 
+import armadaGameUserInterface.MainGame;
 import gameComponents.BasicShip;
+import gameComponents.DefenseToken;
 import gameComponents.HullZone;
 import geometry.Range;
 import geometry.geometryHelper;
@@ -24,11 +26,13 @@ public class Game {
 	private int turn=0;
 	private GameStep gameStep;
 	private Player firstPlayer;
+	private Player activePlayer;
 	private HullZone attackingHullZoneSelection;
 	private HullZone defendingHullZone;
 	private ArrayList<HullZone> defendingHullZoneChoices;
+	private MainGame mainGame;
 	
-	public Game(Image border, Player P1, Player P2){
+	public Game(Image border, Player P1, Player P2, MainGame mainGame){
 		this.setBorder(border);
 		this.setPlayer1(P1);
 		this.setPlayer2(P2);
@@ -36,6 +40,7 @@ public class Game {
 		//this.attackStep = AttackStep.DECLARETARGET;
 		//this.turnStep = TurnStep.DEPLOYMENT;
 		this.gameStep = GameStep.DEPLOYMENT;
+		this.mainGame = mainGame;
 	}
 
 	public Image getBorder() {
@@ -83,8 +88,10 @@ public class Game {
 	public void incrementGameStep(){
 		switch (this.gameStep){
 		case DEPLOYMENT:
+			gameStep = GameStep.COMMANDPHASE;
 			break;
 		case COMMANDPHASE:
+			gameStep = GameStep.SELECTSHIPTOACTIVATE;
 			break;
 		case SELECTSHIPTOACTIVATE:
 			gameStep = GameStep.SELECTATTACK;
@@ -97,8 +104,54 @@ public class Game {
 			break;
 		case SPENDDEFENSETOKENS:
 			gameStep = GameStep.SELECTCRIT;
+			mainGame.shipTray1.clearSelectedDefenseTokens();
+			mainGame.shipTray2.clearSelectedDefenseTokens();
+			break;
+		case SELECTCRIT:
+			gameStep = GameStep.APPLYDAMAGE;
+			break;
+		case APPLYDAMAGE:
+			//check if other player has a ship to Activate
+			
+			int player1ShipToActivate = 0;
+			for(BasicShip ship : player1.ships){
+					if (!ship.isActivated()){
+						player1ShipToActivate++;
+					}
+				}
+			int player2ShipToActivate = 0;
+			for(BasicShip ship : player2.ships){
+					if (!ship.isActivated()){
+						player2ShipToActivate++;
+					}
+				}
+			if(player2ShipToActivate == 0 && player1ShipToActivate == 0){
+				gameStep = GameStep.STATUSPHASE;
+			}else if (player2ShipToActivate == 0){
+				activePlayer=player1;
+				gameStep = GameStep.SELECTSHIPTOACTIVATE;
+			}else if (player1ShipToActivate == 0){
+				activePlayer=player2;
+				gameStep = GameStep.SELECTSHIPTOACTIVATE;
+			}else if(activePlayer == player1){
+				activePlayer = player2;
+				gameStep = GameStep.SELECTSHIPTOACTIVATE;
+			} else {
+				activePlayer = player1;
+				gameStep = gameStep.SELECTSHIPTOACTIVATE;
+			}
 			break;
 		case STATUSPHASE:
+			for(BasicShip ship:player1.ships){
+				for(DefenseToken token :ship.getDefenseTokens()){
+					token.readyToken();
+				}
+			}
+			for(BasicShip ship:player2.ships){
+				for(DefenseToken token :ship.getDefenseTokens()){
+					token.readyToken();
+				}
+			}
 			incrementTurn();
 			gameStep = GameStep.COMMANDPHASE;
 			break;

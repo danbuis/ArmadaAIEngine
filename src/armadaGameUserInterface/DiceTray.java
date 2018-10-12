@@ -1,10 +1,12 @@
 package armadaGameUserInterface;
 
+import java.awt.Font;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 
 import Attacks.Attack;
 import gameComponents.Dice;
@@ -17,11 +19,13 @@ public class DiceTray {
 	private Attack attack;
 	private int offset = 40;
 	private int vertOffset;
+	private TrueTypeFont font;
 	
 	DiceTray(int x, int y, Image image){
 		xCoord = x;
 		yCoord = y;
 		background = image;
+		font = new TrueTypeFont(new Font("Verdana", Font.BOLD, 20), true);
 		try {
 			vertOffset = image.getHeight()/2-(new Image("Graphics/UI/blueDieBG.png").getHeight()/2);
 		} catch (SlickException e) {
@@ -36,6 +40,7 @@ public class DiceTray {
 		if (attack != null){
 			if(attack.diceRoll != null){
 				try {
+					renderAttackInfo(g);
 					drawAttackPool(g);
 				} catch (SlickException e) {
 					e.printStackTrace();
@@ -47,7 +52,15 @@ public class DiceTray {
 					e.printStackTrace();
 				}
 			}
+			
+			
+			
 		}
+	}
+
+	private void renderAttackInfo(Graphics g) {
+		String currentDamage = "Current damage : "+attack.diceRoll.getTotalDamage();
+		g.drawString(currentDamage, xCoord, yCoord-40);
 	}
 
 	private void drawAttackPool(Graphics g) throws SlickException {
