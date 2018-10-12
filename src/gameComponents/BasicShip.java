@@ -45,6 +45,7 @@ public class BasicShip {
 	private float frontConjunction;
 	private float rearConjunction;
 	private Image shipImage;
+	private int speed = 0;
 	
 	//private Line FR;
 	//private Line FL;
@@ -151,6 +152,7 @@ public class BasicShip {
 		}
 
 	}
+
 	
 
 	/**
@@ -527,6 +529,14 @@ public class BasicShip {
 			System.out.println("failed to find image file at : "+string);
 			e.printStackTrace();
 		}
+	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
 	}
 	
 	
