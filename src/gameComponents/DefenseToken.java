@@ -1,5 +1,9 @@
 package gameComponents;
 
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
 import Attacks.Attack;
 import Attacks.AttackPool;
 import geometry.Range;
@@ -28,10 +32,40 @@ public class DefenseToken {
 	// fields. A Not exhausted token is considered ready.
 	private DefenseTokenStatus status = DefenseTokenStatus.READY;
 	private DefenseTokenType type;
+	private Image greenSide;
+	private Image redSide;
 
 	// Valued constructor
-	public DefenseToken(DefenseTokenType type) {
+	public DefenseToken(DefenseTokenType type) throws SlickException {
 		this.type = type;
+		
+		switch (type){
+		case BRACE:
+			greenSide=new Image("Graphics/UI/Green-defensetokenBrace.png");
+			redSide=new Image("Graphics/UI/Red-defensetokenBrace.png");
+			break;
+		case CONTAIN:
+			greenSide=new Image("Graphics/UI/Green-defensetokenContain.png");
+			redSide=new Image("Graphics/UI/Red-defensetokenContain.png");
+			break;
+		case EVADE:
+			greenSide=new Image("Graphics/UI/Green-defensetokenEvade.png");
+			redSide=new Image("Graphics/UI/Red-defensetokenEvade.png");
+			break;
+		case REDIRECT:
+			greenSide=new Image("Graphics/UI/Green-defensetokenRedirect.png");
+			redSide=new Image("Graphics/UI/Red-defensetokenRedirect.png");
+			break;
+		case SCATTER:
+			greenSide=new Image("Graphics/UI/Green-defensetokenScatter.png");
+			redSide=new Image("Graphics/UI/Red-defensetokenScatter.png");
+			break;
+		}
+	}
+	
+	public void renderToken(Graphics g, int x, int y){
+		if(this.isReady()) g.drawImage(greenSide, x, y);
+		else if(this.isExhausted()) g.drawImage(redSide, x, y);
 	}
 
 	/* entry method for spending a token
