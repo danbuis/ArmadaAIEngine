@@ -16,7 +16,7 @@ public class DefenseTokenTests {
 
 	@Test
 	public void generalSpendTest() throws SlickException {
-		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER);
+		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER, true);
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
@@ -56,8 +56,8 @@ public class DefenseTokenTests {
 	
 	@Test
 	public void noRepeatTokensTest() throws SlickException{
-		DefenseToken evade = new DefenseToken(DefenseTokenType.EVADE);
-		DefenseToken evade2 = new DefenseToken(DefenseTokenType.EVADE);
+		DefenseToken evade = new DefenseToken(DefenseTokenType.EVADE, true);
+		DefenseToken evade2 = new DefenseToken(DefenseTokenType.EVADE, true);
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
@@ -80,7 +80,7 @@ public class DefenseTokenTests {
 		while(atk.diceRoll.getTotalDamage()<2){
 			atk.formAttackPool(ship1.getHullZone(0).getArmament());
 		}
-		DefenseToken brace = new DefenseToken(DefenseTokenType.BRACE);
+		DefenseToken brace = new DefenseToken(DefenseTokenType.BRACE, true);
 		
 		assertTrue(brace.isReady());
 		assertFalse(brace.isExhausted());

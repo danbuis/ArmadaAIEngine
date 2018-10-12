@@ -48,7 +48,7 @@ public class AttackPoolTest {
 		
 		assertNotEquals(0, atk.diceRoll.getTotalDamage());
 		
-		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER);
+		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER, true);
 		scatter.spendToken(true, atk, 0);
 		
 		assertEquals(0, atk.diceRoll.getTotalDamage());
@@ -72,7 +72,7 @@ public class AttackPoolTest {
 		int firstDamage = atk.diceRoll.calcTotalDamage();
 		int firstDice = atk.diceRoll.roll.size();
 		
-		DefenseToken evade = new DefenseToken(DefenseTokenType.EVADE);
+		DefenseToken evade = new DefenseToken(DefenseTokenType.EVADE, true);
 		
 		assertEquals(Range.LONG, atk.getRange());
 		evade.spendToken(true, atk, 0);
@@ -101,7 +101,7 @@ public class AttackPoolTest {
 		assertNotEquals(secondDamage, atk.diceRoll.getTotalDamage());
 		assertEquals(secondDice, atk.diceRoll.roll.size());
 		*/
-		evade = new DefenseToken(DefenseTokenType.EVADE);
+		evade = new DefenseToken(DefenseTokenType.EVADE, true);
 		atk.setRange(Range.CLOSE);
 		int thirdDamage = atk.diceRoll.getTotalDamage();
 		evade.spendToken(true, atk, 0);

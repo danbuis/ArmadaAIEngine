@@ -115,7 +115,7 @@ public class BasicShip {
 					this.setAntiSquad(antiSquad.split(" ")[1]);
 
 					String defenseTokens = sc.nextLine();
-					buildDefenseTokens(defenseTokens.split(" ")[1]);
+					buildDefenseTokens(defenseTokens.split(" ")[1], test);
 
 					String navChart = sc.nextLine();
 					this.buildNavChart(navChart);
@@ -273,7 +273,7 @@ public class BasicShip {
 	/*
 	 * Defense Token options: B=Brace R=Redirect E=Evade S=Scatter C=Contain
 	 */
-	private void buildDefenseTokens(String s) {
+	private void buildDefenseTokens(String s, boolean test) {
 		if (s.length() > 0) {
 			defenseTokens = new DefenseToken[s.length()];
 			char targChar;
@@ -281,15 +281,15 @@ public class BasicShip {
 				targChar = s.charAt(i);
 				try {
 					if (targChar == 'B') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.BRACE);
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.BRACE, test);
 					} else if (targChar == 'R') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.REDIRECT);
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.REDIRECT, test);
 					} else if (targChar == 'E') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.EVADE);
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.EVADE, test);
 					} else if (targChar == 'S') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.SCATTER);
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.SCATTER, test);
 					} else if (targChar == 'C') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.CONTAIN);
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.CONTAIN, test);
 					}
 				}catch (SlickException e) {
 						// TODO Auto-generated catch block
@@ -307,23 +307,29 @@ public class BasicShip {
 	 * @param dY difference in y, can be positIve or negative
 	 * @param rotate difference in degrees, can be positive or negative
 	 */
-	public void moveAndRotate(float dX, float dY, float rotate){
+	public void moveAndRotate(float dX, float dY, float rotateAngle){
 		this.xCoord += dX;
 		this.yCoord += dY;
 		
+		
+		
 		//translate geometry
 		Transform translate = Transform.createTranslateTransform(dX, dY);
-		this.plasticBase = (Polygon)this.plasticBase.transform(translate);
+		Transform rotate = Transform.createRotateTransform((float)Math.toRadians(rotateAngle));
+		
+		Transform combined = rotate.concatenate(translate);
+		
+		this.plasticBase = (Polygon)this.plasticBase.transform(combined);
 		
 		for(HullZone zone: hullzones){
-			zone.setGeometry((Polygon)zone.getGeometry().transform(translate));
+			zone.setGeometry((Polygon)zone.getGeometry().transform(combined));
 			Point oldPoint = zone.getYellowDot();
 			zone.setYellowDot(new Point(oldPoint.getX()+dX, oldPoint.getY()+dY));
 		}
 
 		Line temp;
 		for(int i=0; i<4; i++){
-			temp = (Line) lineList.get(i).transform(translate);
+			temp = (Line) lineList.get(i).transform(combined);
 			lineList.remove(i);
 			lineList.add(i, temp);
 		}

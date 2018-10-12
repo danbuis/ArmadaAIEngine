@@ -36,34 +36,34 @@ public class DefenseToken {
 	private Image redSide;
 
 	// Valued constructor
-	public DefenseToken(DefenseTokenType type) throws SlickException {
+	public DefenseToken(DefenseTokenType type, boolean test) throws SlickException {
 		this.type = type;
-		
-		switch (type){
-		case BRACE:
-			greenSide=new Image("Graphics/UI/Green-defensetokenBrace.png");
-			redSide=new Image("Graphics/UI/Red-defensetokenBrace.png");
-			break;
-		case CONTAIN:
-			greenSide=new Image("Graphics/UI/Green-defensetokenContain.png");
-			redSide=new Image("Graphics/UI/Red-defensetokenContain.png");
-			break;
-		case EVADE:
-			greenSide=new Image("Graphics/UI/Green-defensetokenEvade.png");
-			redSide=new Image("Graphics/UI/Red-defensetokenEvade.png");
-			break;
-		case REDIRECT:
-			greenSide=new Image("Graphics/UI/Green-defensetokenRedirect.png");
-			redSide=new Image("Graphics/UI/Red-defensetokenRedirect.png");
-			break;
-		case SCATTER:
-			greenSide=new Image("Graphics/UI/Green-defensetokenScatter.png");
-			redSide=new Image("Graphics/UI/Red-defensetokenScatter.png");
-			break;
-		}
-		
+		if(!test){
+			switch (type){
+			case BRACE:
+				greenSide=new Image("Graphics/UI/Green-defensetokenBrace.png");
+				redSide=new Image("Graphics/UI/Red-defensetokenBrace.png");
+				break;
+			case CONTAIN:
+				greenSide=new Image("Graphics/UI/Green-defensetokenContain.png");
+				redSide=new Image("Graphics/UI/Red-defensetokenContain.png");
+				break;
+			case EVADE:
+				greenSide=new Image("Graphics/UI/Green-defensetokenEvade.png");
+				redSide=new Image("Graphics/UI/Red-defensetokenEvade.png");
+				break;
+			case REDIRECT:
+				greenSide=new Image("Graphics/UI/Green-defensetokenRedirect.png");
+				redSide=new Image("Graphics/UI/Red-defensetokenRedirect.png");
+				break;
+			case SCATTER:
+				greenSide=new Image("Graphics/UI/Green-defensetokenScatter.png");
+				redSide=new Image("Graphics/UI/Red-defensetokenScatter.png");
+				break;
+			}
 		greenSide = greenSide.getScaledCopy(0.6f);
 		redSide = redSide.getScaledCopy(0.6f);
+		}
 	}
 	
 	public void renderToken(Graphics g, int x, int y){
