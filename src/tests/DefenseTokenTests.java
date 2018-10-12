@@ -3,6 +3,7 @@ package tests;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.newdawn.slick.SlickException;
 
 import Attacks.Attack;
 import gameComponents.BasicShip;
@@ -14,7 +15,7 @@ import geometry.Range;
 public class DefenseTokenTests {
 
 	@Test
-	public void generalSpendTest() {
+	public void generalSpendTest() throws SlickException {
 		DefenseToken scatter = new DefenseToken(DefenseTokenType.SCATTER);
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
@@ -54,7 +55,7 @@ public class DefenseTokenTests {
 
 	
 	@Test
-	public void noRepeatTokensTest(){
+	public void noRepeatTokensTest() throws SlickException{
 		DefenseToken evade = new DefenseToken(DefenseTokenType.EVADE);
 		DefenseToken evade2 = new DefenseToken(DefenseTokenType.EVADE);
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
@@ -69,7 +70,7 @@ public class DefenseTokenTests {
 	}
 	
 	@Test
-	public void testReadyDefenseToken(){
+	public void testReadyDefenseToken() throws SlickException{
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);

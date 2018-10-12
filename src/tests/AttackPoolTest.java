@@ -3,6 +3,7 @@ package tests;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.newdawn.slick.SlickException;
 
 import Attacks.Attack;
 import Attacks.AttackPool;
@@ -32,7 +33,7 @@ public class AttackPoolTest {
 	}
 	
 	@Test
-	public void checkScatterToken(){
+	public void checkScatterToken() throws SlickException{
 		BasicShip ship1 = new BasicShip("Victory 1 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);
@@ -55,7 +56,7 @@ public class AttackPoolTest {
 	}
 	
 	@Test
-	public void checkEvadeToken(){
+	public void checkEvadeToken() throws SlickException{
 		BasicShip ship1 = new BasicShip("Victory 2 Star Destroyer", null);
 		BasicShip ship2 = new BasicShip("Victory 1 Star Destroyer", null);
 		ship2.moveAndRotate(200, 0, 0);

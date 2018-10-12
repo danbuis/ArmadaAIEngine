@@ -279,21 +279,27 @@ public class BasicShip {
 			char targChar;
 			for (int i = 0; i < s.length(); i++) {
 				targChar = s.charAt(i);
-				if (targChar == 'B') {
-					defenseTokens[i] = new DefenseToken(DefenseTokenType.BRACE);
-				} else if (targChar == 'R') {
-					defenseTokens[i] = new DefenseToken(DefenseTokenType.REDIRECT);
-				} else if (targChar == 'E') {
-					defenseTokens[i] = new DefenseToken(DefenseTokenType.EVADE);
-				} else if (targChar == 'S') {
-					defenseTokens[i] = new DefenseToken(DefenseTokenType.SCATTER);
-				} else if (targChar == 'C') {
-					defenseTokens[i] = new DefenseToken(DefenseTokenType.CONTAIN);
+				try {
+					if (targChar == 'B') {
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.BRACE);
+					} else if (targChar == 'R') {
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.REDIRECT);
+					} else if (targChar == 'E') {
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.EVADE);
+					} else if (targChar == 'S') {
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.SCATTER);
+					} else if (targChar == 'C') {
+						defenseTokens[i] = new DefenseToken(DefenseTokenType.CONTAIN);
+					}
+				}catch (SlickException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 
-	}
+	
 	
 	/**Function to move and rotate the ship.  
 	 * 
