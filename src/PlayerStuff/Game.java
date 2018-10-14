@@ -188,6 +188,10 @@ public class Game {
 	public void setGameStep(GameStep gameStep) {
 		this.gameStep = gameStep;
 	}
+	
+	public MainGame getMainGame(){
+		return this.mainGame;
+	}
 
 	public HullZone getAttackingHullZoneSelection() {
 		return attackingHullZoneSelection;

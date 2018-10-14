@@ -11,7 +11,7 @@ public class ShipMovementTests {
 
 	@Test
 	public void testTranslate() {
-BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
+		BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
 		
 		HullZone front = test.getHullZone(0);
 		assertEquals(5, front.getGeometry().getPointCount());
@@ -148,6 +148,36 @@ BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
 		
 		assertEquals(10, right.getNthPointOfGeometry(3).getX(), 0.001);
 		assertEquals(13.38, right.getNthPointOfGeometry(3).getY(), 0.001);
+	}
+	
+	@Test
+	public void testRotate(){
+		BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
+		
+		HullZone front = test.getHullZone(0);
+		
+		assertEquals(30.5, front.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(51.0, front.getNthPointOfGeometry(2).getY(), 0.001);
+		
+		test.moveAndRotate(0, 0, 90);
+		
+		assertEquals(-51.0, front.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(30.5, front.getNthPointOfGeometry(2).getY(), 0.001);
+	}
+	
+	@Test
+	public void testMoveAndRotate(){
+BasicShip test = new BasicShip("Victory 1 Star Destroyer", null);
+		
+		HullZone front = test.getHullZone(0);
+		
+		assertEquals(30.5, front.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(51.0, front.getNthPointOfGeometry(2).getY(), 0.001);
+		
+		test.moveAndRotate(500, -1000, 90);
+		
+		assertEquals(449, front.getNthPointOfGeometry(2).getX(), 0.001);
+		assertEquals(-969.5, front.getNthPointOfGeometry(2).getY(), 0.001);
 	}
 
 }

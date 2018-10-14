@@ -299,15 +299,26 @@ public class BasicShip {
 			}
 		}
 
-	
-	
-	/**Function to move and rotate the ship.  
+	/**Overloaded method for pivoting the ship about its center
 	 * 
-	 * @param dX difference in x, can be positive or negative
-	 * @param dY difference in y, can be positIve or negative
-	 * @param rotate difference in degrees, can be positive or negative
+	 * @param dx
+	 * @param dy
+	 * @param rotateAngle
 	 */
-	public void moveAndRotate(float dX, float dY, float rotateAngle){
+	public void moveAndRotate(float dx, float dy, float rotateAngle){
+		moveAndRotate(dx, dy, rotateAngle, this.xCoord, this.yCoord);
+	}
+	
+	
+	/**
+	 * Rotate then move a ship.  Uses a given point as a pivot.
+	 * @param dX
+	 * @param dY
+	 * @param rotateAngle
+	 * @param xPivot
+	 * @param yPivot
+	 */
+	public void moveAndRotate(float dX, float dY, float rotateAngle, float xPivot, float yPivot){
 		this.xCoord += dX;
 		this.yCoord += dY;
 		
@@ -317,7 +328,7 @@ public class BasicShip {
 		Transform translate = Transform.createTranslateTransform(dX, dY);
 		Transform rotate = Transform.createRotateTransform((float)Math.toRadians(rotateAngle));
 		
-		Transform combined = rotate.concatenate(translate);
+		Transform combined = translate.concatenate(rotate);
 		
 		this.plasticBase = (Polygon)this.plasticBase.transform(combined);
 		

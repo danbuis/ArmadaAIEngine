@@ -63,7 +63,7 @@ public class MainGame extends BasicGame
 	private ListDisplay listPlayer1;
 	private ListDisplay listPlayer2;
 	
-	private DiceTray diceTray;
+	public DiceTray diceTray;
 	
 	private int translateX;
 	private int translateY;
