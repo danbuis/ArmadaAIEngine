@@ -83,6 +83,38 @@ public class MainGame extends BasicGame
 		super(gamename);
 	}
 
+	public void populateFullGameTesting(boolean test){
+		Player P1 = new Player("P1", true);
+		BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1, test);
+		vic.moveAndRotate(657.2, 600, 0);
+		P1.addShip(vic);
+		BasicShip vic2 = new BasicShip("Victory 2 Star Destroyer", P1, test);
+		vic2.moveAndRotate(457.2, 600, 0);
+		P1.addShip(vic2);
+		
+		Player P2 = new Player("P2", false);
+		BasicShip CR90 = new BasicShip("CR90B Corvette", P2, test);
+		CR90.moveAndRotate(457.2, 414.4, 0);
+		P2.addShip(CR90);
+		BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2, test);
+		NebB.moveAndRotate(857.2, 814.4, 0);
+		P2.addShip(NebB);
+		BasicShip NebB2 = new BasicShip("Nebulon-B Support Frigate", P2, test);
+		NebB2.moveAndRotate(657.2, 914.4, 0);
+		P2.addShip(NebB2);
+		BasicShip NebB3 = new BasicShip("Nebulon-B Support Frigate", P2, test);
+		NebB3.moveAndRotate(657.2, 714.4, 0);
+		P2.addShip(NebB3);
+		
+		
+		game = new Game(demoGameBorder, P1, P2, this);
+		if(!test){
+			listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
+			listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
+		}
+
+	}
+	
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		demoGameButton = new Image("Graphics/UI/DemoGameButton.png");
@@ -181,33 +213,8 @@ public class MainGame extends BasicGame
 					translateX = 120;
 					translateY = 159;
 					
-					Player P1 = new Player("P1", true);
-					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1, false);
-					vic.moveAndRotate(657.2, 600, 0);
-					P1.addShip(vic);
-					BasicShip vic2 = new BasicShip("Victory 2 Star Destroyer", P1, false);
-					vic2.moveAndRotate(457.2, 600, 0);
-					P1.addShip(vic2);
+					populateFullGameTesting(false);
 					
-					Player P2 = new Player("P2", false);
-					BasicShip CR90 = new BasicShip("CR90A Corvette", P2, false);
-					CR90.moveAndRotate(457.2, 414.4, 0);
-					P2.addShip(CR90);
-					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P2, false);
-					NebB.moveAndRotate(857.2, 814.4, 0);
-					P2.addShip(NebB);
-					BasicShip NebB2 = new BasicShip("Nebulon-B Escort Frigate", P2, false);
-					NebB2.moveAndRotate(657.2, 914.4, 0);
-					P2.addShip(NebB2);
-					BasicShip NebB3 = new BasicShip("Nebulon-B Escort Frigate", P2, false);
-					NebB3.moveAndRotate(657.2, 714.4, 0);
-					P2.addShip(NebB3);
-					
-					
-					game = new Game(demoGameBorder, P1, P2, this);
-					listPlayer1 = new ListDisplay(textBackground,0,70, P1, game);
-					listPlayer2 = new ListDisplay(textBackground, background.getWidth()-textBackground.getWidth(), 70, P2, game);
-
 					game.incrementTurn();
 					game.setGameStep(GameStep.SELECTSHIPTOACTIVATE);
 				}

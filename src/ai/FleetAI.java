@@ -9,11 +9,11 @@ import gameComponents.BasicShip;
 
 public class FleetAI {
 
-	Player me;
-	Game game;
-	Player opponent;
-	Map<BasicShip, Integer> shipPriorities = new HashMap<BasicShip, Integer>();
-	Map<BasicShip, ShipAI> shipAIs = new HashMap<BasicShip, ShipAI>();
+	private Player me;
+	public Game game;
+	private Player opponent;
+	public Map<BasicShip, Integer> shipPriorities = new HashMap<BasicShip, Integer>();
+	private Map<BasicShip, ShipAI> shipAIs = new HashMap<BasicShip, ShipAI>();
 	
 	/**
 	 * 
@@ -41,7 +41,7 @@ public class FleetAI {
 	 */
 	public void assignPriorities(){
 		for(BasicShip ship : opponent.ships){
-			int baseValue = ship.getCost()/25;
+			int baseValue = ship.getCost()/8;
 			shipPriorities.put(ship, baseValue);
 		}
 	}
@@ -50,7 +50,7 @@ public class FleetAI {
 	 * Select a ship to activate
 	 * Reevaluates the field so that the ship that activates has current info
 	 */
-	public void activateAShip(){
+	public BasicShip activateAShip(boolean testing){
 		assignPriorities();
 		
 		//For now just select the most expensive ship
@@ -58,14 +58,17 @@ public class FleetAI {
 		BasicShip selection = null;
 		for (BasicShip ship : me.ships){
 			if(!ship.isActivated()){
-				if (ship.getCost()<cost){
+				if (ship.getCost()>cost){
 					cost = ship.getCost();
 					selection = ship;
 				}
 			}
 		}
+		if(!testing){
+			shipAIs.get(selection).activateShip();
+		}
 		
-		shipAIs.get(selection).activateShip();
+		return selection;
 	}
 	
 }
