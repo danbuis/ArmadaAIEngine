@@ -11,7 +11,7 @@ public class MovementToolTests {
 
 	@Test
 	public void testIncrement() {
-		ManeuverTool tool = new ManeuverTool(new BasicShip("CR90A Corvette", null), false);
+		ManeuverTool tool = new ManeuverTool(new BasicShip("CR90A Corvette", null));
 		
 		//first section checks that incrementing goes through full range
 		tool.incrementKnuckle(4,4);
@@ -47,7 +47,7 @@ public class MovementToolTests {
 	
 	@Test
 	public void testIsValidMove(){
-		ManeuverTool tool = new ManeuverTool(new BasicShip("Victory 1 Star Destroyer", null), false);
+		ManeuverTool tool = new ManeuverTool(new BasicShip("Victory 1 Star Destroyer", null));
 		
 		tool.incrementKnuckle(1, 1);
 		assertFalse(tool.isValidMove(2));
@@ -63,7 +63,7 @@ public class MovementToolTests {
 	
 	@Test
 	public void testInValidSpeeds(){
-		ManeuverTool tool = new ManeuverTool(new BasicShip("Victory 1 Star Destroyer", null), false);
+		ManeuverTool tool = new ManeuverTool(new BasicShip("Victory 1 Star Destroyer", null));
 		tool.incrementKnuckle(1, 2);
 		assertFalse(tool.isValidMove(3));
 		tool.validateConfiguration(3);

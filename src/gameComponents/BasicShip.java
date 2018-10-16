@@ -321,12 +321,12 @@ public class BasicShip {
 	public void moveAndRotate(float dX, float dY, float rotateAngle, float xPivot, float yPivot){
 		this.xCoord += dX;
 		this.yCoord += dY;
-		
+		this.rotation += rotateAngle;
 		
 		
 		//translate geometry
 		Transform translate = Transform.createTranslateTransform(dX, dY);
-		Transform rotate = Transform.createRotateTransform((float)Math.toRadians(rotateAngle));
+		Transform rotate = Transform.createRotateTransform((float)Math.toRadians(rotateAngle), xPivot, yPivot);
 		
 		Transform combined = translate.concatenate(rotate);
 		
@@ -344,6 +344,7 @@ public class BasicShip {
 			lineList.remove(i);
 			lineList.add(i, temp);
 		}
+		
 	}
 	
 	
@@ -396,9 +397,13 @@ public class BasicShip {
 		if(shipImage!=null){
 			float scale = plasticBase.getHeight()/shipImage.getHeight();
 			Image copy = shipImage.getScaledCopy(scale);
-			copy.setRotation(180);;
+			copy.setRotation(this.rotation+180);
 			g.drawImage(copy, xCoord-copy.getWidth()/2, yCoord-copy.getHeight()/2);
 		}
+	}
+	
+	public float getRotation(){
+		return rotation;
 	}
 
 	public Faction getFaction() {

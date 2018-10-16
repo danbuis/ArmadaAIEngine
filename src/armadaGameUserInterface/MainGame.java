@@ -24,6 +24,8 @@ import PlayerStuff.Player;
 import PlayerStuff.TurnStep;
 import gameComponents.BasicShip;
 import gameComponents.HullZone;
+import gameComponents.ManeuverTool;
+import gameComponents.Segment;
 import geometry.geometryHelper;
 
 public class MainGame extends BasicGame
@@ -88,9 +90,11 @@ public class MainGame extends BasicGame
 		BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1, test);
 		vic.moveAndRotate(657.2, 600, 0);
 		P1.addShip(vic);
+		vic.setSpeed(2);
 		BasicShip vic2 = new BasicShip("Victory 2 Star Destroyer", P1, test);
 		vic2.moveAndRotate(457.2, 600, 0);
 		P1.addShip(vic2);
+		vic2.setSpeed(2);
 		
 		Player P2 = new Player("P2", false);
 		BasicShip CR90 = new BasicShip("CR90B Corvette", P2, test);
@@ -356,7 +360,43 @@ public class MainGame extends BasicGame
 					}
 				break;
 			case SELECTCRIT:
-			
+				if(mouseLeft){
+					//check if the click is in the player's ship tray
+					shipTray1.checkClick(mouseX, mouseY);
+					if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+						game.incrementGameStep();
+						}
+					}
+				break;
+			case APPLYDAMAGE:
+				if(mouseLeft){
+					//check if the click is in the player's ship tray
+					shipTray1.checkClick(mouseX, mouseY);
+					if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+						game.incrementGameStep();
+						}
+					}
+				break;
+			case SELECTMANEUVER:
+				boolean clickFound = false;
+				if(mouseLeft){
+					//check if the click is in the player's ship tray
+					shipTray1.checkClick(mouseX, mouseY);
+					if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+						game.incrementGameStep();
+						clickFound=true;
+						}
+					if(!clickFound){
+						float[] convertedClick = convertClickToBoardCoords(mouseX, mouseY);
+						for(Segment segment:game.getManeuverTool().segments){
+							if(segment.length.contains(convertedClick[0], convertedClick[1])){
+								int index = segment.number;
+								System.out.println("Found a click on segment :"+index);
+								game.getManeuverTool().incrementKnuckle(index, game.getActiveShip().getSpeed());
+							}//end if
+						}// end for each	
+					}//end if !clickFound
+				}
 				break;
 				
 			default: System.out.println("Invalid currentState in game update "+game.getGameStep());
@@ -397,13 +437,10 @@ public class MainGame extends BasicGame
 				for(BasicShip ship: game.getPlayer2().ships){
 					ship.draw(demoGameBorder, g);
 				}
-				
-				/*if(game.getAttackingHullZoneSelection()!=null){
-					Polygon poly = geometryHelper.getExtendedZone(game.getAttackingHullZoneSelection());
-					g.setColor(Color.orange);
-					g.draw(poly);
-				}*/
-
+				if(game.getManeuverTool()!=null){
+					game.getManeuverTool().renderSegments(g);
+				}
+			
 			}
 			//reset Graphics settings
 			g.scale(1/scale, 1/scale);
@@ -446,10 +483,6 @@ public class MainGame extends BasicGame
 					width = trueTypeFont.getWidth(temp);
 					trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);	
 				}
-				
-	
-
-
 				break;
 			
 			case MODIFYATTACK:
@@ -473,6 +506,27 @@ public class MainGame extends BasicGame
 				break;
 				
 			case SELECTCRIT:
+				g.drawImage(contextButton1, context1X, context1Y);
+				temp = "Finished";
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+				
+				break;
+				
+			case APPLYDAMAGE:
+				g.drawImage(contextButton1, context1X, context1Y);
+				temp = "Finished";
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+				
+				break;
+				
+			case SELECTMANEUVER:
+				g.drawImage(contextButton1, context1X, context1Y);
+				temp = "Finished";
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
+				
 				break;
 			default:
 				System.out.println("missing gamestep in render "+game.getGameStep());

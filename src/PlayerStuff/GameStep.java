@@ -9,7 +9,8 @@ FORMATTACKPOOL("Roll attack pool"),
 MODIFYATTACK("Attacker modifies dice"), 
 SPENDDEFENSETOKENS("Defender spends defense tokens"), 
 SELECTCRIT ("Attacker selects crit effect"), 
-APPLYDAMAGE ("Apply damage"), 
+APPLYDAMAGE ("Apply damage"),
+SELECTMANEUVER ("Select a maneuver to perform"),
 SQUADRONPHASE("Activate 2 squadrons"), 
 STATUSPHASE("Status Phase");
 	

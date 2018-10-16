@@ -12,6 +12,7 @@ import armadaGameUserInterface.MainGame;
 import gameComponents.BasicShip;
 import gameComponents.DefenseToken;
 import gameComponents.HullZone;
+import gameComponents.ManeuverTool;
 import geometry.Range;
 import geometry.geometryHelper;
 
@@ -31,6 +32,7 @@ public class Game {
 	private HullZone defendingHullZone;
 	private ArrayList<HullZone> defendingHullZoneChoices;
 	private MainGame mainGame;
+	private ManeuverTool maneuverTool;
 	
 	public Game(Image border, Player P1, Player P2, MainGame mainGame){
 		this.setBorder(border);
@@ -110,7 +112,10 @@ public class Game {
 		case SELECTCRIT:
 			gameStep = GameStep.APPLYDAMAGE;
 			break;
-		case APPLYDAMAGE:
+		case SELECTMANEUVER:
+			maneuverTool.moveShip(activeShip.getSpeed());
+			maneuverTool = null;
+			
 			//check if other player has a ship to Activate
 			
 			int player1ShipToActivate = 0;
@@ -154,6 +159,18 @@ public class Game {
 			}
 			incrementTurn();
 			gameStep = GameStep.COMMANDPHASE;
+			break;
+			
+		case APPLYDAMAGE:
+			maneuverTool = new ManeuverTool(activeShip);
+			if(attackingHullZoneSelection!=null){
+				attackingHullZoneSelection.renderColor = attackingHullZoneSelection.normalColor;
+			}
+			if(defendingHullZone!=null){
+				defendingHullZone.renderColor = defendingHullZone.normalColor;
+			}
+			defendingHullZoneChoices = null;
+			gameStep = GameStep.SELECTMANEUVER;
 			break;
 		default:
 			System.out.println("invalid game step in switch statement : game class "+gameStep);
@@ -285,6 +302,14 @@ public class Game {
 
 	public void setDefendingHullZone(HullZone defendingHullZone) {
 		this.defendingHullZone = defendingHullZone;
+	}
+
+	public ManeuverTool getManeuverTool() {
+		return maneuverTool;
+	}
+
+	public void setManeuverTool(ManeuverTool maneuverTool) {
+		this.maneuverTool = maneuverTool;
 	}
 
 }
