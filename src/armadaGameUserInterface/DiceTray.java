@@ -21,7 +21,7 @@ public class DiceTray {
 	private int vertOffset;
 	private TrueTypeFont font;
 	
-	DiceTray(int x, int y, Image image){
+	public DiceTray(int x, int y, Image image){
 		xCoord = x;
 		yCoord = y;
 		background = image;

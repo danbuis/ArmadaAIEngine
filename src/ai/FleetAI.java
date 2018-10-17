@@ -13,7 +13,7 @@ public class FleetAI {
 	public Game game;
 	private Player opponent;
 	public Map<BasicShip, Integer> shipPriorities = new HashMap<BasicShip, Integer>();
-	private Map<BasicShip, ShipAI> shipAIs = new HashMap<BasicShip, ShipAI>();
+	public Map<BasicShip, ShipAI> shipAIs = new HashMap<BasicShip, ShipAI>();
 	
 	/**
 	 * 
@@ -48,7 +48,9 @@ public class FleetAI {
 	
 	/**
 	 * Select a ship to activate
-	 * Reevaluates the field so that the ship that activates has current info
+	 * Reevaluates the game state so that the ship that activates has current info
+	 * passes "1" into the ship activation, which kickstarts the process of activating
+	 * this ship.  The 2nd and 3rd parts will be activated via game step changes.
 	 */
 	public BasicShip activateAShip(boolean testing){
 		assignPriorities();
@@ -65,7 +67,8 @@ public class FleetAI {
 			}
 		}
 		if(!testing){
-			shipAIs.get(selection).activateShip();
+			shipAIs.get(selection).activateShip(1);
+			game.setActiveShip(selection);
 		}
 		
 		return selection;

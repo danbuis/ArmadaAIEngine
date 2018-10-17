@@ -5,12 +5,17 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 
 import org.junit.Test;
+import org.newdawn.slick.SlickException;
 
+import Attacks.Attack;
+import PlayerStuff.GameStep;
 import ai.FleetAI;
+import ai.ShipAI;
+import armadaGameUserInterface.DiceTray;
 import armadaGameUserInterface.MainGame;
 import gameComponents.BasicShip;
 
-public class FleetAiTest {
+public class AiTest {
 
 	@Test
 	public void targetPrioirtyTest(){
@@ -58,9 +63,32 @@ public class FleetAiTest {
 		
 		testAI.assignPriorities();
 		BasicShip activeShip = testAI.activateAShip(true);
-		
-		
-		
+	
 		assertTrue(activeShip.getName().contains("scort"));
+	}
+	
+	@Test
+	public void testShipActivationPart1(){
+		MainGame main = new MainGame(null);
+		main.populateFullGameTesting(true);
+		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
+		
+		//check that game step is correct
+		BasicShip activeShip = testAI.activateAShip(true);
+		
+		//rotate the ship so that its front is sorta facing the enemy
+		activeShip.moveAndRotate(0, 0, 180);
+		
+		ShipAI shipAI = testAI.shipAIs.get(activeShip);
+		
+		Attack testAttack = shipAI.selectAttackTarget();
+		assertEquals("R", testAttack.getArmament());
+		assertTrue(testAttack.getDefendingZone().getParent().getName().contains("ictory"));
+		
+		//Move the ship to show that it can return a different attack
+		activeShip.moveAndRotate(-30, 0, 0);
+		testAttack = shipAI.selectAttackTarget();
+		assertEquals("RRR", testAttack.getArmament());
+				
 	}
 }

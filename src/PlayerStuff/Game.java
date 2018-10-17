@@ -1,6 +1,7 @@
 package PlayerStuff;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
@@ -38,9 +39,6 @@ public class Game {
 		this.setBorder(border);
 		this.setPlayer1(P1);
 		this.setPlayer2(P2);
-		//this.activationStep = ActivationStep.REVEALCOMMAND;
-		//this.attackStep = AttackStep.DECLARETARGET;
-		//this.turnStep = TurnStep.DEPLOYMENT;
 		this.gameStep = GameStep.DEPLOYMENT;
 		this.mainGame = mainGame;
 	}
@@ -68,21 +66,7 @@ public class Game {
 	public void setPlayer2(Player player2) {
 		this.player2 = player2;
 	}
-	/**
-	public void incrementActivationStep(){
-		if (activationStep.equals(ActivationStep.REVEALCOMMAND)) activationStep = ActivationStep.PERFORMATTACKS;
-		else if (activationStep.equals(ActivationStep.PERFORMATTACKS)) activationStep = ActivationStep.MOVEMENT;
-		else if (activationStep.equals(ActivationStep.MOVEMENT)){
-			
-		}
-	}
 	
-	public void incrementTurnStep(){
-		if(turnStep.equals(TurnStep.COMMANDPHASE)) turnStep = TurnStep.SHIPPHASE;
-		else if (turnStep.equals(TurnStep.SHIPPHASE)) turnStep = TurnStep.SQUADRONPHASE;
-		else if (turnStep.equals(TurnStep.SQUADRONPHASE)) turnStep = TurnStep.STATUSPHASE;
-	}
-	**/
 	public void incrementTurn(){
 		setTurn(getTurn() + 1);
 	}
@@ -113,8 +97,9 @@ public class Game {
 			gameStep = GameStep.APPLYDAMAGE;
 			break;
 		case SELECTMANEUVER:
+
 			maneuverTool.moveShip(activeShip.getSpeed());
-			maneuverTool = null;
+			clearManeuverTool();
 			
 			//check if other player has a ship to Activate
 			
@@ -143,8 +128,9 @@ public class Game {
 				gameStep = GameStep.SELECTSHIPTOACTIVATE;
 			} else {
 				activePlayer = player1;
-				gameStep = gameStep.SELECTSHIPTOACTIVATE;
+				gameStep = GameStep.SELECTSHIPTOACTIVATE;
 			}
+			
 			break;
 		case STATUSPHASE:
 			for(BasicShip ship:player1.ships){
@@ -178,6 +164,11 @@ public class Game {
 		}
 	}
 	
+	private void clearManeuverTool() {
+		maneuverTool=null;
+		
+	}
+
 	public int getTurn() {
 		return turn;
 	}

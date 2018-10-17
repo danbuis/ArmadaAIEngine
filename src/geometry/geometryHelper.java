@@ -127,14 +127,11 @@ public abstract class geometryHelper {
 			
 		//find the points that are contained in the other shape
 		shapePoints.addAll(findContainedPoints(scaledAttackingZone, defendingGon));
-		System.out.println("current list is this many elements "+shapePoints.size());
 			
 		shapePoints.addAll(findContainedPoints(defendingGon, scaledAttackingZone));
-		System.out.println("current list is this many elements "+shapePoints.size());
 			
 		//find the points of intersecting lines
 		shapePoints.addAll(findIntersectingPoints(scaledAttackingZone, defendingGon));
-		System.out.println("current list is this many elements "+shapePoints.size());
 		
 		//if no points found, no intersection, and just return the null value
 		if(!shapePoints.isEmpty()){
@@ -257,11 +254,8 @@ public abstract class geometryHelper {
 		displayPolygonString(poly1);
 		
 		for(int i=0; i<poly2.getPointCount(); i++){
-			System.out.println("i = "+i);
 			point = new Point(poly2.getPoint(i)[0], poly2.getPoint(i)[1]);
-			System.out.println("point "+poly2.getPoint(i)[0]+ "," +poly2.getPoint(i)[1]);
 			if (poly1.contains(point)){
-				System.out.println("adding a point");
 				returnList.add(point);
 			}
 		}
@@ -270,10 +264,8 @@ public abstract class geometryHelper {
 	}
 
 	private static void displayPolygonString(Polygon poly) {
-		System.out.println("Polygon bounds ");
 		for(int i = 0; i<poly.getPointCount(); i++){
 			System.out.println("point "+poly.getPoint(i)[0]+ "," +poly.getPoint(i)[1]);
-	
 		}
 		
 	}

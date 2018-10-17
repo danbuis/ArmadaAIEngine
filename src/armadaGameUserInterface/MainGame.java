@@ -507,7 +507,7 @@ public class MainGame extends BasicGame
 				
 			case SELECTCRIT:
 				g.drawImage(contextButton1, context1X, context1Y);
-				temp = "Finished";
+				temp = "Default Critical";
 				width = trueTypeFont.getWidth(temp);
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 				
@@ -523,7 +523,7 @@ public class MainGame extends BasicGame
 				
 			case SELECTMANEUVER:
 				g.drawImage(contextButton1, context1X, context1Y);
-				temp = "Finished";
+				temp = "Perform maneuver";
 				width = trueTypeFont.getWidth(temp);
 				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);
 				

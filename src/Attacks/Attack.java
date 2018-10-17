@@ -38,9 +38,7 @@ public class Attack {
 	}
 	
 	public String formAttackPool(String str){
-		//System.out.println(str);
 		//grab entirety of armament dice
-		//String returnString = str;
 		if(range.equals(Range.MEDIUM)){
 			//System.out.println("Medium");
 			str = str.replaceAll("K", "");
@@ -70,6 +68,10 @@ public class Attack {
 	
 	public String getArmament(){
 		return armament;
+	}
+	
+	public HullZone getDefendingZone(){
+		return defendingZone;
 	}
 
 
