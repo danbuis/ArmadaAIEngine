@@ -15,6 +15,7 @@ import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
+import Attacks.Attack;
 import PlayerStuff.Player;
 import gameComponents.DefenseToken.DefenseTokenType;
 
@@ -39,7 +40,7 @@ public class BasicShip {
 	private int engineering;
 	private int cost;
 	private int[][] navChart; // [speed column 0-4][knuckle joint 0-3 ]
-	private DefenseToken[] defenseTokens;
+	private ArrayList<DefenseToken> defenseTokens;
 	private float frontArcOffset;
 	private float rearArcOffset;
 	private float frontConjunction;
@@ -275,21 +276,21 @@ public class BasicShip {
 	 */
 	private void buildDefenseTokens(String s, boolean test) {
 		if (s.length() > 0) {
-			defenseTokens = new DefenseToken[s.length()];
+			defenseTokens = new ArrayList<DefenseToken>();
 			char targChar;
 			for (int i = 0; i < s.length(); i++) {
 				targChar = s.charAt(i);
 				try {
 					if (targChar == 'B') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.BRACE, test);
+						defenseTokens.add(new DefenseToken(DefenseTokenType.BRACE, test));
 					} else if (targChar == 'R') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.REDIRECT, test);
+						defenseTokens.add(new DefenseToken(DefenseTokenType.REDIRECT, test));
 					} else if (targChar == 'E') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.EVADE, test);
+						defenseTokens.add(new DefenseToken(DefenseTokenType.EVADE, test));
 					} else if (targChar == 'S') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.SCATTER, test);
+						defenseTokens.add(new DefenseToken(DefenseTokenType.SCATTER, test));
 					} else if (targChar == 'C') {
-						defenseTokens[i] = new DefenseToken(DefenseTokenType.CONTAIN, test);
+						defenseTokens.add(new DefenseToken(DefenseTokenType.CONTAIN, test));
 					}
 				}catch (SlickException e) {
 						// TODO Auto-generated catch block
@@ -372,6 +373,18 @@ public class BasicShip {
 		adjacentHullZones.add(hullzones.get((index+hullzones.size()-1)%hullzones.size()));
 		return adjacentHullZones;
 		
+	}
+	
+	public void sufferDamagePoint(HullZone zone){
+		if(zone==null){
+			this.hull--;
+		}else{
+			if(zone.getShields()>0){
+				zone.setShields(zone.getShields()-1);
+			}else{
+				this.hull--;
+			}
+		}
 	}
 	
 	
@@ -498,11 +511,11 @@ public class BasicShip {
 		this.size = size;
 	}
 
-	public DefenseToken[] getDefenseTokens() {
+	public ArrayList<DefenseToken> getDefenseTokens() {
 		return defenseTokens;
 	}
 
-	public void setDefenseTokens(DefenseToken[] defenseTokens) {
+	public void setDefenseTokens(ArrayList<DefenseToken> defenseTokens) {
 		this.defenseTokens = defenseTokens;
 	}
 

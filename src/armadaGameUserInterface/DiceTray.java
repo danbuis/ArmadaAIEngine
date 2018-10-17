@@ -7,9 +7,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.geom.Point;
 
 import Attacks.Attack;
 import gameComponents.Dice;
+import geometry.geometryHelper;
 
 public class DiceTray {
 	
@@ -19,7 +21,12 @@ public class DiceTray {
 	private Attack attack;
 	private int offset = 40;
 	private int vertOffset;
+	int iconShimmy = 7;
 	private TrueTypeFont font;
+	public int maxSelectableDice = 0;
+	private boolean[] selectedDice;
+	private int clickTolerance = 18;
+	
 	
 	public DiceTray(int x, int y, Image image){
 		xCoord = x;
@@ -57,6 +64,40 @@ public class DiceTray {
 			
 		}
 	}
+	
+	public void handleClick(int clickX, int clickY) throws SlickException{
+		Point click = new Point(clickX, 1152-clickY);
+		Point icon;
+		Image diceBG = new Image("Graphics/UI/redDieBG.png");
+		System.out.println("Checking click in dice tray "+clickX+","+clickY);
+		for(int i=0; i<attack.diceRoll.roll.size(); i++){
+			icon = new Point(xCoord+10+i*offset+diceBG.getWidth()/2, 
+						yCoord-iconShimmy+vertOffset+diceBG.getHeight()/2);
+			//System.out.println("checking icon @ "+icon.getCenterX()+","+icon.getCenterY());
+			System.out.println("distance is... "+geometryHelper.dist(icon, click));
+			if(geometryHelper.dist(icon, click)<clickTolerance){
+				System.out.println("start of if tree");
+				if(selectedDice[i]){
+					selectedDice[i]=false;
+					System.out.println("unselecting a die");
+				}else{
+					System.out.println("in else...");
+					//check how many dice are selected
+					int selected=0;
+					for(boolean bool:selectedDice){
+						if(bool) selected++;
+					}
+					System.out.println("total selected right now : "+selected);
+					//if there is capacity...
+					if(selected<maxSelectableDice){
+						selectedDice[i]=true;
+						System.out.println("selecting a die");
+					}
+				}
+			}
+		}
+	}
+	
 
 	private void renderAttackInfo(Graphics g) {
 		String currentDamage = "Current damage : "+attack.diceRoll.getTotalDamage();
@@ -64,7 +105,7 @@ public class DiceTray {
 	}
 
 	private void drawAttackPool(Graphics g) throws SlickException {
-		int iconShimmy = 7;
+
 		for(int i=0; i<attack.diceRoll.roll.size(); i++){
 			Dice die = attack.diceRoll.roll.get(i);
 			Image diceBG = null;
@@ -134,6 +175,18 @@ public class DiceTray {
 
 	public void setAttack(Attack attack) {
 		this.attack = attack;
+	}
+
+	public int getMaxSelectableDice() {
+		return maxSelectableDice;
+	}
+	
+	public void setDiceBools(int quantity){
+		selectedDice = new boolean[quantity];
+	}
+
+	public void setMaxSelectableDice(int maxSelectableDice) {
+		this.maxSelectableDice = maxSelectableDice;
 	}
 
 }

@@ -311,7 +311,7 @@ public class MainGame extends BasicGame
 								}//end inner for each loop
 								
 								clickFound=true;
-								diceTray.setAttack(new Attack(game.getAttackingHullZoneSelection(), zone));
+								diceTray.setAttack(new Attack(game.getAttackingHullZoneSelection(), zone, game));
 								System.out.println("Setting attack armament");
 								break;
 							}
@@ -344,6 +344,10 @@ public class MainGame extends BasicGame
 				}//end if button down
 				break;
 			case MODIFYATTACK:
+				//Player1 is non AI, so should have access to defense modifications if defener
+				if(game.getActiveShip().getOwner().equals(game.getPlayer1()))
+					diceTray.handleClick(mouseX, mouseY);
+				
 				if(mouseLeft && contextRect1.contains(mouseX, this.totalHeight-mouseY)){
 					game.incrementGameStep();
 				}
@@ -354,6 +358,9 @@ public class MainGame extends BasicGame
 				if(mouseLeft){
 					//check if the click is in the player's ship tray
 					shipTray1.checkClick(mouseX, mouseY);
+					//Player1 is non AI, so should have access to defense modifications if defener
+					if(game.getActiveShip().getOwner().equals(game.getPlayer2()))
+						diceTray.handleClick(mouseX, mouseY);
 					if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
 						game.incrementGameStep();
 						}

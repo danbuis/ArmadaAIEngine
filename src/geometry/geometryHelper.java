@@ -281,4 +281,18 @@ public abstract class geometryHelper {
 		}else return null;
 		
 	}
+
+	public static float dist(Point p1, Point p2) {
+		float x1 = p1.getCenterX();
+		float x2 = p2.getCenterX();
+		
+		float y1 = p1.getCenterY();
+		float y2 = p2.getCenterY();
+		
+		float dx = x1-x2;
+		float dy = y1-y2;
+		
+		return (float) Math.sqrt((dx*dx)+(dy*dy));
+		
+	}
 }

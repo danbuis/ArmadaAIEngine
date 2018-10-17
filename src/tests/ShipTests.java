@@ -13,6 +13,28 @@ import gameComponents.Faction;
 import gameComponents.HullZone;
 
 public class ShipTests {
+	
+	@Test
+	public void testBasicShipDamage() {
+		BasicShip testShip = new BasicShip("Nebulon-B Support Frigate", null);
+		assertEquals(5,  testShip.getHull());
+		
+		assertEquals(3, testShip.getHullZone(0).getShields());
+		assertEquals(1, testShip.getHullZone(1).getShields());
+
+		testShip.sufferDamagePoint(testShip.getHullZone(0));
+		assertEquals(2, testShip.getHullZone(0).getShields());
+		
+		testShip.sufferDamagePoint(testShip.getHullZone(1));
+		assertEquals(0, testShip.getHullZone(1).getShields());
+		
+		testShip.sufferDamagePoint(testShip.getHullZone(1));
+		assertEquals(0, testShip.getHullZone(1).getShields());
+		assertEquals(4,  testShip.getHull());
+		
+		testShip.sufferDamagePoint(null);
+		assertEquals(3,  testShip.getHull());
+	}
 
 	/**
 	 * tests basic attributes of a ship build from the 

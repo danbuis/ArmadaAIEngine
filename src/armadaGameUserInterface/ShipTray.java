@@ -53,12 +53,12 @@ public class ShipTray {
 		this.ship = ship;
 		scaledShipImage = getScaledImage();
 		
-		defenseRects =  new Rectangle[ship.getDefenseTokens().length];
-		defenseBools = new boolean[ship.getDefenseTokens().length];
-		for(int i=0; i<ship.getDefenseTokens().length; i++){
+		defenseRects =  new Rectangle[ship.getDefenseTokens().size()];
+		defenseBools = new boolean[ship.getDefenseTokens().size()];
+		for(int i=0; i<ship.getDefenseTokens().size(); i++){
 			defenseRects[i]=new Rectangle(xCoord+defTokenX+defTokenGap*i, yCoord+defTokenY, 
-					ship.getDefenseTokens()[i].getImage().getWidth(),
-					ship.getDefenseTokens()[i].getImage().getHeight());
+					ship.getDefenseTokens().get(i).getImage().getWidth(),
+					ship.getDefenseTokens().get(i).getImage().getHeight());
 		}
 	}
 	
@@ -81,9 +81,6 @@ public class ShipTray {
 		//check if one of the defense tokens contains the click...
 		for(int i=0; i<defenseRects.length; i++){
 			Rectangle rect = defenseRects[i];
-			
-			System.out.println("Rectangle coords "+rect.getX()+","+rect.getY());
-			System.out.println("Rectangle dims "+rect.getWidth()+","+rect.getHeight());
 			
 			if(defenseRects[i].contains(mouseX, mouseY)){
 				System.out.println("Found a click on element "+1);

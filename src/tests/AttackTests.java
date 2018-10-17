@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import Attacks.Attack;
+import PlayerStuff.Game;
 import gameComponents.BasicShip;
 import geometry.Range;
 
@@ -16,7 +17,7 @@ public class AttackTests {
 		BasicShip ship2 = new BasicShip("Victory 2 Star Destroyer", null);
 		ship2.moveAndRotate(40, 0, 0);
 		
-		Attack atk = new Attack(ship1.getHullZone(0), ship2.getHullZone(2));
+		Attack atk = new Attack(ship1, ship2, 0,2);
 		
 		assertEquals("RRRKKK", atk.getArmament());
 		

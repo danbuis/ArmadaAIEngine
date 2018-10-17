@@ -1,10 +1,17 @@
 package ai;
 
+import java.util.ArrayList;
+
 import Attacks.Attack;
 import PlayerStuff.GameStep;
 import armadaGameUserInterface.DiceTray;
 import gameComponents.BasicShip;
+import gameComponents.DefenseToken;
+import gameComponents.DefenseToken.DefenseTokenType;
+import gameComponents.Dice;
+import gameComponents.Dice.DiceFace;
 import gameComponents.HullZone;
+import geometry.Range;
 
 public class ShipAI {
 
@@ -86,7 +93,7 @@ public class ShipAI {
 					if(boss.shipPriorities.get(defZone.getParent()) >=
 							boss.shipPriorities.get(highestPriorityShip)){
 						//its priority is equal to or higher than current one
-						tempAttack = new Attack(zone, defZone);
+						tempAttack = new Attack(zone, defZone, boss.game);
 						if (tempAttack.getArmament().length()>diceOnShip){
 							diceOnShip = tempAttack.getArmament().length();
 							returnAttack = tempAttack;
@@ -96,6 +103,100 @@ public class ShipAI {
 			}//end if not null
 		}//end of check all zones
 		return returnAttack;
+	}
+	
+	public void spendDefenseTokens(Attack attack){
+		//For now, just try to spend everything.
+		
+		//start with scatter token
+		for(DefenseToken token : me.getDefenseTokens()){
+			if(token.getType()==DefenseTokenType.SCATTER){
+				if(!token.isDiscarded()){
+					if(attack.diceRoll.getTotalDamage()>0){
+						token.spendToken(true, attack, 0);
+					}
+				}
+			}//end scatter
+		}//end for each
+		
+		//try an evade
+		if(attack.getRange()!=Range.CLOSE){
+			for(DefenseToken token : me.getDefenseTokens()){
+				if(token.getType()==DefenseTokenType.EVADE){
+					if(!token.isDiscarded()){
+						//find index of best evade candidate
+						int index = 0;
+						Dice die = attack.diceRoll.roll.get(0);
+						for(int i=1; i<attack.diceRoll.roll.size(); i++){
+							//if it has 2 damage, pick this one and break
+							if(attack.diceRoll.roll.get(i).getFace()==DiceFace.HITHIT || attack.diceRoll.roll.get(i).getFace()==DiceFace.HITCRIT){
+								index=i;
+								die=attack.diceRoll.roll.get(i);
+								break;
+							}else{
+								if(attack.diceRoll.roll.get(i).getFace()==DiceFace.CRIT){
+									die = attack.diceRoll.roll.get(i);
+									index = i;
+								}else if(attack.diceRoll.roll.get(i).getFace()==DiceFace.HIT && die.getFace()!=DiceFace.CRIT){
+									die = attack.diceRoll.roll.get(i);
+									index = i;
+								}
+							}
+						}
+						token.spendToken(true, attack, index);
+					}//end if discarded
+				}//end if evade
+			}//end for each
+		}//end if range not close
+		
+		for(DefenseToken token : me.getDefenseTokens()){
+			if(token.getType()==DefenseTokenType.BRACE){
+				if(!token.isDiscarded()){
+					if(attack.diceRoll.getTotalDamage()>1){
+						token.spendToken(true, attack, 0);
+					}
+				}
+			}//end brace
+		}//end for each
+		
+		for(DefenseToken token : me.getDefenseTokens()){
+			if(token.getType()==DefenseTokenType.CONTAIN){
+				if(!token.isDiscarded()){
+					if(attack.diceRoll.getTotalDamage()>0){
+						token.spendToken(true, attack, 0);
+					}
+				}
+			}//end contain
+		}//end for each
+		
+		for(DefenseToken token : me.getDefenseTokens()){
+			if(token.getType()==DefenseTokenType.REDIRECT){
+				if(!token.isDiscarded()){
+					if(attack.diceRoll.getTotalDamage()>0){
+						token.spendToken(true, attack, 0);
+						attack.setRedirectTargets(selectRedirectTargets(attack));
+					}
+				}
+			}//end redirect
+		}//end for each
+		
+	}//end spend defense token method
+
+	private ArrayList<HullZone> selectRedirectTargets(Attack attack) {
+		ArrayList<HullZone> targets = me.getAdjacentHullZones(attack.getDefendingZone());
+		
+		//select the zone with the most shields
+		int shields = targets.get(0).getShields();
+		HullZone strongestZone = targets.get(0);
+		for(HullZone zone:targets){
+			if(zone.getShields()>shields){
+				shields = zone.getShields();
+				strongestZone = zone;
+			}
+		}
+		ArrayList<HullZone> returnList =  new ArrayList<HullZone>();
+		returnList.add(strongestZone);
+		return returnList;
 	}
 	
 }

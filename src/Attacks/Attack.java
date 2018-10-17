@@ -1,6 +1,9 @@
 package Attacks;
 
+import java.util.ArrayList;
+
 import PlayerStuff.AttackStep;
+import PlayerStuff.Game;
 import gameComponents.BasicShip;
 import gameComponents.HullZone;
 import geometry.Range;
@@ -13,9 +16,11 @@ public class Attack {
 	private HullZone defendingZone;
 	private Range range;
 	public AttackStep step = AttackStep.DECLARETARGET;
+	private ArrayList<HullZone> redirectTargets;
 
 	public AttackPool diceRoll;
 	private String armament;
+	private Game game;
 	
 
 	//used only for testing
@@ -28,13 +33,14 @@ public class Attack {
 		this.armament = formAttackPool(this.attackingZone.getArmament());
 	}
 	
-	public Attack(HullZone attackingZone, HullZone defendingZone){
+	public Attack(HullZone attackingZone, HullZone defendingZone, Game game){
 		this.attackingShip=attackingZone.getParent();
 		this.attackingZone = attackingZone;
 		this.defendingShip=defendingZone.getParent();
 		this.defendingZone = defendingZone;
 		this.setRange(geometryHelper.getRange(geometryHelper.rangeToPolygon(this.attackingZone.getGeometry(), this.defendingZone.getGeometry())));
 		this.armament = formAttackPool(this.attackingZone.getArmament());
+		this.game = game;
 	}
 	
 	public String formAttackPool(String str){
@@ -56,6 +62,8 @@ public class Attack {
 	
 	public void rollDice(){
 		diceRoll = new AttackPool(armament);
+		if(game!=null)
+		game.getMainGame().diceTray.setDiceBools(diceRoll.roll.size());
 	}
 
 	public Range getRange() {
@@ -72,6 +80,14 @@ public class Attack {
 	
 	public HullZone getDefendingZone(){
 		return defendingZone;
+	}
+
+	public ArrayList<HullZone> getRedirectTargets() {
+		return redirectTargets;
+	}
+
+	public void setRedirectTargets(ArrayList<HullZone> redirectTargets) {
+		this.redirectTargets = redirectTargets;
 	}
 
 
