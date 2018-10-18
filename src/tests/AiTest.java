@@ -6,9 +6,12 @@ import java.util.HashMap;
 
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Point;
 
 import Attacks.Attack;
+import PlayerStuff.Game;
 import PlayerStuff.GameStep;
+import PlayerStuff.Player;
 import ai.FleetAI;
 import ai.ShipAI;
 import armadaGameUserInterface.DiceTray;
@@ -121,4 +124,111 @@ public class AiTest {
 		assertFalse(attack.diceRoll.isRedirected());
 		assertTrue(attack.diceRoll.isEvaded());		
 	}
+	
+	@Test
+	public void testSelectRedirect(){
+		
+		MainGame main = new MainGame(null);
+		
+		Player player1 = new  Player(null, true);
+		Player player2 = new  Player(null, true);
+		
+		BasicShip vic = new BasicShip("Victory 1 Star Destroyer", null);
+		player1.addShip(vic);
+		
+		BasicShip cr90 = new BasicShip("CR90A Corvette", null);
+		player2.addShip(cr90);
+		cr90.moveAndRotate(0, 100, 90);
+		
+		main.game = new Game(null, player1, player2, main);
+		
+		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
+		
+		BasicShip activeShip = testAI.activateAShip(true);
+		
+		BasicShip attackingShip = main.game.getPlayer1().ships.get(0);
+		Attack attack = new Attack(attackingShip, activeShip, 0,1);
+		attack.rollDice();
+		
+		//guarantee that there are 6 damage
+		for(Dice die:attack.diceRoll.roll){
+			die.changeFace(DiceFace.HIT);
+		}
+		
+		ShipAI ai = testAI.shipAIs.get(activeShip);
+		
+		assertEquals(activeShip.getHullZone(0),ai.selectRedirectTargets(attack).get(0));
+	}
+	
+	@Test
+	public void testBasicManeuver(){
+		MainGame main = new MainGame(null);
+		
+		Player player1 = new  Player(null, true);
+		Player player2 = new  Player(null, true);
+		
+		BasicShip vic = new BasicShip("Victory 1 Star Destroyer", null);
+		player1.addShip(vic);
+		
+		BasicShip cr90 = new BasicShip("CR90A Corvette", null);
+		player2.addShip(cr90);
+		cr90.moveAndRotate(0, 100, 90);
+		
+		main.game = new Game(null, player1, player2, main);
+		
+		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
+		BasicShip activeShip = testAI.activateAShip(true);
+		ShipAI ai = testAI.shipAIs.get(activeShip);
+		
+		Point start = new Point(activeShip.getxCoord(), activeShip.getyCoord());
+		
+		activeShip.setSpeed(2);
+		ai.activateShip(3);
+		
+		Point end = new Point(activeShip.getxCoord(), activeShip.getyCoord());
+		
+		assertNotEquals(start.getCenterY(), end.getCenterY());
+
+	}
+	
+	@Test
+	public void testApplyDamage(){
+	MainGame main = new MainGame(null);
+		
+		Player player1 = new  Player(null, true);
+		Player player2 = new  Player(null, true);
+		
+		BasicShip vic = new BasicShip("Victory 1 Star Destroyer", null);
+		player1.addShip(vic);
+		
+		BasicShip cr90 = new BasicShip("CR90A Corvette", null);
+		player2.addShip(cr90);
+		cr90.moveAndRotate(0, 100, 90);
+		
+		main.game = new Game(null, player1, player2, main);
+		
+		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
+		
+		BasicShip activeShip = testAI.activateAShip(true);
+		
+		BasicShip attackingShip = main.game.getPlayer1().ships.get(0);
+		Attack attack = new Attack(attackingShip, activeShip, 0,1);
+		attack.rollDice();
+		
+		//guarantee that there are 6 damage
+		for(Dice die:attack.diceRoll.roll){
+			die.changeFace(DiceFace.HIT);
+		}
+		
+		ShipAI ai = testAI.shipAIs.get(activeShip);
+		ai.spendDefenseTokens(attack);
+		ai.applyDamage(attack);
+		
+		assertEquals(0, activeShip.getHullZone(0).getShields());
+		assertEquals(0, activeShip.getHullZone(1).getShields());
+		assertEquals(1, activeShip.getHullZone(2).getShields());
+		assertEquals(2, activeShip.getHullZone(3).getShields());
+		assertEquals(2, activeShip.getHull());
+	}
+	
 }

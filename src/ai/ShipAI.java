@@ -11,6 +11,7 @@ import gameComponents.DefenseToken.DefenseTokenType;
 import gameComponents.Dice;
 import gameComponents.Dice.DiceFace;
 import gameComponents.HullZone;
+import gameComponents.ManeuverTool;
 import geometry.Range;
 
 public class ShipAI {
@@ -50,8 +51,11 @@ public class ShipAI {
 			//select crit
 			
 		//part 3 is moving the ship, then we are done
-		}else if (part ==3){
-			//move ship	
+		}else if (part == 3){
+			System.out.println("Speed "+me.getSpeed());
+			ManeuverTool tool = selectManeuver();
+			System.out.println(tool);
+			tool.moveShip(me.getSpeed());
 		} else System.out.println("ERROR!  Invalid argument to AI activate Ship");
 		
 		
@@ -183,7 +187,7 @@ public class ShipAI {
 		
 	}//end spend defense token method
 
-	private ArrayList<HullZone> selectRedirectTargets(Attack attack) {
+	public ArrayList<HullZone> selectRedirectTargets(Attack attack) {
 		ArrayList<HullZone> targets = me.getAdjacentHullZones(attack.getDefendingZone());
 		
 		//select the zone with the most shields
@@ -198,6 +202,34 @@ public class ShipAI {
 		ArrayList<HullZone> returnList =  new ArrayList<HullZone>();
 		returnList.add(strongestZone);
 		return returnList;
+	}
+	
+	public ManeuverTool selectManeuver(){
+		ManeuverTool returnTool = new ManeuverTool(me);
+		
+		return returnTool;
+	}
+	
+	public void applyDamage(Attack attack){
+		int damageToApply = attack.diceRoll.calcTotalDamage();
+		HullZone defender = attack.getDefendingZone();
+		ArrayList<HullZone> redirectTargets = attack.getRedirectTargets();
+		redirectTargets.add(defender);
+		
+		while(damageToApply!=0){
+			int highestShields= 0;
+			HullZone bestZone = null;
+			
+			for(HullZone zone:redirectTargets){
+				if(zone.getShields()>highestShields){
+					highestShields = zone.getShields();
+					bestZone=zone;
+				}//end if
+			}//end for each
+			
+			me.sufferDamagePoint(bestZone);
+			damageToApply--;
+		}
 	}
 	
 }
