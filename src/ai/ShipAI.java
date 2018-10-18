@@ -106,6 +106,7 @@ public class ShipAI {
 	}
 	
 	public void spendDefenseTokens(Attack attack){
+		
 		//For now, just try to spend everything.
 		
 		//start with scatter token

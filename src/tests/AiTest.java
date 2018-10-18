@@ -14,6 +14,8 @@ import ai.ShipAI;
 import armadaGameUserInterface.DiceTray;
 import armadaGameUserInterface.MainGame;
 import gameComponents.BasicShip;
+import gameComponents.Dice;
+import gameComponents.Dice.DiceFace;
 
 public class AiTest {
 
@@ -90,5 +92,33 @@ public class AiTest {
 		testAttack = shipAI.selectAttackTarget();
 		assertEquals("RRR", testAttack.getArmament());
 				
+	}
+	
+	@Test
+	public void testSpendDefenseTokens(){
+		
+		MainGame main = new MainGame(null);
+		main.populateFullGameTesting(true);
+		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
+		
+		BasicShip activeShip = testAI.activateAShip(true);
+		System.out.println(activeShip.getName());
+		
+		BasicShip attackingShip = main.game.getPlayer1().ships.get(0);
+		Attack attack = new Attack(attackingShip, activeShip, 0,2);
+		attack.rollDice();
+		
+		//guarantee that there are 6 damage
+		for(Dice die:attack.diceRoll.roll){
+			die.changeFace(DiceFace.HIT);
+		}
+		
+		ShipAI ai = testAI.shipAIs.get(activeShip);
+		
+		ai.spendDefenseTokens(attack);
+		
+		assertTrue(attack.diceRoll.isBraced());
+		assertFalse(attack.diceRoll.isRedirected());
+		assertTrue(attack.diceRoll.isEvaded());		
 	}
 }
