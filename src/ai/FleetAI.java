@@ -21,6 +21,7 @@ public class FleetAI {
 	 * @param game
 	 */
 	public FleetAI (Player player, Game game){
+		System.out.println("New FleetAI");
 		this.me = player;
 		this.game = game;
 		if (game.getPlayer1().equals(me)){
@@ -52,7 +53,7 @@ public class FleetAI {
 	 * passes "1" into the ship activation, which kickstarts the process of activating
 	 * this ship.  The 2nd and 3rd parts will be activated via game step changes.
 	 */
-	public BasicShip activateAShip(boolean testing){
+	public BasicShip activateAShipToActivate(boolean testing){
 		assignPriorities();
 		
 		//For now just select the most expensive ship
@@ -67,7 +68,6 @@ public class FleetAI {
 			}
 		}
 		if(!testing){
-			shipAIs.get(selection).activateShip(1);
 			game.setActiveShip(selection);
 		}
 		

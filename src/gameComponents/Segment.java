@@ -90,7 +90,9 @@ public class Segment {
 	public Segment addNext(float newRotation){
 		float[] point1 = length.getPoint(2);
 		float[] point2 = length.getPoint(3);
-		
+		System.out.println("New rotation "+newRotation);
+		System.out.println("Angle "+angle);
+		//get the midpoint between the length rectangle
 		return new Segment(number+1,(point1[0]+point2[0])/2f, (point1[1]+point2[1])/2f, angle+newRotation*22.5f, parent);
 	}
 	
@@ -108,11 +110,13 @@ public class Segment {
 		float[] shipPoint = ship.getPlasticBase().getPoint(index);
 		float[] notchPoint = notch.getPoint(index);
 		
-		
+		//now snap to the point
 		ship.moveAndRotate(notchPoint[0]-shipPoint[0], notchPoint[1]-shipPoint[1],0);
 	}
-	
-	
-	
-	
+
+	public void setAngle(float rotation) {
+		this.angle = rotation;
+		
+	}
+
 }

@@ -2,12 +2,14 @@ package PlayerStuff;
 
 import java.util.ArrayList;
 
+import ai.FleetAI;
 import gameComponents.BasicShip;
 
 public class Player {
 	public ArrayList<BasicShip> ships = new ArrayList<BasicShip>();
 	private boolean AI = false;
 	private String playerID;
+	public FleetAI fleetAI;
 	
 	public Player(String ID, boolean AI){
 		this.AI = AI;

@@ -35,15 +35,28 @@ public class ShipAI {
 		/*part 1 is select attack through modify dice. Pause to let the defener
 		make choices about defense*/
 		if(part ==1){
-			//Select attack
-			desiredAttack = selectAttackTarget();
+			System.out.println("performing part one of activation");
+			//increment to select attack step
 			boss.game.incrementGameStep();
+			desiredAttack = selectAttackTarget();
+
+			if(desiredAttack==null){
+				System.out.println("no attack selected");
+				me.attacksThisTurn=10;
+				System.out.println("have performed "+me.attacksThisTurn+" attacks");
+				System.out.println("incrementing from "+boss.game.getGameStep());
+				boss.game.incrementGameStep();
+				return;
+			}
 			
+			boss.game.incrementGameStep();
 			//Form attackpool and roll dice
+			System.out.println(desiredAttack);
 			rollDice(desiredAttack);
 			boss.game.incrementGameStep();
 			
 			//modify dice
+			boss.game.incrementGameStep();
 			
 			 //Part 2 is crit selection, then pause to let the defender apply damage
 		}else if (part == 2){
@@ -55,7 +68,8 @@ public class ShipAI {
 			System.out.println("Speed "+me.getSpeed());
 			ManeuverTool tool = selectManeuver();
 			System.out.println(tool);
-			tool.moveShip(me.getSpeed());
+			System.out.println("End of part 3");
+			System.out.println(boss.game.getGameStep());
 		} else System.out.println("ERROR!  Invalid argument to AI activate Ship");
 		
 		
@@ -63,7 +77,7 @@ public class ShipAI {
 
 	public void rollDice(Attack attack) {
 		//double check that we are in the right gameStep, else throw a notification
-		if(boss.game.getGameStep().equals(GameStep.FORMATTACKPOOL)){
+		if(boss.game.getGameStep().equals(GameStep.SELECTATTACK)){
 			diceTray.setAttack(attack);
 			diceTray.getAttack().rollDice();
 		} else {

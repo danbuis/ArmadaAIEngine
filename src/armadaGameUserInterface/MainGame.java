@@ -86,7 +86,7 @@ public class MainGame extends BasicGame
 	}
 
 	public void populateFullGameTesting(boolean test){
-		Player P1 = new Player("P1", true);
+		Player P1 = new Player("P1", false);
 		BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P1, test);
 		vic.moveAndRotate(657.2, 600, 0);
 		P1.addShip(vic);
@@ -96,7 +96,7 @@ public class MainGame extends BasicGame
 		P1.addShip(vic2);
 		vic2.setSpeed(2);
 		
-		Player P2 = new Player("P2", false);
+		Player P2 = new Player("P2", true);
 		BasicShip CR90 = new BasicShip("CR90B Corvette", P2, test);
 		CR90.moveAndRotate(457.2, 414.4, 0);
 		P2.addShip(CR90);
@@ -191,14 +191,17 @@ public class MainGame extends BasicGame
 					BasicShip vic = new BasicShip("Victory 2 Star Destroyer", P2, false);
 					vic.moveAndRotate(457.2, 100, 0);
 					P2.addShip(vic);
+					vic.setSpeed(2);
 					
 					Player P1 = new Player("P1", false);
 					BasicShip CR90 = new BasicShip("CR90A Corvette", P1, false);
-					CR90.moveAndRotate(257.2, 814.4, 0);
+					CR90.moveAndRotate(257.2, 814.4, 180);
 					P1.addShip(CR90);
+					CR90.setSpeed(2);
 					BasicShip NebB = new BasicShip("Nebulon-B Escort Frigate", P1, false);
-					NebB.moveAndRotate(657.2, 814.4, 0);
+					NebB.moveAndRotate(657.2, 814.4, 90);
 					P1.addShip(NebB);
+					NebB.setSpeed(2);
 					
 					
 					game = new Game(demoGameBorder, P1, P2, this);
@@ -271,7 +274,7 @@ public class MainGame extends BasicGame
 					
 					for(HullZone zone : game.getActiveShip().getAllHullZones()){
 						System.out.println("looking at active ships");
-						if (zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
+						if (!game.getActiveShip().hullzonesThatAttackedThisTurn.contains(zone) && zone.getGeometry().contains(convertedClick[0], convertedClick[1])){
 							// the click is on the active ship 
 							
 							//set att zone in game
@@ -332,9 +335,14 @@ public class MainGame extends BasicGame
 					}//end if block for defending zones
 					
 					//click button and advance
-					if(!clickFound && game.getDefendingHullZone()!=null && game.getAttackingHullZoneSelection()!=null){
-						if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+					if(contextRect1.contains(mouseX, this.totalHeight-mouseY)){
+						if(!clickFound && game.getDefendingHullZone()!=null && game.getAttackingHullZoneSelection()!=null){
 							diceTray.getAttack().rollDice();
+							game.getActiveShip().attacksThisTurn++;
+							game.getActiveShip().hullzonesThatAttackedThisTurn.add(game.getAttackingHullZoneSelection());
+							game.incrementGameStep();
+						}else{
+							game.getActiveShip().attacksThisTurn+=10;
 							game.incrementGameStep();
 						}
 						
@@ -482,14 +490,16 @@ public class MainGame extends BasicGame
 			case SELECTATTACK:
 				
 				diceTray.renderDiceTray(g);
-				
+				g.drawImage(contextButton1, context1X, context1Y);
 				//if we have a valid attack selected, draw the button to commit to it
-				if(game.getDefendingHullZone()!=null && game.getAttackingHullZoneSelection()!=null){
-					g.drawImage(contextButton1, context1X, context1Y);
+				if(game.getDefendingHullZone()!=null && game.getAttackingHullZoneSelection()!=null){	
 					temp = "Perform this attack";
-					width = trueTypeFont.getWidth(temp);
-					trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);	
+				}else{
+					temp = "Skip remaining attacks";
 				}
+				
+				width = trueTypeFont.getWidth(temp);
+				trueTypeFont.drawString((float)(context1X + contextButton1.getWidth()/2f-width/2), (context1Y+contextButton1.getHeight()/2f-height/2), temp, Color.black);	
 				break;
 			
 			case MODIFYATTACK:

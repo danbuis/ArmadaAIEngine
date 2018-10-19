@@ -9,6 +9,9 @@ import gameComponents.ManeuverTool;
 
 public class MovementToolTests {
 
+	/**
+	 * Make sure that incrementing actually happens correctly
+	 */
 	@Test
 	public void testIncrement() {
 		ManeuverTool tool = new ManeuverTool(new BasicShip("CR90A Corvette", null));
@@ -45,22 +48,36 @@ public class MovementToolTests {
 		assertEquals(-1, tool.getKnuckle(1));
 	}
 	
+	/**
+	 * Make sure that tool can recognize what is or isn't a valid move
+	 */
 	@Test
 	public void testIsValidMove(){
 		ManeuverTool tool = new ManeuverTool(new BasicShip("Victory 1 Star Destroyer", null));
 		
+
 		tool.incrementKnuckle(1, 1);
+		
+		//at speed 2 the vic only has 1 click at the 2nd joint, so this
+		//click at the first joint is no bueno
 		assertFalse(tool.isValidMove(2));
 		
+		//make sure it actually clicked
 		assertEquals(1, tool.getKnuckle(0));
 		System.out.println(tool);
+		
 		//now we tweak it so that it is as valid move
 		tool.validateConfiguration(2);
+		
+		//make sure that the automatic validation/correction works as expected
 		System.out.println(tool);
 		assertTrue(tool.isValidMove(2));
 		assertEquals(0, tool.getKnuckle(0));	
 	}
 	
+	/**Make sure code fails gravefully when given bad input
+	 * 
+	 */
 	@Test
 	public void testInValidSpeeds(){
 		ManeuverTool tool = new ManeuverTool(new BasicShip("Victory 1 Star Destroyer", null));

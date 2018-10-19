@@ -67,7 +67,7 @@ public class AiTest {
 		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
 		
 		testAI.assignPriorities();
-		BasicShip activeShip = testAI.activateAShip(true);
+		BasicShip activeShip = testAI.activateAShipToActivate(true);
 	
 		assertTrue(activeShip.getName().contains("scort"));
 	}
@@ -79,7 +79,7 @@ public class AiTest {
 		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
 		
 		//check that game step is correct
-		BasicShip activeShip = testAI.activateAShip(true);
+		BasicShip activeShip = testAI.activateAShipToActivate(true);
 		
 		//rotate the ship so that its front is sorta facing the enemy
 		activeShip.moveAndRotate(0, 0, 180);
@@ -104,7 +104,7 @@ public class AiTest {
 		main.populateFullGameTesting(true);
 		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
 		
-		BasicShip activeShip = testAI.activateAShip(true);
+		BasicShip activeShip = testAI.activateAShipToActivate(true);
 		System.out.println(activeShip.getName());
 		
 		BasicShip attackingShip = main.game.getPlayer1().ships.get(0);
@@ -144,7 +144,7 @@ public class AiTest {
 		
 		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
 		
-		BasicShip activeShip = testAI.activateAShip(true);
+		BasicShip activeShip = testAI.activateAShipToActivate(true);
 		
 		BasicShip attackingShip = main.game.getPlayer1().ships.get(0);
 		Attack attack = new Attack(attackingShip, activeShip, 0,1);
@@ -177,7 +177,7 @@ public class AiTest {
 		main.game = new Game(null, player1, player2, main);
 		
 		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
-		BasicShip activeShip = testAI.activateAShip(true);
+		BasicShip activeShip = testAI.activateAShipToActivate(true);
 		ShipAI ai = testAI.shipAIs.get(activeShip);
 		
 		Point start = new Point(activeShip.getxCoord(), activeShip.getyCoord());
@@ -209,7 +209,7 @@ public class AiTest {
 		
 		FleetAI testAI = new FleetAI(main.game.getPlayer2(), main.game);
 		
-		BasicShip activeShip = testAI.activateAShip(true);
+		BasicShip activeShip = testAI.activateAShipToActivate(true);
 		
 		BasicShip attackingShip = main.game.getPlayer1().ships.get(0);
 		Attack attack = new Attack(attackingShip, activeShip, 0,1);

@@ -22,6 +22,10 @@ public class ManeuverTool {
 		}
 	}
 	
+	/**
+	 * Move ship from segment to segment along the tool
+	 * @param speed
+	 */
 	public void moveShip(int speed){
 		for(int i=1; i<speed+1; i++){
 			segments[i].moveShipToThisSegment(parent, rightHand);
@@ -49,6 +53,9 @@ public class ManeuverTool {
 
 
 
+	/**
+	 * Place the root flush with the correct corner of the ship base
+	 */
 	private void placeRoot() {			
 		int index;
 		if(rightHand){
@@ -59,6 +66,8 @@ public class ManeuverTool {
 		Segment root = new Segment(0,0,0,0, this);
 		
 		//rotate the neutral root
+		System.out.println("parent rotated at "+parent.getRotation());
+		root.setAngle(parent.getRotation()); 
 		root.moveAndRotate(0, 0, parent.getRotation());
 		
 		//get target point on the parent
@@ -112,13 +121,8 @@ public class ManeuverTool {
 	 * @return
 	 */
 	public boolean isValidMove(int speed){
-		//make sure that we didn't somehow get an invalid speed
-		
-		//System.out.println("speed "+speed);
-
-		
+		//make sure that we didn't somehow get an invalid speed	
 		int maxSpeed = getMaxSpeed();
-		//System.out.println("maxSpeed "+maxSpeed);
 		if(speed>maxSpeed) {
 			return false;
 		}else{
@@ -167,13 +171,16 @@ public class ManeuverTool {
 		return knuckle[i];
 	}
 	
+	/**
+	 * Find the max speed for the parent ship.  Iterate along the ship's navigation chart
+	 * until an empty column is found.
+	 * @return
+	 */
 	private int getMaxSpeed(){
 		int i=1;
-		
 		while(i<4 && parent.getNavChart()[i+1]!=null){
 			i++;
-		}
-		
+		}	
 		return i;
 	}
 	

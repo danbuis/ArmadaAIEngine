@@ -9,7 +9,7 @@ public class Dice {
 	 * 
 	 * Dice are represented by a color and a facing
 	 * 
-	 * @author boredompwndu 7/6/18
+	 * @author ransburger 7/6/18
 	 */
 
 	// enums

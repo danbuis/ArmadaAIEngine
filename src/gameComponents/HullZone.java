@@ -10,6 +10,7 @@ public class HullZone {
 	private int shields;
 	private String armament;
 	private Point yellowDot;
+	
 	public final Color normalColor = new Color(30,30,30);
 	public final Color attacker = new Color(49,117,40);
 	public final Color defendClose = new Color(50,50,50);
@@ -74,6 +75,12 @@ public class HullZone {
 		return geometry;
 	}
 
+	/**
+	 * The shape of the hull zone is handled in the BasicShip constructor, based off the 
+	 * values of the text file
+	 * @param geometry
+	 * @param i
+	 */
 	public void initializeGeometry(Polygon geometry, int i) {
 		this.geometry = geometry;
 		createYellowDot(i);
@@ -83,6 +90,10 @@ public class HullZone {
 		this.geometry = geometry;
 	}
 
+	/**
+	 * Place the yellow dot used for LOS measurements
+	 * @param i
+	 */
 	private void createYellowDot(int i) {
 		float gap = 8f;
 		// Dot goes between first and 2nd points

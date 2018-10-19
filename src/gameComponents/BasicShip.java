@@ -48,6 +48,9 @@ public class BasicShip {
 	private Image shipImage;
 	private int speed = 0;
 	
+	public int attacksThisTurn;
+	public ArrayList<HullZone> hullzonesThatAttackedThisTurn = new ArrayList<HullZone>();
+	
 	//private Line FR;
 	//private Line FL;
 	//private Line RL;

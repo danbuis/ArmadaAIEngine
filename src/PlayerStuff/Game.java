@@ -9,6 +9,8 @@ import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Polygon;
 
+import ai.FleetAI;
+import ai.ShipAI;
 import armadaGameUserInterface.MainGame;
 import gameComponents.BasicShip;
 import gameComponents.DefenseToken;
@@ -35,12 +37,22 @@ public class Game {
 	private MainGame mainGame;
 	private ManeuverTool maneuverTool;
 	
-	public Game(Image border, Player P1, Player P2, MainGame mainGame){
+	public Game(Image border, Player firstPlayer, Player P2, MainGame mainGame){
 		this.setBorder(border);
-		this.setPlayer1(P1);
+		this.setPlayer1(firstPlayer);
+		this.firstPlayer=firstPlayer;
+		this.activePlayer=firstPlayer;
 		this.setPlayer2(P2);
 		this.gameStep = GameStep.DEPLOYMENT;
 		this.mainGame = mainGame;
+		
+		if(firstPlayer.getAI()){
+			player1.fleetAI = new FleetAI(player1, this);
+		}
+		
+		if(P2.getAI()){
+			player2.fleetAI = new FleetAI(player2, this);
+		}
 	}
 
 	public Image getBorder() {
@@ -71,31 +83,90 @@ public class Game {
 		setTurn(getTurn() + 1);
 	}
 
+	/**
+	 * After many actions we will need to move onto the next step in the game.  Most checks are linear,
+	 * but some are cyclical, and will have some checks to see which way we need to go
+	 */
 	public void incrementGameStep(){
 		switch (this.gameStep){
 		case DEPLOYMENT:
+			//TODO check that all ships have been deployed, if not, circle back to DEPLOYMENT
+			
 			gameStep = GameStep.COMMANDPHASE;
+			//TODO AIs build/update their command stack
 			break;
+			
 		case COMMANDPHASE:
+			if(activePlayer.getAI()){
+				activePlayer.fleetAI.activateAShipToActivate(false);
+			}
+			
 			gameStep = GameStep.SELECTSHIPTOACTIVATE;
 			break;
+			
 		case SELECTSHIPTOACTIVATE:
 			gameStep = GameStep.SELECTATTACK;
 			break;
-		case SELECTATTACK:
-			gameStep = GameStep.MODIFYATTACK;
+			
+		case SELECTATTACK:			
+			
+
+			System.out.println("active ship "+activeShip);
+			if(activeShip.attacksThisTurn<2){
+				System.out.println("Performing attack # "+activeShip.attacksThisTurn);
+				gameStep = GameStep.MODIFYATTACK;
+			}else{
+				System.out.println("skipping ahead to maneuver step");
+				maneuverTool = new ManeuverTool(activeShip);
+				if(activePlayer.getAI()){
+					ShipAI ai = activePlayer.fleetAI.shipAIs.get(activeShip);
+					ai.activateShip(3);
+				}
+				gameStep = GameStep.SELECTMANEUVER;
+				if(activePlayer.getAI()){
+					incrementGameStep();
+				}
+			}
 			break;
+			
 		case MODIFYATTACK:
 			gameStep = GameStep.SPENDDEFENSETOKENS;
 			break;
+			
 		case SPENDDEFENSETOKENS:
+			if(activePlayer.getAI()){
+				ShipAI ai = activePlayer.fleetAI.shipAIs.get(activeShip);
+				ai.activateShip(2);
+			}
+			
 			gameStep = GameStep.SELECTCRIT;
 			mainGame.shipTray1.clearSelectedDefenseTokens();
 			mainGame.shipTray2.clearSelectedDefenseTokens();
 			break;
+			
 		case SELECTCRIT:
+			//TODO - once alternate crits are included... do stuff.
+			
 			gameStep = GameStep.APPLYDAMAGE;
 			break;
+			
+		case APPLYDAMAGE:
+			maneuverTool = new ManeuverTool(activeShip);
+			if(attackingHullZoneSelection!=null){
+				attackingHullZoneSelection.renderColor = attackingHullZoneSelection.normalColor;
+			}
+			if(defendingHullZone!=null){
+				defendingHullZone.renderColor = defendingHullZone.normalColor;
+			}
+			defendingHullZoneChoices = null;
+			if(activePlayer.getAI()){
+				ShipAI ai = activePlayer.fleetAI.shipAIs.get(activeShip);
+				ai.activateShip(3);
+			}
+			
+			gameStep = GameStep.SELECTMANEUVER;
+			break;
+			
 		case SELECTMANEUVER:
 
 			maneuverTool.moveShip(activeShip.getSpeed());
@@ -103,35 +174,52 @@ public class Game {
 			
 			//check if other player has a ship to Activate
 			
-			int player1ShipToActivate = 0;
+			int player1ShipsToActivate = 0;
 			for(BasicShip ship : player1.ships){
 					if (!ship.isActivated()){
-						player1ShipToActivate++;
+						player1ShipsToActivate--;
 					}
 				}
-			int player2ShipToActivate = 0;
+			int player2ShipsToActivate = 0;
 			for(BasicShip ship : player2.ships){
 					if (!ship.isActivated()){
-						player2ShipToActivate++;
+						player2ShipsToActivate--;
 					}
 				}
-			if(player2ShipToActivate == 0 && player1ShipToActivate == 0){
+			System.out.println("Leaving select maneuver");
+			
+			if(player2ShipsToActivate == 0 && player1ShipsToActivate == 0){
+				System.out.println("to the status phase");
 				gameStep = GameStep.STATUSPHASE;
-			}else if (player2ShipToActivate == 0){
+			}else if (player2ShipsToActivate == 0){
+				System.out.println("defaulting to player1");
 				activePlayer=player1;
 				gameStep = GameStep.SELECTSHIPTOACTIVATE;
-			}else if (player1ShipToActivate == 0){
+			}else if (player1ShipsToActivate == 0){
+				System.out.println("defaulting to player2");
 				activePlayer=player2;
 				gameStep = GameStep.SELECTSHIPTOACTIVATE;
 			}else if(activePlayer == player1){
+				System.out.println("swapping to player2");
 				activePlayer = player2;
 				gameStep = GameStep.SELECTSHIPTOACTIVATE;
 			} else {
+				System.out.println("swapping to player1");
 				activePlayer = player1;
 				gameStep = GameStep.SELECTSHIPTOACTIVATE;
 			}
+
+			activeShip=null;
+			System.out.println("Player 1 "+player1);
+			System.out.println("ActivePlayer "+activePlayer);
+			
+			if(activePlayer.getAI()){
+				activeShip = activePlayer.fleetAI.activateAShipToActivate(false);
+				activePlayer.fleetAI.shipAIs.get(activeShip).activateShip(1);
+			}
 			
 			break;
+			
 		case STATUSPHASE:
 			for(BasicShip ship:player1.ships){
 				for(DefenseToken token :ship.getDefenseTokens()){
@@ -146,25 +234,14 @@ public class Game {
 			incrementTurn();
 			gameStep = GameStep.COMMANDPHASE;
 			break;
-			
-		case APPLYDAMAGE:
-			maneuverTool = new ManeuverTool(activeShip);
-			if(attackingHullZoneSelection!=null){
-				attackingHullZoneSelection.renderColor = attackingHullZoneSelection.normalColor;
-			}
-			if(defendingHullZone!=null){
-				defendingHullZone.renderColor = defendingHullZone.normalColor;
-			}
-			defendingHullZoneChoices = null;
-			gameStep = GameStep.SELECTMANEUVER;
-			break;
+					
 		default:
 			System.out.println("invalid game step in switch statement : game class "+gameStep);
 			break;
 		}
 	}
 	
-	private void clearManeuverTool() {
+	public void clearManeuverTool() {
 		maneuverTool=null;
 		
 	}
